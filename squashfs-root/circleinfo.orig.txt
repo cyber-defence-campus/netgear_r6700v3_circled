@@ -1,0 +1,6 @@
+firmware_ver 2.3.0.4
+database_ver 3.2.1
+platforms_ver 2.15.2
+db_checksum 80f34399912c29a9b619193658d43b1c
+firmware_size 1875732
+database_size 8649020
