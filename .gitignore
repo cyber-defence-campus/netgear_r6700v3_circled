@@ -1,0 +1,3 @@
+# Ignore all yaml files (but not the init yaml files)
+.yaml
+!*.init.yaml
