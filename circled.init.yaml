@@ -1,0 +1,15 @@
+hooks:
+  lib:
+    func_hook:
+    - {entry: '0xd038', leave: '0xd03c', target: '0x1000', mode: 'skip'}
+    - {entry: '0xcffc', leave: '0xd000', target: '0x1000', mode: 'skip'}
+    - {entry: '0xd030', leave: '0xd034', target: '0x1000', mode: 'skip'}
+  libc:
+    fgets:
+    - {entry: '0xcfe0', leave: '0xcfe4', target: '0x1000', mode: 'model'}
+    # sscanf:
+    # - {entry: '0xcffc', leave: '0xd000', target: '0x1000', mode: 'skip'}
+    strcmp:
+    - {entry: '0xd010', leave: '0xd014', target: '0x1000', mode: 'skip'}
+    # snprintf:
+    # - {entry: '0xd030', leave: '0xd034', target: '0x1000', mode: 'skip'}
