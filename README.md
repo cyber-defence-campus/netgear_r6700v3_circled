@@ -1,1 +1,31 @@
-# netgear_r6700v3_circled
+# Exploiting a Stack Buffer Overflow on the Netgear R6700v3
+## 1. Individual Binary Emulation
+- Extract the R6700v3 firmware with *binwalk*
+- Use *QEMU* to boot an ARM Debian system
+- Upload the firmware's root filesystem to the ARM Debian system
+- Build and copy a statically-linked version of *gdbserver* to the root filesystem
+- Emulate the *circled* binary
+  - Cross-compile (use *bootlin* toolchain for *armv7-eabihf* and *ulibc*) *libnvram* to emulate non-volatile RAM (NVRAM)
+  - Chroot into the root filesystem
+    - `sudo mount -t proc /proc/ ./squashfs-root/proc/`
+    - `sudo mount -t sysfs /sys/ ./squashfs-root/sys/`
+    - `sudo mount -o bind /dev/ ./squashfs-root/dev/`
+    - `sudo chroot ./squashfs-root/ /bin/sh`
+    - `export SHELL=/bin/sh`
+  - Execute the targeted binary (use `circled.sh` helper script)
+- Trace crash (`gdb-multiarch -q -x circled.gdb`)
+## 2. References
+- Emulating Netgear R6700v3 cicled binary:
+  - https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2
+  - https://medium.com/@INTfinity/1-2-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-2-cf1571493117
+  - https://medium.com/@INTfinity/1-3-exploiting-and-debugging-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-a80dbaf1245d
+- Emulating IoT Firmware Made Easy:
+  - https://boschko.ca/qemu-emulating-firmware/
+- Defeating the Netgear R6700v3:
+  - https://www.synacktiv.com/en/publications/pwn2own-austin-2021-defeating-the-netgear-r6700v3.html
+- Chroot:
+  - https://wiki.archlinux.org/title/Chroot#Using_chroot
+- Ready-to-Use Cross-Compilation Toolchains:
+  - https://toolchains.bootlin.com/
+- NVRAM Emulator:
+  - https://github.com/firmadyne/libnvram
