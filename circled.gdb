@@ -56,4 +56,4 @@ break *0xcfc0
 continue
 
 # Trace till return of function updating_database
-morion_trace debug circled.yaml 0xf768 0xc9b8
+# morion_trace debug circled.yaml 0xf768 0xc9b8
