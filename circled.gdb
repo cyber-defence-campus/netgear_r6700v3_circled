@@ -51,11 +51,9 @@ continue
 # Let GDB follow the parent process
 set follow-fork-mode parent
 
-# # Break before invocation of function sscanf
-# break *$sscnaf
-# continue
-
+# Break before invocation of function fgets
 break *0xcfc0
 continue
 
-morion_trace debug circled.yaml 0xd040
+# Trace till return of function updating_database
+morion_trace debug circled.yaml 0xf768 0xc9b8
