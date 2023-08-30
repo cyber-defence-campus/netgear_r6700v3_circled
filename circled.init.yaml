@@ -39,7 +39,7 @@ states:
 #   - ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
 #   postconditions:
 #     regs:
-#       r6:   '0xbeffc136'
+#       r6:   '0xbeffc215'
 #       pc:   '0x0000c9b8'
 #     mems:
 # - instructions:
@@ -48,7 +48,7 @@ states:
 #   postconditions:
 #     regs:
 #     mems:
-# # Advanced ROP Chain (non-crashing)
+# Advanced ROP Chain (non-crashing)
 # ropchain:
 # # Gadget 0
 # - instructions:
