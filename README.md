@@ -3,8 +3,11 @@
 git clone https://github.com/pdamian/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
 binwalk -e -M -C firmware/ firmware/R6700v3-V1.0.4.120_10.0.91.zip
 export ROOTFS="`pwd`/firmware/_R6700v3-V1.0.4.120_10.0.91.zip.extracted/_R6700v3-V1.0.4.120_10.0.91.chk.extracted/squashfs-root"
+cp binaries/gdbserver $ROOTFS/usr/bin/gdbserver
 python3 circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
+chmod +x $ROOTFS/bin/circled.patched
 cp circled.sh $ROOTFS/circled.sh
+chmod +x $ROOTFS/circled.sh
 ```
 ## 1. Individual Binary Emulation
 - Extract the R6700v3 firmware with *binwalk*:
