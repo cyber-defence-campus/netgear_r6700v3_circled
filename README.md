@@ -1,9 +1,12 @@
 # Exploiting a Stack Buffer Overflow on the Netgear R6700v3
 ## 1. Individual Binary Emulation
-- Extract the R6700v3 firmware with *binwalk*
-- Use *QEMU* to boot an ARM Debian system
-- Upload the firmware's root filesystem to the ARM Debian system
-- Build and copy a statically-linked version of *gdbserver* to the root filesystem
+- Extract the R6700v3 firmware with *binwalk*:
+  ```
+  binwalk -e -M firmware/R6700v3-V1.0.4.120_10.0.91.zip
+  ```
+- Use *QEMU* to boot an ARMHF Debian system
+- Upload the firmware's root filesystem (`_R6700v3-V1.0.4.120_10.0.91.zip.extracted/_R6700v3-V1.0.4.120_10.0.91.chk.extracted/squashfs-root/`) to the ARM Debian system
+- Build and copy a statically-linked version of *gdbserver* to the root filesystem (`/usr/bin/gdbserver`)
 - Emulate the *circled* binary
   - Cross-compile (use *bootlin* toolchain for *armv7-eabihf* and *ulibc*) *libnvram* to emulate non-volatile RAM (NVRAM)
   - Chroot into the root filesystem
