@@ -12,6 +12,7 @@
     - `sudo mount -o bind /dev/ ./squashfs-root/dev/`
     - `sudo chroot ./squashfs-root/ /bin/sh`
     - `export SHELL=/bin/sh`
+    - `echo 1 | tee /proc/sys/kernel/randomize_va_space`
   - Execute the targeted binary (use `circled.sh` helper script)
 - Trace crash (`gdb-multiarch -q -x circled.gdb`)
 ## 2. References
