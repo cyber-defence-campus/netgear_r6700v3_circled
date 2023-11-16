@@ -1,4 +1,4 @@
-# Exploiting a Stack Buffer Overflow on the Netgear R6700v3
+# Exploiting a Stack Buffer Overflow on the Netgear R6700v3 (CVE-2022-27646)
 ## 1. Setup
 ### 1.1 Host System
 - Install the following dependencies:
