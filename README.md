@@ -1,6 +1,6 @@
 # Exploiting a Stack Buffer Overflow on the Netgear R6700v3
-## 1. Individual Binary Emulation
-- Use *QEMU* to boot an ARMHF Debian system
+## 1. Setup
+### 1.1 Host
 - Install the following dependencies:
   - git
   - binwalk (https://github.com/ReFirmLabs/binwalk)
@@ -11,26 +11,29 @@
   ```
   binwalk -e -M -C firmware/ firmware/R6700v3-V1.0.4.120_10.0.91.zip
   ```
-- Copy files to the firmware's root filesystem:
+- Copy the following files to the firmware's root filesystem:
   ```
   # Variable to the root filesystem
   export ROOTFS="$(pwd)/firmware/_R6700v3-V1.0.4.120_10.0.91.zip.extracted/_R6700v3-V1.0.4.120_10.0.91.chk.extracted/squashfs-root"
   
   # Copy pre-built gdbserver binary (or compile your own statically-linked version)
-  cp binaries/gdbserver $ROOTFS/usr/bin/gdbserver
+  cp firmware/bins/gdbserver $ROOTFS/gdbserver
   
   # Copy pre-built libnvram.so library (or compile your own version)
-  cp binaries/libnvram.so $ROOTFS/libnvram.so
+  cp firmware/bins/libnvram.so $ROOTFS/libnvram.so
   
   # Copy pre-built libcircled.so library (or compile your own version)
-  cp binaries/libcircled.so $ROOTFS/libcircled.so
-  
-  # Copy circled.sh script
-  cp circled.sh $ROOTFS/circled.sh
+  cp firmware/bins/libcircled.so $ROOTFS/libcircled.so
 
   # Patch the circled binary
-  python3 circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
+  python3 firmware/circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
+  
+  # Copy circled.sh script
+  cp firmware/circled.sh $ROOTFS/circled.sh
   ```
+- Copy the root filesystem to an ARMHF guest system (e.g. a *QEMU* ARMHF Debian VM)
+### 1.2 Guest: ARMHF
+- In the following, we assume that variable $ROOTFS points to the copied firmware root filesystem
 
 ## 1. Individual Binary Emulation
 - Extract the R6700v3 firmware with *binwalk*:
