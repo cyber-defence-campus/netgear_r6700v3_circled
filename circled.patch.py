@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 import argparse
+import os
+import stat
 from   shutil   import copyfile
 
 base_addr = 0x8000
@@ -10,7 +12,7 @@ opcodes   = b"\x00\x00\xa0\xe3"    # mov r0, #0
 def main() -> None:
     # Argument parsing
     description = """
-    Remove anti-debugging check (LD_PRELOAD) in the binary circled.
+    Remove anti-debugging checks in the binary `circled` so we can use LD_PRELOAD.
     """
     parser = argparse.ArgumentParser(description=description,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -25,6 +27,10 @@ def main() -> None:
     with open(args.circled_patched, "rb+") as f:
         f.seek(patch_addr-base_addr)
         f.write(opcodes)
+
+    # Add execute permissions to binary
+    st = os.stat(args.circled_patched)
+    os.chmod(args.circled_patched, st.st_mode | stat.S_IEXEC)
     
 if __name__ == "__main__":
     main()
