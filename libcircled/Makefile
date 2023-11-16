@@ -1,4 +1,5 @@
-CC      = arm-linux-gcc
+# X-compile with `CC=arm-linux-gcc make`
+CC      ?= gcc
 CFLAGS  = -Wall -fPIC -D_GNU_SOURCE
 LDFLAGS = -shared -ldl
 
