@@ -40,8 +40,24 @@
   ```
 - In case you use the HTTP server with the default stage 0 payload, listen for the reverse shell on TCP/5001:
   ```
-  ncat -l -p 5001
+  server/bins/ncat -l -p 5001
   ```
+- Emulate the *circled* binary
+  - Configure conservative ASLR:
+    ```
+    echo 1 | sudo tee /proc/sys/kernel/randomize_va_spac
+    ```
+  - Chroot into the root filesystem
+    - `sudo mount -t proc /proc/ ./squashfs-root/proc/`
+    - `sudo mount -t sysfs /sys/ ./squashfs-root/sys/`
+    - `sudo mount -o bind /dev/ ./squashfs-root/dev/`
+    - `sudo chroot ./squashfs-root/ /bin/sh`
+    - `export SHELL=/bin/sh`
+  - Execute the `circled` binary:
+    ```
+    ./circled.sh
+    ./circled.sh --gdb
+    ```
 ## 1. Individual Binary Emulation
 - Extract the R6700v3 firmware with *binwalk*:
   ```
