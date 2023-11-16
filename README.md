@@ -31,8 +31,7 @@
   # Patch the circled binary
   python3 circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
   ```
-- Use *QEMU* to boot an ARMHF Debian system
-- Upload the firmware's root filesystem (`$ROOTFS`) to the ARM Debian system
+
 ## 1. Individual Binary Emulation
 - Extract the R6700v3 firmware with *binwalk*:
   ```
