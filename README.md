@@ -26,7 +26,7 @@
   cp firmware/bins/libcircled.so $ROOTFS/libcircled.so
 
   # Patch the circled binary
-  python3 circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
+  python3 firmware/circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
   
   # Copy circled.sh script
   cp firmware/circled.sh $ROOTFS/circled.sh
