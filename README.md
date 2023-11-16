@@ -1,4 +1,36 @@
 # Exploiting a Stack Buffer Overflow on the Netgear R6700v3
+## 1. Individual Binary Emulation
+- Use *QEMU* to boot an ARMHF Debian system
+- Install the following dependencies:
+  - git
+  - binwalk (https://github.com/ReFirmLabs/binwalk)
+- Clone the repository:
+  ```
+  git clone https://github.com/pdamian/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
+- Extract the R6700v3 firmware with *binwalk*:
+  ```
+  binwalk -e -M -C firmware/ firmware/R6700v3-V1.0.4.120_10.0.91.zip
+  ```
+- Copy files to the firmware's root filesystem:
+  ```
+  # Variable to the root filesystem
+  export ROOTFS="$(pwd)/firmware/_R6700v3-V1.0.4.120_10.0.91.zip.extracted/_R6700v3-V1.0.4.120_10.0.91.chk.extracted/squashfs-root"
+  
+  # Copy pre-built gdbserver binary (or compile your own statically-linked version)
+  cp binaries/gdbserver $ROOTFS/usr/bin/gdbserver
+  
+  # Copy pre-built libnvram.so library (or compile your own version)
+  cp binaries/libnvram.so $ROOTFS/libnvram.so
+  
+  # Copy pre-built libcircled.so library (or compile your own version)
+  cp binaries/libcircled.so $ROOTFS/libcircled.so
+  
+  # Copy circled.sh script
+  cp circled.sh $ROOTFS/circled.sh
+
+  # Patch the circled binary
+  python3 circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
+  ```
 - Use *QEMU* to boot an ARMHF Debian system
 - Upload the firmware's root filesystem (`$ROOTFS`) to the ARM Debian system
 ## 1. Individual Binary Emulation
@@ -51,33 +83,3 @@ make
 cp libcircled.so $ROOTFS/libcricled.so
 cd ../
 ```
-## 4. Setup
-### Ubuntu Host
-- Clone the repository:
-  ```
-  git clone https://github.com/pdamian/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
-- Extract the R6700v3 firmware with *binwalk*:
-  ```
-  binwalk -e -M -C firmware/ firmware/R6700v3-V1.0.4.120_10.0.91.zip
-  ```
-- Copy files to the firmware's root filesystem:
-  ```
-  # Variable to the root filesystem
-  export ROOTFS="`pwd`/firmware/_R6700v3-V1.0.4.120_10.0.91.zip.extracted/_R6700v3-V1.0.4.120_10.0.91.chk.extracted/squashfs-root"
-  
-  # Copy prebuilt gdbserver binary (or cross-compile your own statically-linked version)
-  cp binaries/gdbserver $ROOTFS/usr/bin/gdbserver
-  
-  # Copy prebuilt libnvram.so library (or cross-compile your own version)
-  cp binaries/libnvram.so $ROOTFS/libnvram.so
-  
-  # Copy prebuilt libcircled.so library (or cross-compile your own version)
-  cp binaries/libcircled.so $ROOTFS/libcircled.so
-  
-  # Copy circled.sh script
-  cp circled.sh $ROOTFS/circled.sh
-
-  # Patch the circled binary
-  python3 circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
-  ```
-### QEMU Debian ARMHF VM
