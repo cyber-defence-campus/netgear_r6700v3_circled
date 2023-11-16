@@ -1,8 +1,15 @@
 # Ignore GDB history
 .gdb_history
-# Ignore all yaml files (but the init yaml files)
-*.yaml
-!*.init.yaml
-# Ignore all binary files (but the circled file)
-squashfs-root/bin/*
-!squashfs-root/bin/circled
+# Ignore unpacked firmware files
+firmware/*
+!firmware/R6700v3-V1.0.4.120_10.0.91.zip
+!firmware/bins/*
+!firmware/circled.patch.py
+!firmware/circled.sh
+# Ignore object files
+libcircled/*
+!libcircled/Makefile
+!libcircled/circled.c
+# Ignore all .yaml file (but the .init.yaml files)
+morion/*.yaml
+!morion/*.init.yaml
