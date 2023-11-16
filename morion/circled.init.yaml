@@ -33,6 +33,36 @@ states:
       '0x000120fb': ['0x25']  # '%'
       '0x000120fc': ['0x73']  # 's'
       '0x000120fd': ['0x00']  #
+      # TODO: Test ROP Chain
+      '0xbeffc904': ['0x54']
+      '0xbeffc905': ['0x79']
+      '0xbeffc906': ['0xff']
+      '0xbeffc907': ['0xff']
+# TODO: Test ROP Chain
+ropchain_test:
+# Gadget 0
+- preconditions:
+    regs:
+    mems:
+      '0xbeffc88c': '0x78'  # [sp+8*4] == 0xec78
+      '0xbeffc88d': '0xec'
+      '0xbeffc88e': '0x00'
+      '0xbeffc88f': '0x00'
+  instructions:
+  - ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
+# Gadget 1
+- preconditions:
+    regs:
+      sp: '0xbeffc890'
+  instructions:
+  - ['0x0000ec78', 84 20 9d e5, 'ldr r2, [sp, #132]', '']
+  - ['0x0000ec7c', 02 00 84 e0, 'add r0, r4, r2', '']
+- preconditions:
+    regs:
+      r0: '0xbeffc126'
+      r2: '0xffff7954'
+  instructions:
+  - ['0x0000ec80', 06 ea ff eb, 'bl 94a0', '']
 # Simple ROP Chain (crashing)
 ropchain_simple:
 # Gadget 0

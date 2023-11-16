@@ -8,66 +8,68 @@ set arm fallback-mode arm
 target remote localhost:3000
 
 # Addresses
-set $main = 0xe3f0
-set $daemon = 0xe5fc
-set $system_mount_circle = 0xe6a4
-set $fork = 0xe7d4
-set $system_cp_firmware = 0xf7d8
-set $updating_database = 0xf1a0
+set $main                     = 0xe3f0
+set $before_daemon            = 0xe5fc
+set $after_daemon             = 0xe600
+set $before_fork              = 0xe7d4
+set $after_fork               = 0xe7d8
+set $before_updating_database = 0xf1a0
+set $after_updating_database  = 0xf1a4
+set $before_fgets             = 0xcfc0
 
 # Ingore the cancellation of threads
 handle SIG32 nostop
 handle SIG33 nostop
 
-# Let GDB follow the parent process only
+# Let GDB follow either the parent or the child, but not both
 set detach-on-fork on
+
+# Let GDB follow the parent process
 set follow-fork-mode parent
 
-# Break before invocation of function daemon
-break *$daemon
+# Break before function daemon
+break *$before_daemon
 continue
 
 # Let GDB follow the child process
 set follow-fork-mode child
 
-# Break before invocation of function system
-break *$system_mount_circle
+# Break after function daemon
+break *$after_daemon
 continue
 
 # Let GDB follow the parent process
 set follow-fork-mode parent
 
-# Break before invocation of function fork
-break *$fork
+# Break before function fork
+break *$before_fork
 continue
 
 # Let GDB follow the child process
 set follow-fork-mode child
 
-# Break before invocation of function system
-break *$system_cp_firmware
+# Break after function fork
+break *$after_fork
 continue
 
 # Let GDB follow the parent process
 set follow-fork-mode parent
 
-# Determine callee-save registers before invocation of updating_database (use original circleinfo.txt)
-break *$updating_database
+# Determine callee-save registers before function updating_database (use original circleinfo.txt)
+break *$before_updating_database
 continue
 echo \n
 echo Callee-save registers before updating_database: \n
 info registers r4 r5 r6 r7 r8 r9 r10 r11
 
-# Break before invocation of function fgets
-break *0xcfc0
+# Break before function fgets
+break *$before_fgets
 continue
 
 # Trace till return of function updating_database
 morion_trace debug circled.yaml 0xf1a4
 
 # Determine callee-save registers after invocation of updating_database (use original circleinfo.txt)
-break *($updating_database+4)
-continue
 echo \n
 echo Callee-save registers after updating_database: \n
 info registers r4 r5 r6 r7 r8 r9 r10 r11
