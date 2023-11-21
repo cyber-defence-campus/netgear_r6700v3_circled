@@ -47,6 +47,7 @@
   export SHELL=/bin/sh
   ```
 ## 2. Morion Tracing
+Use the following steps to trace the binary *circled* with a proof-of-vulnerability (PoV) payload (as e.g. identified by a fuzzer):
 | Step | System         | Command                                                                      | Explanation                                                  |
 |------|----------------|------------------------------------------------------------------------------|--------------------------------------------------------------|
 | 1    | Guest          | `python3 server/circled.server.py --payload "pov"`                           | Start HTTP server delivering proof-of-vulnerability payloads |
