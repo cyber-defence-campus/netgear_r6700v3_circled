@@ -15,7 +15,8 @@ set $before_fork              = 0xe7d4
 set $after_fork               = 0xe7d8
 set $before_updating_database = 0xf1a0
 set $after_updating_database  = 0xf1a4
-set $before_fgets             = 0xcfc0
+set $before_vulnerability     = 0xcfc0
+set $after_vulnerability      = 0xcf24
 
 # Ingore the cancellation of threads
 handle SIG32 nostop
@@ -62,14 +63,10 @@ echo \n
 echo Callee-save registers before updating_database: \n
 info registers r4 r5 r6 r7 r8 r9 r10 r11
 
-# Break before function fgets
-break *$before_fgets
+# Break before vulnerabilty
+break *$before_vulnerability
 continue
 
-# Trace till return of function updating_database
-morion_trace debug circled.yaml 0xf1a4
-
-# Determine callee-save registers after invocation of updating_database (use original circleinfo.txt)
-echo \n
-echo Callee-save registers after updating_database: \n
-info registers r4 r5 r6 r7 r8 r9 r10 r11
+# Break after vulnerability
+break *$after_vulnerability
+continue
