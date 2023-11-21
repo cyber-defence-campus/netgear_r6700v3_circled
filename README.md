@@ -4,7 +4,7 @@
 - Install the following dependencies:
   - git
   - binwalk (https://github.com/ReFirmLabs/binwalk)
-- Clone the repository:
+- Clone the project repository:
   ```
   git clone https://github.com/pdamian/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
 - Extract the R6700v3 firmware with *binwalk*:
@@ -13,22 +13,22 @@
   ```
 - Copy the following files to the firmware's root filesystem:
   ```
-  # Variable to the root filesystem
+  # Variable pointing to the root filesystem
   export ROOTFS="$(pwd)/firmware/_R6700v3-V1.0.4.120_10.0.91.zip.extracted/_R6700v3-V1.0.4.120_10.0.91.chk.extracted/squashfs-root"
   
-  # Copy pre-built gdbserver binary (or compile your own statically-linked version)
+  # Copy pre-built gdbserver binary (or compile your own statically-linked version; arch: armv7-eabihf, libc: uclibc)
   cp firmware/bins/gdbserver $ROOTFS/gdbserver
   
-  # Copy pre-built libnvram.so library (or compile your own version)
+  # Copy pre-built libnvram.so library (or compile your own version; arch: armv7-eabihf, libc: uclibc)
   cp firmware/bins/libnvram.so $ROOTFS/libnvram.so
   
-  # Copy pre-built libcircled.so library (or compile your own version)
+  # Copy pre-built libcircled.so library (or compile your own version; arch: armv7-eabihf, libc: uclibc)
   cp firmware/bins/libcircled.so $ROOTFS/libcircled.so
 
-  # Patch the circled binary
+  # Patch out the anti-debugging functionality (allow LDPRELOAD) of the circled binary
   python3 firmware/circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
   
-  # Copy circled.sh script
+  # Copy circled.sh script (wrapper to emulate binary circled)
   cp firmware/circled.sh $ROOTFS/circled.sh
   ```
 - Copy the directories `$ROOTFS/` and `server/` to an ARMHF guest system (e.g. a *QEMU* ARMHF Debian VM).
