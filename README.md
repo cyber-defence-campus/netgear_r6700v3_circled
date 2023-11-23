@@ -48,11 +48,21 @@
   ```
 ## 2. Morion Tracing
 Use the following steps to trace the binary *circled* with a proof-of-vulnerability (PoV) payload (as e.g. identified by a fuzzer):
-| Step | System         | Command                                                                      | Explanation                                                  |
-|------|----------------|------------------------------------------------------------------------------|--------------------------------------------------------------|
-| 1    | Guest          | `python3 server/circled.server.py --payload "pov"`                           | Start HTTP server delivering proof-of-vulnerability payloads |
-| 2    | Guest (chroot) | `/circled.sh --gdb`                                                          | Emulate binary *circled* with GDB attached                   |
-| 3    | Host  (morion) | `cp circled.init.yaml circled.yaml && gdb-multiarch -q -x circled.trace.gdb` | Trace *circled* binary                                       |
+| Step | System         | Command                                                                      | Explanation                                                             |
+|------|----------------|------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| 1    | Guest          | `python3 server/circled.server.py --payload "pov"`                           | Start HTTP server delivering proof-of-vulnerability (PoV) payloads      |
+| 2    | Guest (chroot) | `/circled.sh --gdb`                                                          | Emulate binary *circled* with GDB attached (and therefore no ASRL)      |
+| 3    | Host  (morion) | `cp circled.init.yaml circled.yaml && gdb-multiarch -q -x circled.trace.gdb` | Collect an execution trace of the binary *circled*                      |
+
+## 3. Morion Symbolic Execution
+Use the following steps to execute the collected trace symbolically and analyse for potential control flow hijacking vulnerabilities:
+| Step | System         | Command                                                                      | Explanation                                                             |
+|------|----------------|------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| 4    | Host  (morion) | `morion_control_hijacker circled.yaml --disallow_user_inputs`                | Symbolically analyse the trace for potential control flow hijacks       |
+| 5.1  | Host  (morion) | `morion_control_hijacker circled.yaml --skip_state_analysis`                 | Symbolically analyse the trace for potential control flow hijacks       |
+| 5.2  | Host  (morion) | `quit`                                                                       | Ignore notification about unrestricted `r11/fp` register                |
+| 5.3  | Host  (morion) | `%run -i circled.rop1.py`                                                    | Try jump to ROP gadget 1: `0xc9b8: mov r0, r6; bl #0x94a0 <system@plt>` |
+| 5.4  | Host  (morion) | `%run -i circled.rop2.py`                                                    | Put argument for function `system@plt`                                  |
 ## 2. References
 - Emulating Netgear R6700v3 cicled binary:
   - https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2
