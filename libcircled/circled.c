@@ -46,6 +46,10 @@ int system(const char *command) {
         printf("    - new command: '%s'\n", new_command);
         return orig_system(new_command);
     }
+    // Print debug output
+    printf("[+] Hook function 'system':\n");
+    printf("    -  command: %p\n", command);
+    printf("    - *command: '%s'\n", command);
     // Call original system function
     return orig_system(command);
 }
