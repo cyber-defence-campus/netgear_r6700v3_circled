@@ -63,6 +63,8 @@ Use the following steps to execute the collected trace symbolically and analyse 
 | 5.2  | Host  (morion) | `quit`                                                                       | Ignore notification about unrestricted `r11/fp` register                |
 | 5.3  | Host  (morion) | `%run -i circled.rop1.py`                                                    | Try jump to ROP gadget 1: `0xc9b8: mov r0, r6; bl #0x94a0 <system@plt>` |
 | 5.4  | Host  (morion) | `%run -i circled.rop2.py`                                                    | Put argument for function `system@plt`                                  |
+| 5.5  | Host  (morion) | `quit`                                                                       | Terminate                                                               |
+| 6    | Host  (morion) | `morion_rop_generator circeld.yaml default`                                  | Generate exploit payload for a specified ROP chain                      |
 ## 2. References
 - Emulating Netgear R6700v3 cicled binary:
   - https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2
