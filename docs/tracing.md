@@ -1,5 +1,7 @@
 # Table of Contents
 1. [Tracing](./tracing.md)
+   1. [Hooks](./tracing.md#Hooks)
+   2. [States](./tracing.md#states)
 # Tracing
 ## Hooks
 [circled.init.yaml](../morion/circled.init.yaml):
