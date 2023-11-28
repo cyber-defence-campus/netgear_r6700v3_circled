@@ -28,7 +28,7 @@ set up.
 ### GDB Commands Script
 The file [circled.trace.gdb](../morion/circled.trace.gdb) is a commands script to be used with the
 _GNU Project Debugger (GDB)_. It contains GDB commands that bring the target to the point from which
-we aim to start collecting a trace. As show below, the trace can be collected with the command
+we aim to start collecting a trace. As show below, the trace can then be collected with the command
 `morion_trace`, a custom GDB command implemented by [Morion](https://github.com/pdamian/morion)
 (usage: `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
 ```
@@ -46,6 +46,12 @@ continue
 morion_trace debug circled.yaml 0xf1a4
 [...]
 ```
+In the example above, the trace will start and stop at addresses `0xcfc0` and `0xf1a4`,
+respectively. Start and stop addresses of the trace need to be selected adequately for the intended
+purpose. In our specific case this means that the trace should include both the points where
+attacker-controllable inputs are introduced and where these inputs lead to a potential vulnerability
+(e.g. the point the binary is crashing due to a memory violation situation - as for instance
+triggered by a fuzzer).
 ### Hooks
 [circled.init.yaml](../morion/circled.init.yaml):
 ```
