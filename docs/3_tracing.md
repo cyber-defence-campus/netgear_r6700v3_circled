@@ -1,7 +1,7 @@
 # Table of Contents
-1. [Setup](./1_setup.md)
-2. [Emulation](./2_emulation.md)
-3. [Tracing](./3_tracing.md)
+1. [Setup](./1_setup.md#setup)
+2. [Emulation](./2_emulation.md#emulation)
+3. [Tracing](./3_tracing.md#tracing)
    1. [Setup](./3_tracing.md#setup)
       1. [GDB Commands Script](./3_tracing.md#gdb-commands-script)
       2. [Init YAML File](./3_tracing.md#init-yaml-file)
@@ -10,8 +10,8 @@
       1. [Loading the Trace File](./3_tracing.md#loading-the-trace-file)
       2. [Collecting the Trace](./3_tracing.md#collecting-the-trace)
       3. [How Hooking Works](./3_tracing.md#how-hooking-works)
-4. [Symbolic Execution](./4_symbex.md)
-5. [Exploitation](./5_exploitation.md)
+4. [Symbolic Execution](./4_symbex.md#symbolic-execution)
+5. [Exploitation](./5_exploitation.md#exploitation)
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
 (known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
