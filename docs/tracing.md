@@ -64,7 +64,8 @@ states:
 [...]
 ```
 ## Run
-Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
+Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
+_proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
 1. Start a HTTP server, delivering PoV payloads:
    - System: [Guest](./setup.md)
    - Command:
@@ -86,7 +87,10 @@ Use the following steps to create a **trace** of the binary _circled_, while it 
      ```
 ## Results
 ### Loading the Trace File
-As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](../morion/circled.init.yaml)) may define concrete **register** (`states:entry:regs:`) and/or **memory** (`states:entry:mems:`) values, which are set (using GDB) before starting the actual tracing process:
+As seen above, the file `circled.yaml` (initially a copy of
+[circled.init.yaml](../morion/circled.init.yaml)) may define concrete **register**
+(`states:entry:regs:`) and/or **memory** (`states:entry:mems:`) values, which are set (using GDB)
+before starting the actual tracing process:
 ```
 [...]
 [2023-11-28 08:56:32] [INFO] Start loading trace file 'circled.yaml'...
@@ -99,7 +103,9 @@ As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](
 [2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
-Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect (see also [How Hooking Works](./tracing.md#how-hooking-works)) when collecting the concrete execution trace:
+Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect
+(see also [How Hooking Works](./tracing.md#how-hooking-works)) when collecting the concrete
+execution trace:
 ```
 [2023-11-28 08:56:32] [DEBG] Hooks:
 [2023-11-28 08:56:32] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
@@ -116,11 +122,12 @@ Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that t
 [...]
 [2023-11-28 08:56:32] [INFO] ... finished loading trace file 'circled.yaml'.
 ```
-This finishes the loading of the trace file and the actual tracing can start.
+Once this is done, the actual tracing can start.
 ### Collecting the Trace
 Collecting a trace includes the recording of the following pieces of information:
 - Executed assembly **instructions** (e.g. `0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!`)
-- **Initial values** of all accessed registers and memory locations (e.g. `r3 = 0x0`, `r5 = 0xbeffc868` or `0xbeffc104 = 0x00`)
+- **Initial values** of all accessed registers and memory locations (e.g. `r3 = 0x0`,
+  `r5 = 0xbeffc868` or `0xbeffc104 = 0x00`)
 ```
 [2023-11-28 08:56:32] [INFO] Start tracing...
 [2023-11-28 08:56:32] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!   # store 1st assembly instruction
@@ -138,9 +145,12 @@ Collecting a trace includes the recording of the following pieces of information
 [2023-11-28 08:56:32] [DEBG] 	0x0000d233 = 0xff                                # store value of memory 0x0000d233 (initial access)
 [...]
 ```
-The initial values of register (`states:entry:regs:`) and memory locations (`states:entry:mems:`) are stored, so that they can later be set in the symbolic context. This is needed so that the symbolic execution engine uses the correct concrete values.
+The initial values of register (`states:entry:regs:`) and memory locations (`states:entry:mems:`)
+are stored, so that they can later be set in the symbolic context. This is needed so that the
+symbolic execution engine uses the correct concrete values.
 
-The collected information is stored in the `circled.yaml` file, i.e. the file is updated as shown below:
+The collected information (instructions and initial values) is stored in the `circled.yaml` file,
+i.e. the file is updated as shown below:
 ```
 [...]
 instructions:
@@ -172,8 +182,15 @@ states:
       '0xbeffc104': ['0x00']
       [...]
 ```
+The file `circled.yaml` serves as input for subsequent symbolic execution runs (see also
+[Symbolic Execution](./symbex.md)).
 ### How Hooking Works
-mode:model
+Hooking allows a specified **sequence of assembly instructions** (e.g. corresponding to a called
+function) not to be added to the trace. In consequence, these instructions will not be executed
+by the symbolic execution engine and have therefore no effect on the symbolic state. Typically, this
+is required for **scalability** reasons or to abstract away **environment interactions** (e.g. 3rd
+party libraries, inter-process communication, Kernel, device drivers, coprocessors, etc.).
+#### Mode: Model
 ```
 [...]
 [2023-11-28 08:56:32] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5                                            #                                                                               
@@ -208,7 +225,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 [2023-11-28 08:56:33] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
 [2023-11-28 08:56:33] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0                                            #  
 ```
-mode:skip
+#### Mode: Skip
 ```
 [...]
 [2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
