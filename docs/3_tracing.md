@@ -4,8 +4,7 @@
 3. [Tracing](./3_tracing.md)
    1. [Setup](./3_tracing.md#setup)
       1. [GDB Commands Script](./3_tracing.md#gdb-commands-script)
-      2. [Hooks](./3_tracing.md#hooks)
-      3. [States](./3_tracing.md#states)
+      2. [Init YAML File](./3_tracing.md#init-yaml-file)
    2. [Run](./3_tracing.md#run)
    3. [Discussion](./3_tracing.md#discussion)
       1. [Loading the Trace File](./3_tracing.md#loading-the-trace-file)
@@ -29,9 +28,9 @@ set up.
 ### GDB Commands Script
 The file [circled.trace.gdb](../morion/circled.trace.gdb) is a commands script to be used with the
 _GNU Project Debugger (GDB)_. It contains GDB commands that bring the target to the point from which
-we aim to start collecting a trace. As show below, the trace can then be collected with the command
-`morion_trace`, a custom GDB command implemented by [Morion](https://github.com/pdamian/morion)
-(usage: `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
+to start tracing. As show below, the trace can then be collected with the command `morion_trace`, a
+custom GDB command implemented by [Morion](https://github.com/pdamian/morion) (usage:
+`morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
 ```
 [...]
 # Addresses
@@ -53,7 +52,28 @@ purpose. In our specific case this means that the trace should include both the 
 attacker-controllable inputs are introduced and where these inputs lead to a potential vulnerability
 (e.g. the point the binary is crashing due to a memory violation situation - as for instance
 triggered by a fuzzer).
-### Hooks
+### Init YAML File
+Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined.
+#### States
+In the [circled.init.yaml](../morion/circled.init.yaml) file we first define information about the
+entry state (`states:entry`). More specifically, we define concrete register and/or memory values,
+that [Morion](https://github.com/pdamian/morion), respectively GDB will set before collecting the
+trace (see also [Loading the Trace File](./3_tracing.md#loading-the-trace-file)).
+```
+[...]
+states:
+  entry:
+    regs:
+    mems:
+      '0x000120f8': ['0x25']  # '%'
+      '0x000120f9': ['0x73']  # 's'
+      '0x000120fa': ['0x20']  # ' '
+      '0x000120fb': ['0x25']  # '%'
+      '0x000120fc': ['0x73']  # 's'
+      '0x000120fd': ['0x00']  #
+[...]
+```
+#### Hooks
 [circled.init.yaml](../morion/circled.init.yaml):
 ```
 hooks:
@@ -68,21 +88,6 @@ hooks:
     - {entry: '0xd094', leave: '0xd098', mode: 'model'}  # fgets@plt
     sscanf:
     - {entry: '0xcffc', leave: '0xd000', mode: 'model'}  # sscanf@plt
-[...]
-```
-### States
-[circled.init.yaml](../morion/circled.init.yaml):
-```
-[...]
-states:
-  entry:
-    mems:
-      '0x000120f8': ['0x25']  # '%'
-      '0x000120f9': ['0x73']  # 's'
-      '0x000120fa': ['0x20']  # ' '
-      '0x000120fb': ['0x25']  # '%'
-      '0x000120fc': ['0x73']  # 's'
-      '0x000120fd': ['0x00']  #
 [...]
 ```
 ## Run
