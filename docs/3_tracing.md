@@ -16,7 +16,8 @@
 In the following, we document how to collect a **concrete execution trace** of our target, a
 (known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
 setup, i.e. despite our host system being x86-based, the target runs on an (emulated) ARMv7-based
-device (see also  [Emulation](./2_emulation.md)).
+device (see also  [Emulation](./2_emulation.md)). The collected trace may later on be used for
+different symbolic execution runs/analyses (see also [Symbolic Execution](./4_symbex.md)).
 <p align="center">
   <img src="../images/Morion_Overview.svg "Morion Overview" alt="Morion Overview"/>
 </p>
