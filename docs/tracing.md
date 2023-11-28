@@ -186,10 +186,11 @@ The file `circled.yaml` serves as input for subsequent symbolic execution runs (
 [Symbolic Execution](./symbex.md)).
 ### How Hooking Works
 Hooking allows a specified **sequence of assembly instructions** (e.g. corresponding to a called
-function) not to be added to the trace. In consequence, these instructions will not be executed
-by the symbolic execution engine and have therefore no effect on the symbolic state. Typically, this
-is required for **scalability** reasons or to abstract away **environment interactions** (e.g. 3rd
-party libraries, inter-process communication, Kernel, device drivers, coprocessors, etc.).
+function) not to be added to the trace. In consequence, these instructions will later on not be 
+executed by the symbolic execution engine and have therefore no effect on the symbolic state.
+Typically, this is required to address **scalability** issues of symbolic execution or to abstract
+away **environment interactions** (e.g. 3rd party libraries, inter-process communication, Kernel,
+device drivers, coprocessors, etc.).
 #### Mode: Model
 ```
 [...]
