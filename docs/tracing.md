@@ -7,6 +7,9 @@
       2. [Hooks](./tracing.md#hooks)
       3. [States](./tracing.md#states)
    2. [Run](./tracing.md#run)
+   3. [Analysis](./tracing.md#analysis)
+      1. [Loading the Trace File](./tracing.md#loading-the-trace-file)
+      2. [Collecting the Trace](./tracing.md#collecting-the-trace)
 4. [Symbolic Execution](./symbex.md)
 # Tracing
 ## Setup
@@ -80,3 +83,45 @@ Use the following steps to create a **trace** of the binary _circled_, while it 
      cp circled.init.yaml circled.yaml;       # Start with a fresh circled.yaml file
      gdb-multiarch -q -x circled.trace.gdb;   # Use GDB for cross-platform remote trace collection
      ```
+## Analysis
+### Loading the Trace File
+As seen above, the file `circled.yaml` (copy of `circled.init.yaml`) contains concrete register and/or memory values, which are set before starting the tracing process:
+```
+[...]
+[2023-11-28 08:56:32] [INFO] Start loading trace file 'circled.yaml'...
+[2023-11-28 08:56:32] [DEBG] Regs:
+[2023-11-28 08:56:32] [DEBG] Mems:
+[2023-11-28 08:56:32] [DEBG] 	0x000120f8 = 0x25 %
+[2023-11-28 08:56:32] [DEBG] 	0x000120f9 = 0x73 s
+[2023-11-28 08:56:32] [DEBG] 	0x000120fa = 0x20  
+[2023-11-28 08:56:32] [DEBG] 	0x000120fb = 0x25 %
+[2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
+[2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
+```
+```
+[2023-11-28 08:56:32] [DEBG] Hooks:
+[2023-11-28 08:56:32] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000d044 'lib:func_hook (on=leave, mode=skip)'
+[...]
+[2023-11-28 08:56:32] [DEBG] 	0x0000c9c4 'lib:func_hook (on=entry, mode=skip)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000c9c8 'lib:func_hook (on=leave, mode=skip)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000cfe0 'libc:fgets (on=entry, mode=model)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000cfe4 'libc:fgets (on=leave, mode=model)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000d094 'libc:fgets (on=entry, mode=model)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000d098 'libc:fgets (on=leave, mode=model)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000cffc 'libc:sscanf (on=entry, mode=model)'
+[2023-11-28 08:56:32] [DEBG] 	0x0000d000 'libc:sscanf (on=leave, mode=model)'
+[...]
+[2023-11-28 08:56:32] [INFO] ... finished loading trace file 'circled.yaml'.
+```
+### Collecting the Trace
+```
+[2023-11-28 08:56:32] [INFO] Start tracing...
+[2023-11-28 08:56:32] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!                               #                                                                               
+[2023-11-28 08:56:32] [DEBG] Regs:
+[2023-11-28 08:56:32] [DEBG] 	r3 = 0x0
+[2023-11-28 08:56:32] [DEBG] 	r5 = 0xbeffc868
+[2023-11-28 08:56:32] [DEBG] Mems:
+[2023-11-28 08:56:32] [DEBG] 	0xbeffc104 = 0x00
+[...]
+```
