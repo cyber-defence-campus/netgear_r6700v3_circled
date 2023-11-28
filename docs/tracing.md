@@ -99,7 +99,7 @@ As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](
 [2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
-Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect when collecting the concrete execution trace:
+Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect (see also [How Hooking Works](./tracing.md#how-hooking-works)) when collecting the concrete execution trace:
 ```
 [2023-11-28 08:56:32] [DEBG] Hooks:
 [2023-11-28 08:56:32] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
@@ -120,7 +120,7 @@ This finishes the loading of the trace file and the actual tracing can start.
 ### Collecting the Trace
 Collecting a trace includes the recording of the following pieces of information:
 - Executed assembly **instructions** (e.g. `0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!`)
-- **Initial values** of accessed registers and memory locations (e.g. `r3 = 0x0`, `r5 = 0xbeffc868` or `0xbeffc104 = 0x00`)
+- **Initial values** of all accessed registers and memory locations (e.g. `r3 = 0x0`, `r5 = 0xbeffc868` or `0xbeffc104 = 0x00`)
 ```
 [2023-11-28 08:56:32] [INFO] Start tracing...
 [2023-11-28 08:56:32] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!   # store 1st assembly instruction
@@ -138,7 +138,7 @@ Collecting a trace includes the recording of the following pieces of information
 [2023-11-28 08:56:32] [DEBG] 	0x0000d233 = 0xff                                # store value of memory 0x0000d233 (initial access)
 [...]
 ```
-The initial register (`states:entry:regs:`) and memory (`states:entry:mems:`) values are stored, so that they can later be set in the symbolic context. This is needed so that the symbolic execution engine uses the correct concrete values.
+The initial values of register (`states:entry:regs:`) and memory locations (`states:entry:mems:`) are stored, so that they can later be set in the symbolic context. This is needed so that the symbolic execution engine uses the correct concrete values.
 
 The collected information is stored in the `circled.yaml` file, i.e. the file is updated as shown below:
 ```
