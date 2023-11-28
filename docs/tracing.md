@@ -85,7 +85,7 @@ Use the following steps to create a **trace** of the binary _circled_, while it 
      ```
 ## Results
 ### Loading the Trace File
-As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](../morion/circled.init.yaml)) defines **concrete register and/or memory values**, which are set before starting the tracing process:
+As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](../morion/circled.init.yaml)) defines **concrete register and/or memory values** (`states: entry`), which are set before starting the actual tracing process:
 ```
 [...]
 [2023-11-28 08:56:32] [INFO] Start loading trace file 'circled.yaml'...
@@ -98,7 +98,7 @@ As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](
 [2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
-Also, the **hooks** defined in `circled.yaml` are applied, so that they execute when collecting the concrete execution trace:
+Also, the **hooks** defined in `circled.yaml` are applied, so that they take effect when collecting the concrete execution trace:
 ```
 [2023-11-28 08:56:32] [DEBG] Hooks:
 [2023-11-28 08:56:32] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
@@ -115,15 +115,68 @@ Also, the **hooks** defined in `circled.yaml` are applied, so that they execute 
 [...]
 [2023-11-28 08:56:32] [INFO] ... finished loading trace file 'circled.yaml'.
 ```
-This finishes the loading of the trace file, and the actual tracing can start.
+This finishes the loading of the trace file and the actual tracing can start.
 ### Collecting the Trace
+Collecting a trace includes the recording of the following pieces of information:
+- Executed assembly **instructions** (e.g. `0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!`)
+- **Initial values** of accessed registers and memory locations (e.g. `r3 = 0x0` or `0xbeffc104 = 0x00`)
 ```
 [2023-11-28 08:56:32] [INFO] Start tracing...
-[2023-11-28 08:56:32] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!                               #                                                                               
+[2023-11-28 08:56:32] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!   # store 1st assembly instruction
 [2023-11-28 08:56:32] [DEBG] Regs:
-[2023-11-28 08:56:32] [DEBG] 	r3 = 0x0
-[2023-11-28 08:56:32] [DEBG] 	r5 = 0xbeffc868
+[2023-11-28 08:56:32] [DEBG] 	r3 = 0x0                                         # store value of accessed register r3 (initial access)
+[2023-11-28 08:56:32] [DEBG] 	r5 = 0xbeffc868                                  # store value of accessed register r5 (initial access)
 [2023-11-28 08:56:32] [DEBG] Mems:
-[2023-11-28 08:56:32] [DEBG] 	0xbeffc104 = 0x00
+[2023-11-28 08:56:32] [DEBG] 	0xbeffc104 = 0x00                                # store value of memory 0xbeffc104 (inital access)
+[2023-11-28 08:56:32] [DEBG] 0x0000cfc4 (64 32 9f e5): ldr r3, [pc, #0x264]      # store 2nd assembly instruction
+[2023-11-28 08:56:32] [DEBG] Regs:                                               # ignore value of accessed register r3 (stored before)
+[2023-11-28 08:56:32] [DEBG] Mems:
+[2023-11-28 08:56:32] [DEBG] 	0x0000d230 = 0xbc                                # store value of memory 0x0000d230 (initial access)
+[2023-11-28 08:56:32] [DEBG] 	0x0000d231 = 0x6a j                              # store value of memory 0x0000d231 (initial access)
+[2023-11-28 08:56:32] [DEBG] 	0x0000d232 = 0xff                                # store value of memory 0x0000d232 (initial access)
+[2023-11-28 08:56:32] [DEBG] 	0x0000d233 = 0xff                                # store value of memory 0x0000d233 (initial access)
 [...]
+```
+The initial register and memory values are stored (`states: entry`), so that they can later be set in the symbolic context. This is needed so that the symbolic execution engine uses the correct concrete values.
+TODO:
+```
+[...]
+[2023-11-28 08:56:32] [INFO] --> Hook: 'libc:fgets (on=entry, mode=model)'
+[2023-11-28 08:56:32] [INFO]           'char *fgets(char *restrict s, int n, FILE *restrict stream);'
+[2023-11-28 08:56:32] [INFO] 	 s      = 0xbeffc104
+[2023-11-28 08:56:32] [INFO] 	 n      = 1024
+[2023-11-28 08:56:32] [INFO] 	 stream = 0x00021ae0
+[2023-11-28 08:56:32] [DEBG] 0x0000cfe0 (06 d0 ff ea): b #-0xbfe0                                            # // Hook: libc:fgets (on=entry, mode=model)                                    
+[2023-11-28 08:56:32] [INFO]    ---
+[2023-11-28 08:56:33] [INFO] 	 s = 0xbeffc104
+[2023-11-28 08:56:33] [INFO] 	*s = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA X'
+[2023-11-28 08:56:33] [DEBG] 0x00001000 (04 01 0c e3): mov  r0, #0xc104                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00001004 (ff 0e 4b e3): movt r0, #0xbeff                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00001008 (41 10 a0 e3): mov  r1, #0x41                                        # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0                                         # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00001010 (00 10 c0 e5): strb r1, [r0]                                         # // Hook: libc:fgets (on=leave, mode=model)
+[...]
+[2023-11-28 08:56:33] [DEBG] 0x00005fec (03 05 0c e3): mov  r0, #0xc503                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00005ff0 (ff 0e 4b e3): movt r0, #0xbeff                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00005ff4 (00 10 a0 e3): mov  r1, #0x0                                         # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00005ff8 (00 10 40 e3): movt r1, #0x0                                         # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00005ffc (00 10 c0 e5): strb r1, [r0]                                         # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00006000 (04 01 0c e3): mov  r0, #0xc104                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00006004 (ff 0e 4b e3): movt r0, #0xbeff                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [DEBG] 0x00006008 (f5 1b 00 ea): b #0x6fdc                                             # // Hook: libc:fgets (on=leave, mode=model)                                    
+[2023-11-28 08:56:33] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
+[2023-11-28 08:56:33] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0                                            #  
+```
+```
+[...]
+instructions:
+- ['0x0000cfc0', 64 37 65 e5, 'strb r3, [r5, #-0x764]!', '']
+- ['0x0000cfc4', 64 32 9f e5, 'ldr r3, [pc, #0x264]', '']
+[...]
+states:
+  entry:
+    addr: '0x0000cfc0'
+    mems:
 ```
