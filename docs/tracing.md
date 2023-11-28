@@ -7,7 +7,7 @@
       2. [Hooks](./tracing.md#hooks)
       3. [States](./tracing.md#states)
    2. [Run](./tracing.md#run)
-   3. [Analysis](./tracing.md#analysis)
+   3. [Results](./tracing.md#results)
       1. [Loading the Trace File](./tracing.md#loading-the-trace-file)
       2. [Collecting the Trace](./tracing.md#collecting-the-trace)
 4. [Symbolic Execution](./symbex.md)
@@ -83,9 +83,9 @@ Use the following steps to create a **trace** of the binary _circled_, while it 
      cp circled.init.yaml circled.yaml;       # Start with a fresh circled.yaml file
      gdb-multiarch -q -x circled.trace.gdb;   # Use GDB for cross-platform remote trace collection
      ```
-## Analysis
+## Results
 ### Loading the Trace File
-As seen above, the file `circled.yaml` (copy of `circled.init.yaml`) contains concrete register and/or memory values, which are set before starting the tracing process:
+As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](../morion/circled.init.yaml)) defines **concrete register and/or memory values**, which are set before starting the tracing process:
 ```
 [...]
 [2023-11-28 08:56:32] [INFO] Start loading trace file 'circled.yaml'...
@@ -98,6 +98,7 @@ As seen above, the file `circled.yaml` (copy of `circled.init.yaml`) contains co
 [2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
+Also, the **hooks** defined in `circled.yaml` are applied, so that they execute when collecting the concrete execution trace:
 ```
 [2023-11-28 08:56:32] [DEBG] Hooks:
 [2023-11-28 08:56:32] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
@@ -114,6 +115,7 @@ As seen above, the file `circled.yaml` (copy of `circled.init.yaml`) contains co
 [...]
 [2023-11-28 08:56:32] [INFO] ... finished loading trace file 'circled.yaml'.
 ```
+This finishes the loading of the trace file, and the actual tracing can start.
 ### Collecting the Trace
 ```
 [2023-11-28 08:56:32] [INFO] Start tracing...
