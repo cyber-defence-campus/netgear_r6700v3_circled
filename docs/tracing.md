@@ -119,7 +119,7 @@ This finishes the loading of the trace file and the actual tracing can start.
 ### Collecting the Trace
 Collecting a trace includes the recording of the following pieces of information:
 - Executed assembly **instructions** (e.g. `0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!`)
-- **Initial values** of accessed registers and memory locations (e.g. `r3 = 0x0` or `0xbeffc104 = 0x00`)
+- **Initial values** of accessed registers and memory locations (e.g. `r3 = 0x0`, `r5 = 0xbeffc868` or `0xbeffc104 = 0x00`)
 ```
 [2023-11-28 08:56:32] [INFO] Start tracing...
 [2023-11-28 08:56:32] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!   # store 1st assembly instruction
@@ -138,6 +138,8 @@ Collecting a trace includes the recording of the following pieces of information
 [...]
 ```
 The initial register (`states:entry:regs:`) and memory (`states:entry:mems:`) values are stored, so that they can later be set in the symbolic context. This is needed so that the symbolic execution engine uses the correct concrete values.
+
+The collected information is stored in the `circled.yaml` file, i.e. the file is updated as shown below:
 ```
 [...]
 instructions:
@@ -158,6 +160,13 @@ states:
       '0x0000d231': ['0x6a']
       '0x0000d232': ['0xff']
       '0x0000d233': ['0xff']
+      [...]
+      '0x000120f8': ['0x25']  # '%'
+      '0x000120f9': ['0x73']  # 's'
+      '0x000120fa': ['0x20']  # ' '
+      '0x000120fb': ['0x25']  # '%'
+      '0x000120fc': ['0x73']  # 's'
+      '0x000120fd': ['0x00']  #
       [...]
       '0xbeffc104': ['0x00']
       [...]
