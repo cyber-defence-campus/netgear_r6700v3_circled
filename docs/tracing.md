@@ -3,8 +3,9 @@
 2. [Emulation](./emulation.md)
 3. [Tracing](./tracing.md)
    1. [Setup](./tracing.md#setup)
-      1. [Hooks](./tracing.md#hooks)
-      2. [States](./tracing.md#states)
+      1. [GDB Commands Script](./tracing.md#gdb-commands-script)
+      2. [Hooks](./tracing.md#hooks)
+      3. [States](./tracing.md#states)
    2. [Run](./tracing.md#run)
 4. [Symbolic Execution](./symbex.md)
 # Tracing
@@ -13,6 +14,11 @@
 [circled.trace.gdb](../morion/circled.trace.gdb):
 ```
 [...]
+# Addresses
+[...]
+set $before_vulnerability     = 0xcfc0
+[...]
+
 # Break before vulnerabilty
 break *$before_vulnerability
 continue
