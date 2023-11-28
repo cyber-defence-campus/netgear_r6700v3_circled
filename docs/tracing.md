@@ -1,6 +1,7 @@
 # Table of Contents
-1. [Emulation](./emulation.md)
-2. [Tracing](./tracing.md)
+1. [Setup](./setup.md)
+2. [Emulation](./emulation.md)
+3. [Tracing](./tracing.md)
    1. [Setup](./tracing.md#setup)
       1. [Hooks](./tracing.md#hooks)
       2. [States](./tracing.md#states)
