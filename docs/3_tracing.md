@@ -7,15 +7,25 @@
       2. [Hooks](./3_tracing.md#hooks)
       3. [States](./3_tracing.md#states)
    2. [Run](./3_tracing.md#run)
-   3. [Results](./3_tracing.md#results)
+   3. [Discussion](./3_tracing.md#discussion)
       1. [Loading the Trace File](./3_tracing.md#loading-the-trace-file)
       2. [Collecting the Trace](./3_tracing.md#collecting-the-trace)
       3. [How Hooking Works](./3_tracing.md#how-hooking-works)
 4. [Symbolic Execution](./4_symbex.md)
 # Tracing
+In the following, we document how to collect a **concrete execution trace** of our target, a
+(known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
+setup, i.e. despite our host system being x86-based, the target runs on an (emulated) ARMv7-based
+device (see also  [Emulation](./2_emulation.md)).
 ## Setup
+To collect a concrete execution trace of the target binary _circled_, the following files are
+needed.
 ### GDB Commands Script
-[circled.trace.gdb](../morion/circled.trace.gdb):
+The file [circled.trace.gdb](../morion/circled.trace.gdb) is a commands script to be used with GDB.
+It contains GDB commands that bring the target to the point from which we aim to start collecting a
+trace (e.g. `break *$before_vulnerability`). As show below, the trace can be collected by the
+command `morion_trace`, a dedicated GDB command provided by
+[Morion](https://github.com/pdamian/morion).
 ```
 [...]
 # Addresses
@@ -85,7 +95,7 @@ _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fu
      cp circled.init.yaml circled.yaml;       # Start with a fresh circled.yaml file
      gdb-multiarch -q -x circled.trace.gdb;   # Use GDB for cross-platform remote trace collection
      ```
-## Results
+## Discussion
 ### Loading the Trace File
 As seen above, the file `circled.yaml` (initially a copy of
 [circled.init.yaml](../morion/circled.init.yaml)) may define concrete **register**
@@ -191,6 +201,25 @@ executed by the symbolic execution engine and have therefore no effect on the sy
 Typically, this is required to address **scalability** issues of symbolic execution or to abstract
 away **environment interactions** (e.g. 3rd party libraries, inter-process communication, Kernel,
 device drivers, coprocessors, etc.).
+#### Mode: Skip
+```
+[...]
+[2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
+[2023-11-28 08:56:37] [DEBG] Regs:
+[2023-11-28 08:56:37] [DEBG] Mems:
+[2023-11-28 08:56:37] [INFO] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
+[2023-11-28 08:56:37] [INFO]           'func_hook'
+[2023-11-28 08:56:37] [DEBG] 0x0000d040 (ee cf ff ea): b #-0xc040                                            # // Hook: lib:func_hook (on=entry, mode=skip)                                  
+[2023-11-28 08:56:37] [INFO]    ---
+[2023-11-28 08:56:37] [DEBG] 0x00001000 (00 00 a0 e3): mov  r0, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x00001008 (01 10 a0 e3): mov  r1, #0x1                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x00001010 (0b 30 00 ea): b #0xc034                                             # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [INFO] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
+[2023-11-28 08:56:37] [DEBG] 0x0000d048 (00 00 53 e3): cmp r3, #0                                            #
+[...]
+```
 #### Mode: Model
 ```
 [...]
@@ -225,23 +254,4 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 [2023-11-28 08:56:33] [DEBG] 0x00006008 (f5 1b 00 ea): b #0x6fdc                                             # // Hook: libc:fgets (on=leave, mode=model)                                    
 [2023-11-28 08:56:33] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
 [2023-11-28 08:56:33] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0                                            #  
-```
-#### Mode: Skip
-```
-[...]
-[2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
-[2023-11-28 08:56:37] [DEBG] Regs:
-[2023-11-28 08:56:37] [DEBG] Mems:
-[2023-11-28 08:56:37] [INFO] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
-[2023-11-28 08:56:37] [INFO]           'func_hook'
-[2023-11-28 08:56:37] [DEBG] 0x0000d040 (ee cf ff ea): b #-0xc040                                            # // Hook: lib:func_hook (on=entry, mode=skip)                                  
-[2023-11-28 08:56:37] [INFO]    ---
-[2023-11-28 08:56:37] [DEBG] 0x00001000 (00 00 a0 e3): mov  r0, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
-[2023-11-28 08:56:37] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
-[2023-11-28 08:56:37] [DEBG] 0x00001008 (01 10 a0 e3): mov  r1, #0x1                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
-[2023-11-28 08:56:37] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
-[2023-11-28 08:56:37] [DEBG] 0x00001010 (0b 30 00 ea): b #0xc034                                             # // Hook: lib:func_hook (on=leave, mode=skip)                                  
-[2023-11-28 08:56:37] [INFO] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
-[2023-11-28 08:56:37] [DEBG] 0x0000d048 (00 00 53 e3): cmp r3, #0                                            #
-[...]
 ```
