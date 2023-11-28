@@ -26,6 +26,7 @@ hooks:
     - {entry: '0xd0e8', leave: '0xd0ec', target: '0x1000', mode: 'skip'}
 states:
   entry:
+    regs:
     mems:
       '0x000120f8': ['0x25']  # '%'
       '0x000120f9': ['0x73']  # 's'
