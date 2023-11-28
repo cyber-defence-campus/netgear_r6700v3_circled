@@ -85,20 +85,20 @@ Use the following steps to create a **trace** of the binary _circled_, while it 
      ```
 ## Results
 ### Loading the Trace File
-As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](../morion/circled.init.yaml)) defines **concrete register and/or memory values** (`states: entry`), which are set before starting the actual tracing process:
+As seen above, the file `circled.yaml` (initially a copy of [circled.init.yaml](../morion/circled.init.yaml)) may define concrete **register** (`states:entry:regs:`) and/or **memory** (`states:entry:mems:`) values, which are set (using GDB) before starting the actual tracing process:
 ```
 [...]
 [2023-11-28 08:56:32] [INFO] Start loading trace file 'circled.yaml'...
 [2023-11-28 08:56:32] [DEBG] Regs:
 [2023-11-28 08:56:32] [DEBG] Mems:
-[2023-11-28 08:56:32] [DEBG] 	0x000120f8 = 0x25 %
+[2023-11-28 08:56:32] [DEBG] 	0x000120f8 = 0x25 %   # Setting a format string that will be accessed within the trace
 [2023-11-28 08:56:32] [DEBG] 	0x000120f9 = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fa = 0x20  
 [2023-11-28 08:56:32] [DEBG] 	0x000120fb = 0x25 %
 [2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
-Also, the **hooks** defined in `circled.yaml` are applied, so that they take effect when collecting the concrete execution trace:
+Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect when collecting the concrete execution trace:
 ```
 [2023-11-28 08:56:32] [DEBG] Hooks:
 [2023-11-28 08:56:32] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
@@ -137,8 +137,32 @@ Collecting a trace includes the recording of the following pieces of information
 [2023-11-28 08:56:32] [DEBG] 	0x0000d233 = 0xff                                # store value of memory 0x0000d233 (initial access)
 [...]
 ```
-The initial register and memory values are stored (`states: entry`), so that they can later be set in the symbolic context. This is needed so that the symbolic execution engine uses the correct concrete values.
-TODO:
+The initial register (`states:entry:regs:`) and memory (`states:entry:mems:`) values are stored, so that they can later be set in the symbolic context. This is needed so that the symbolic execution engine uses the correct concrete values.
+```
+[...]
+instructions:
+- ['0x0000cfc0', 64 37 65 e5, 'strb r3, [r5, #-0x764]!', '']
+- ['0x0000cfc4', 64 32 9f e5, 'ldr r3, [pc, #0x264]', '']
+[...]
+states:
+  entry:
+    addr: '0x0000cfc0'
+    regs:
+      [...]
+      r3: ['0x00000000']
+      [...]
+      r5: ['0xbeffc868']
+      [...]
+    mems:
+      '0x0000d230': ['0xbc']
+      '0x0000d231': ['0x6a']
+      '0x0000d232': ['0xff']
+      '0x0000d233': ['0xff']
+      [...]
+      '0xbeffc104': ['0x00']
+      [...]
+```
+
 ```
 [...]
 [2023-11-28 08:56:32] [INFO] --> Hook: 'libc:fgets (on=entry, mode=model)'
@@ -168,15 +192,4 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 [2023-11-28 08:56:33] [DEBG] 0x00006008 (f5 1b 00 ea): b #0x6fdc                                             # // Hook: libc:fgets (on=leave, mode=model)                                    
 [2023-11-28 08:56:33] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
 [2023-11-28 08:56:33] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0                                            #  
-```
-```
-[...]
-instructions:
-- ['0x0000cfc0', 64 37 65 e5, 'strb r3, [r5, #-0x764]!', '']
-- ['0x0000cfc4', 64 32 9f e5, 'ldr r3, [pc, #0x264]', '']
-[...]
-states:
-  entry:
-    addr: '0x0000cfc0'
-    mems:
 ```
