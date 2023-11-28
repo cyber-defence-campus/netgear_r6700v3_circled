@@ -17,6 +17,10 @@ In the following, we document how to collect a **concrete execution trace** of o
 (known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
 setup, i.e. despite our host system being x86-based, the target runs on an (emulated) ARMv7-based
 device (see also  [Emulation](./2_emulation.md)).
+<p align="center">
+  <img src="../images/Morion_Overview.svg "Morion Overview" alt="Morion Overview"/>
+</p>
+
 ## Setup
 To collect a concrete execution trace of the target binary _circled_, the following files are
 needed.
