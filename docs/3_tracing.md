@@ -73,6 +73,7 @@ states:
       '0x000120fd': ['0x00']  #
 [...]
 ```
+In the example above, a format string (normally stored in the binary's `.data` section) is set, which the trace will rely on.
 #### Hooks
 [circled.init.yaml](../morion/circled.init.yaml):
 ```
