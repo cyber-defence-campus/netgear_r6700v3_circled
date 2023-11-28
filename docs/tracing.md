@@ -9,6 +9,18 @@
 4. [Symbolic Execution](./symbex.md)
 # Tracing
 ## Setup
+### GDB Commands Script
+[circled.trace.gdb](../morion/circled.trace.gdb):
+```
+[...]
+# Break before vulnerabilty
+break *$before_vulnerability
+continue
+
+# Trace till return of function updating_database
+morion_trace debug circled.yaml 0xf1a4
+[...]
+```
 ### Hooks
 [circled.init.yaml](../morion/circled.init.yaml):
 ```
