@@ -12,6 +12,7 @@
       2. [Collecting the Trace](./3_tracing.md#collecting-the-trace)
       3. [How Hooking Works](./3_tracing.md#how-hooking-works)
 4. [Symbolic Execution](./4_symbex.md)
+5. [Exploitation](./5_exploitation.md)
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
 (known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
