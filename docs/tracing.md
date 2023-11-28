@@ -10,6 +10,7 @@
    3. [Results](./tracing.md#results)
       1. [Loading the Trace File](./tracing.md#loading-the-trace-file)
       2. [Collecting the Trace](./tracing.md#collecting-the-trace)
+      3. [Hooking](./tracing.md#hooking)
 4. [Symbolic Execution](./symbex.md)
 # Tracing
 ## Setup
@@ -171,9 +172,14 @@ states:
       '0xbeffc104': ['0x00']
       [...]
 ```
-
+### Hooking
+mode:model
 ```
 [...]
+[2023-11-28 08:56:32] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5                                            #                                                                               
+[2023-11-28 08:56:32] [DEBG] Regs:
+[2023-11-28 08:56:32] [DEBG] 	r0 = 0x21ae0
+[2023-11-28 08:56:32] [DEBG] Mems:
 [2023-11-28 08:56:32] [INFO] --> Hook: 'libc:fgets (on=entry, mode=model)'
 [2023-11-28 08:56:32] [INFO]           'char *fgets(char *restrict s, int n, FILE *restrict stream);'
 [2023-11-28 08:56:32] [INFO] 	 s      = 0xbeffc104
@@ -181,8 +187,8 @@ states:
 [2023-11-28 08:56:32] [INFO] 	 stream = 0x00021ae0
 [2023-11-28 08:56:32] [DEBG] 0x0000cfe0 (06 d0 ff ea): b #-0xbfe0                                            # // Hook: libc:fgets (on=entry, mode=model)                                    
 [2023-11-28 08:56:32] [INFO]    ---
-[2023-11-28 08:56:33] [INFO] 	 s = 0xbeffc104
-[2023-11-28 08:56:33] [INFO] 	*s = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+[2023-11-28 08:56:33] [INFO] 	 s      = 0xbeffc104
+[2023-11-28 08:56:33] [INFO] 	*s      = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA X'
 [2023-11-28 08:56:33] [DEBG] 0x00001000 (04 01 0c e3): mov  r0, #0xc104                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
@@ -201,4 +207,23 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 [2023-11-28 08:56:33] [DEBG] 0x00006008 (f5 1b 00 ea): b #0x6fdc                                             # // Hook: libc:fgets (on=leave, mode=model)                                    
 [2023-11-28 08:56:33] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
 [2023-11-28 08:56:33] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0                                            #  
+```
+mode:skip
+```
+[...]
+[2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
+[2023-11-28 08:56:37] [DEBG] Regs:
+[2023-11-28 08:56:37] [DEBG] Mems:
+[2023-11-28 08:56:37] [INFO] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
+[2023-11-28 08:56:37] [INFO]           'func_hook'
+[2023-11-28 08:56:37] [DEBG] 0x0000d040 (ee cf ff ea): b #-0xc040                                            # // Hook: lib:func_hook (on=entry, mode=skip)                                  
+[2023-11-28 08:56:37] [INFO]    ---
+[2023-11-28 08:56:37] [DEBG] 0x00001000 (00 00 a0 e3): mov  r0, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x00001008 (01 10 a0 e3): mov  r1, #0x1                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [DEBG] 0x00001010 (0b 30 00 ea): b #0xc034                                             # // Hook: lib:func_hook (on=leave, mode=skip)                                  
+[2023-11-28 08:56:37] [INFO] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
+[2023-11-28 08:56:37] [DEBG] 0x0000d048 (00 00 53 e3): cmp r3, #0                                            #
+[...]
 ```
