@@ -23,14 +23,14 @@ different symbolic execution runs/analyses (see also [Symbolic Execution](./4_sy
 </p>
 
 ## Setup
-To collect a concrete execution trace of the target binary _circled_, the following files are
-needed.
+To collect a concrete execution trace of the target binary _circled_, the following files need to be
+set up.
 ### GDB Commands Script
-The file [circled.trace.gdb](../morion/circled.trace.gdb) is a commands script to be used with GDB.
-It contains GDB commands that bring the target to the point from which we aim to start collecting a
-trace (e.g. `break *$before_vulnerability`). As show below, the trace can be collected by the
-command `morion_trace`, a dedicated GDB command provided by
-[Morion](https://github.com/pdamian/morion).
+The file [circled.trace.gdb](../morion/circled.trace.gdb) is a commands script to be used with the
+_GNU Project Debugger (GDB)_. It contains GDB commands that bring the target to the point from which
+we aim to start collecting a trace. As show below, the trace can be collected with the command
+`morion_trace`, a custom GDB command implemented by [Morion](https://github.com/pdamian/morion)
+(usage: `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
 ```
 [...]
 # Addresses
