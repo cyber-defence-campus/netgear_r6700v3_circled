@@ -10,7 +10,7 @@
    3. [Results](./tracing.md#results)
       1. [Loading the Trace File](./tracing.md#loading-the-trace-file)
       2. [Collecting the Trace](./tracing.md#collecting-the-trace)
-      3. [Hooking](./tracing.md#hooking)
+      3. [How Hooking Works](./tracing.md#how-hooking-works)
 4. [Symbolic Execution](./symbex.md)
 # Tracing
 ## Setup
@@ -172,7 +172,7 @@ states:
       '0xbeffc104': ['0x00']
       [...]
 ```
-### Hooking
+### How Hooking Works
 mode:model
 ```
 [...]
