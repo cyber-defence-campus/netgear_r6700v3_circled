@@ -1,17 +1,17 @@
 # Table of Contents
-1. [Setup](./setup.md)
-2. [Emulation](./emulation.md)
-3. [Tracing](./tracing.md)
-   1. [Setup](./tracing.md#setup)
-      1. [GDB Commands Script](./tracing.md#gdb-commands-script)
-      2. [Hooks](./tracing.md#hooks)
-      3. [States](./tracing.md#states)
-   2. [Run](./tracing.md#run)
-   3. [Results](./tracing.md#results)
-      1. [Loading the Trace File](./tracing.md#loading-the-trace-file)
-      2. [Collecting the Trace](./tracing.md#collecting-the-trace)
-      3. [How Hooking Works](./tracing.md#how-hooking-works)
-4. [Symbolic Execution](./symbex.md)
+1. [Setup](./1_setup.md)
+2. [Emulation](./2_emulation.md)
+3. [Tracing](./3_tracing.md)
+   1. [Setup](./3_tracing.md#setup)
+      1. [GDB Commands Script](./3_tracing.md#gdb-commands-script)
+      2. [Hooks](./3_tracing.md#hooks)
+      3. [States](./3_tracing.md#states)
+   2. [Run](./3_tracing.md#run)
+   3. [Results](./3_tracing.md#results)
+      1. [Loading the Trace File](./3_tracing.md#loading-the-trace-file)
+      2. [Collecting the Trace](./3_tracing.md#collecting-the-trace)
+      3. [How Hooking Works](./3_tracing.md#how-hooking-works)
+4. [Symbolic Execution](./4_symbex.md)
 # Tracing
 ## Setup
 ### GDB Commands Script
@@ -67,18 +67,18 @@ states:
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
 1. Start a HTTP server, delivering PoV payloads:
-   - System: [Guest](./setup.md)
+   - System: [Guest](./1_setup.md)
    - Command:
       ```
       python3 server/circled.server.py --payload "pov"
       ```
 2. Emulate the binary _circled_ with GDB attached (and therefore not using ASRL):
-   - System: [Guest (chroot)](./setup.md)
+   - System: [Guest (chroot)](./1_setup.md)
    - Command:
      ```
      /circled.sh --gdb
 3. Collect an execution trace of the binary _circled_:
-   - System: [Host (morion)](./setup.md)
+   - System: [Host (morion)](./1_setup.md)
    - Command:
      ```
      cd morion/;                              # Ensure to be within the correct directory
@@ -104,7 +104,7 @@ before starting the actual tracing process:
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
 Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect
-(see also [How Hooking Works](./tracing.md#how-hooking-works)) when collecting the concrete
+(see also [How Hooking Works](./3_tracing.md#how-hooking-works)) when collecting the concrete
 execution trace:
 ```
 [2023-11-28 08:56:32] [DEBG] Hooks:
@@ -183,7 +183,7 @@ states:
       [...]
 ```
 The file `circled.yaml` serves as input for subsequent symbolic execution runs (see also
-[Symbolic Execution](./symbex.md)).
+[Symbolic Execution](./4_symbex.md)).
 ### How Hooking Works
 Hooking allows a specified **sequence of assembly instructions** (e.g. corresponding to a called
 function) not to be added to the trace. In consequence, these instructions will later on not be 
