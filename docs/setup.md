@@ -3,4 +3,4 @@
 2. [Emulation](./emulation.md)
 3. [Tracing](./tracing.md)
 4. [Symbolic Execution](./symbex.md)
-# Tracing
+# Setup
