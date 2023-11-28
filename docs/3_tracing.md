@@ -56,7 +56,7 @@ triggered by a fuzzer).
 Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined.
 #### States
 In the [circled.init.yaml](../morion/circled.init.yaml) file we first define information about the
-entry state (`states:entry`). More specifically, we define concrete register and/or memory values,
+entry state (`states:entry:`). More specifically, we define concrete register and/or memory values,
 that [Morion](https://github.com/pdamian/morion), respectively GDB will set before collecting the
 trace (see also [Loading the Trace File](./3_tracing.md#loading-the-trace-file)).
 ```
