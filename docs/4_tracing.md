@@ -16,17 +16,17 @@
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
 (known vulnerable - see [Vulnerability CVE-2022-27646](./3_vulnerability.md)) ARMv7 binary
-called *circled*. The trace is collected in a cross-platform remote setup, i.e. despite our host
+named *circled*. The trace is collected in a cross-platform remote setup, i.e. despite our host
 system being x86-based, the target runs on an (emulated) ARMv7-based device (see 
 [Emulation](./2_emulation.md)). The collected trace may later be used for different symbolic
-execution runs/analyses (see [Symbolic Execution](./5_symbex.md)), which can be done offline and for
+execution runs/analyses (see [Symbolic Execution](./5_symbex.md)), which can be done offline, for
 instance on a more powerful machine.
 
 <p align="center">
   <figure>
     <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
     <figcaption>
-      Morion Overview: Showing the two main phases of Morion, tracing and symbolic execution.
+      Fig. 1: Morion Overview - Showing the two main phases of Morion, tracing and symbolic execution
     </figcaption>
   </figure> 
 </p>
@@ -62,12 +62,13 @@ continue
 morion_trace debug circled.yaml 0xf1a4
 [...]
 ```
-In the example above, the trace will start and stop at addresses `0xcfc0` and `0xf1a4`,
-respectively. Start and stop addresses of the trace need to be selected adequately for the intended
-purpose. In our specific case this means that the trace should include both the points where
-attacker-controllable inputs are introduced and where these inputs lead to a potential vulnerability
-(e.g. the point the binary is crashing due to a memory violation condition - as for instance found
-by a fuzzer).
+As can be seen in the code excerpt above, the trace we intend to collect should start at addresses
+`0xcfc0` and `0xf1a4`, respectively. Start and stop addresses of the trace need to be selected
+adequately for the intended purpose. In our specific case where we intend to generate an exploit for
+CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this means that the trace should
+include both the points where attacker-controllable inputs are introduced and where these inputs
+lead to a potential vulnerability (e.g. the point the binary is crashing due to a memory violation
+condition - as for instance found by a fuzzing campaign).
 ### Init YAML File
 Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined.
 #### States
