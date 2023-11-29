@@ -1,23 +1,24 @@
 # Table of Contents
 1. [Setup](./1_setup.md#setup)
 2. [Emulation](./2_emulation.md#emulation)
-3. [Tracing](./3_tracing.md#tracing)
-   1. [Setup](./3_tracing.md#setup)
-      1. [GDB Commands Script](./3_tracing.md#gdb-commands-script)
-      2. [Init YAML File](./3_tracing.md#init-yaml-file)
-   2. [Run](./3_tracing.md#run)
-   3. [Discussion](./3_tracing.md#discussion)
-      1. [Loading the Trace File](./3_tracing.md#loading-the-trace-file)
-      2. [Collecting the Trace](./3_tracing.md#collecting-the-trace)
-      3. [How Hooking Works](./3_tracing.md#how-hooking-works)
-4. [Symbolic Execution](./4_symbex.md#symbolic-execution)
-5. [Exploitation](./5_exploitation.md#exploitation)
+3. [Vulnerability CVE-2022-27646](./3_vulnerability.md#vulnerability)
+4. [Tracing](./4_tracing.md#tracing)
+   1. [Setup](./4_tracing.md#setup)
+      1. [GDB Commands Script](./4_tracing.md#gdb-commands-script)
+      2. [Init YAML File](./4_tracing.md#init-yaml-file)
+   2. [Run](./4_tracing.md#run)
+   3. [Discussion](./4_tracing.md#discussion)
+      1. [Loading the Trace File](./4_tracing.md#loading-the-trace-file)
+      2. [Collecting the Trace](./4_tracing.md#collecting-the-trace)
+      3. [How Hooking Works](./4_tracing.md#how-hooking-works)
+5. [Symbolic Execution](./5_symbex.md#symbolic-execution)
+6. [Exploitation](./6_exploitation.md#exploitation)
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
 (known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
 setup, i.e. despite our host system being x86-based, the target runs on an (emulated) ARMv7-based
 device (see also  [Emulation](./2_emulation.md)). The collected trace may later on be used for
-different symbolic execution runs/analyses (see also [Symbolic Execution](./4_symbex.md)).
+different symbolic execution runs/analyses (see also [Symbolic Execution](./5_symbex.md)).
 <p align="center">
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
 </p>
@@ -58,7 +59,7 @@ Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defi
 In the [circled.init.yaml](../morion/circled.init.yaml) file we first define information about the
 entry state (`states:entry:`). More specifically, we define concrete register and/or memory values,
 that [Morion](https://github.com/pdamian/morion), respectively GDB will set before collecting the
-trace (see also [Loading the Trace File](./3_tracing.md#loading-the-trace-file)).
+trace (see also [Loading the Trace File](./4_tracing.md#loading-the-trace-file)).
 ```
 [...]
 states:
@@ -132,7 +133,7 @@ before starting the actual tracing process:
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
 Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect
-(see also [How Hooking Works](./3_tracing.md#how-hooking-works)) when collecting the concrete
+(see also [How Hooking Works](./4_tracing.md#how-hooking-works)) when collecting the concrete
 execution trace:
 ```
 [2023-11-28 08:56:32] [DEBG] Hooks:
@@ -211,7 +212,7 @@ states:
       [...]
 ```
 The file `circled.yaml` serves as input for subsequent symbolic execution runs (see also
-[Symbolic Execution](./4_symbex.md)).
+[Symbolic Execution](./5_symbex.md)).
 ### How Hooking Works
 Hooking allows a specified **sequence of assembly instructions** (e.g. corresponding to a called
 function) not to be added to the trace. In consequence, these instructions will later on not be 

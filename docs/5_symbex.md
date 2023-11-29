@@ -5,4 +5,4 @@
 4. [Tracing](./4_tracing.md#tracing)
 5. [Symbolic Execution](./5_symbex.md#symbolic-execution)
 6. [Exploitation](./6_exploitation.md#exploitation)
-# Emulation
+# Symbolic Execution
