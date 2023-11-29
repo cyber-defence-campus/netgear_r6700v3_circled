@@ -129,12 +129,9 @@ hooks:
 [...]
 ```
 As can be seen in the code excerpt above, hooks include - beside `entry` and `leave` addresses - a
-parameter `mode`. This parameter can be used to distinguish multiple hooking implementations that
-will be executed instead of the actual function's assembly instructions.
-[Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
-common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
-More details regarding hooking during trace collection can be found in section
-[How Hooking Works](./4_tracing.md#how-hooking-works) below.
+parameter `mode`. This is only relevant during symbolic execution and will therefore be explained
+in [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace collection can
+be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
@@ -268,17 +265,17 @@ communications, Kernel, device drivers, coprocessors, etc.).
 
 Below, we discuss how the hooking of two concrete _libc_ functions looks like while
 [Morion](https://github.com/pdamian/morion) collects a trace.
-#### Example libc:fclose (Mode Skip)
+#### Abstract Function Hook (Example libc:fclose)
 The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for entry and leave 
-addresses `0xd040` and `0xd044`, respectively (and a mode of `skip`). The corresponding entry is
-located under the key `hooks:lib:func_hook:`, which means that a general hooking mechanism for
-functions should be used (see
+addresses `0xd040` and `0xd044`, respectively. The corresponding entry is located under the key
+"`hooks:lib:func_hook:`", which means that an abstract hooking mechanism for functions should be
+used (see
 [Morion/Tracing/GDB/Hooking/](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
-for implementation details), as compared to a specific one, which will be the case in the second
-example below. The general function hooking mechanism will skip the actual assembly instructions of
-the function, but inject some instructions to move the value of the function's concrete execution to
-the return register(s) (`r0`/`r1` for ARMv7 architectures). This is needed so that during symbolic
-execution the return register(s) hold the correct concrete value(s).
+for implementation details), as compared to a dedicated one, which will be the case in the second
+example below. The **abstract function hooking** mechanism will skip the actual assembly
+instructions of the function, but inject some instructions to move the value of the function's
+concrete execution to the return register(s) (`r0`/`r1` for ARMv7 architectures). This is needed so
+that during symbolic execution the return register(s) hold the correct concrete value(s).
 
 The described behavior can be observed in [Morion](https://github.com/pdamian/morion)'s debug output
 below. Instructions within the address range of `0xd040` and `0x1010` have been injected by
@@ -302,7 +299,11 @@ function.
 [2023-11-28 08:56:37] [DEBG] 0x0000d048 (00 00 53 e3): cmp r3, #0                                            #
 [...]
 ```
-#### Example libc:fgets (Mode Model)
+In general, not only function return values, but **all side-effects** of a hooked function towards
+registers and memory locations need to covered in order for the symbolic execution to be correct.
+This is why dedicated function hooks might be needed.
+#### Dedicated Function Hook (Example libc:fgets)
+TODO: Maybe use sscanf instead!
 ```
 [...]
 [2023-11-28 08:56:32] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5                                            #                                                                               
