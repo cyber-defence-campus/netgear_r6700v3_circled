@@ -1,7 +1,7 @@
 # Table of Contents
-1. [Setup](./1_setup.md#setup)
-2. [Emulation](./2_emulation.md#emulation)
-3. [Vulnerability CVE-2022-27646](./3_vulnerability.md#vulnerability)
+1. [Setup](./1_setup.md)
+2. [Emulation](./2_emulation.md)
+3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
 4. [Tracing](./4_tracing.md#tracing)
    1. [Setup](./4_tracing.md#setup)
       1. [GDB Commands Script](./4_tracing.md#gdb-commands-script)
@@ -11,8 +11,8 @@
       1. [Loading the Trace File](./4_tracing.md#loading-the-trace-file)
       2. [Collecting the Trace](./4_tracing.md#collecting-the-trace)
       3. [How Hooking Works](./4_tracing.md#how-hooking-works)
-5. [Symbolic Execution](./5_symbex.md#symbolic-execution)
-6. [Exploitation](./6_exploitation.md#exploitation)
+5. [Symbolic Execution](./5_symbex.md)
+6. [Exploitation](./6_exploitation.md)
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
 (known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
