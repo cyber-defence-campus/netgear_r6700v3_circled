@@ -19,7 +19,7 @@ setup, i.e. despite our host system being x86-based, the target runs on an (emul
 device (see also  [Emulation](./2_emulation.md)). The collected trace may later on be used for
 different symbolic execution runs/analyses (see also [Symbolic Execution](./4_symbex.md)).
 <p align="center">
-  <img src="../images/Morion_Overview.svg "Morion Overview" alt="Morion Overview"/>
+  <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
 </p>
 
 ## Setup
