@@ -43,10 +43,10 @@ thread when dealing with multi-threaded binaries, as it is the case with _circle
 the trace can then be collected with the command `morion_trace`, a custom GDB command implemented by
 [Morion](https://github.com/pdamian/morion) (usage:
 `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
-Amongst others, `morion_trace` expects as argument a YAML file, into which the trace will be stored.
-As explained below in section [Init YAML File](./4_tracing.md#init-yaml-file), the inputted YAML
-file can hold additional information that steer how the trace will be collected (e.g. by hooking
-certain functions).
+Alongside some stop addresses, `morion_trace` expects as argument a YAML file, into which the trace
+will be stored. As explained below in section [Init YAML File](./4_tracing.md#init-yaml-file), the
+inputted YAML file can hold additional information that steer how the trace will be collected (e.g.
+by hooking certain functions).
 ```
 [...]
 # Addresses
@@ -62,15 +62,17 @@ continue
 morion_trace debug circled.yaml 0xf1a4
 [...]
 ```
-As can be seen in the code excerpt above, the trace we intend to collect should start at addresses
-`0xcfc0` and `0xf1a4`, respectively. Start and stop addresses of the trace need to be selected
-adequately for the intended purpose. In our specific case where we intend to generate an exploit for
-CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this means that the trace should
-include both the points where attacker-controllable inputs are introduced and where these inputs
-lead to a potential vulnerability (e.g. the point the binary is crashing due to a memory violation
-condition - as for instance found by a fuzzing campaign).
+As can be seen in the code excerpt above, the trace we intend to collect should start/stop at 
+addresses `0xcfc0` and `0xf1a4`, respectively. Start and stop addresses of the trace need to be
+selected adequately for the intended purpose. In our specific case where we intend to generate an
+exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this means that the trace
+should include both the points where attacker-controllable inputs are introduced and where these
+inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a memory
+violation condition - as for instance found by a fuzzing campaign).
 ### Init YAML File
-Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined.
+Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined. It typically
+includes information about the trace's entry state (`states:entry:`), as well as about functions
+that should be hooked (`hooks:`).
 #### States
 In the [circled.init.yaml](../morion/circled.init.yaml) file we first define information about the
 entry state (`states:entry:`). More specifically, we define concrete register and/or memory values,
@@ -92,13 +94,14 @@ states:
 ```
 In the example above, we manually set a format string `%s %s`. Within the trace that we are about to
 collect, this format string is exclusively used by the function `sscanf` - a function that we hook
-(see next section on Hooks) and in consequence, omit executing all of its assembly instructions
-individually. Due to skipping the function's instructions,
-[Morion](https://github.com/pdamian/morion) does not record the accessed memory locations, which is
-why we need to add them manually. [Morion](https://github.com/pdamian/morion) is designed with the
-intention to give an analyst extensive configuration flexibilities, so that you can deal with cases
-where the tool does not (yet) implement full automation. In the example of `sscanf`, a future
-hooking implementation could improve on this so that the format string is automatically added to the
+(see next section on Hooks) and in consequence, do not trace all of its assembly instructions. Due
+to skipping the function's instructions, [Morion](https://github.com/pdamian/morion) does not record
+all memory locations accessed by it, which is why we need to add them manually.
+
+Here and in other places, [Morion](https://github.com/pdamian/morion) is designed with the intention
+to give an analyst extensive configuration flexibilities, so that cases can be handled where the
+tool does not (yet) implement full automation. In the example of `sscanf`, a future hooking
+implementation could improve on this so that the format string is automatically added to the
 accessed memory pool.
 #### Hooks
 [circled.init.yaml](../morion/circled.init.yaml):
