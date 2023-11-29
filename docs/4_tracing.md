@@ -74,10 +74,10 @@ Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defi
 includes information about the trace's entry state (`states:entry:`), as well as about functions
 that should be hooked (`hooks:`).
 #### States
-In the [circled.init.yaml](../morion/circled.init.yaml) file we first define information about the
-entry state (`states:entry:`). More specifically, we define concrete register and/or memory values,
-that [Morion](https://github.com/pdamian/morion), respectively GDB will set before collecting the
-trace (see also [Loading the Trace File](./4_tracing.md#loading-the-trace-file)).
+Typically, the [circled.init.yaml](../morion/circled.init.yaml) file first defines information about
+the trace's entry state (`states:entry:`). More specifically, we define concrete register and/or
+memory values, that [Morion](https://github.com/pdamian/morion), respectively GDB will set before
+collecting the trace (see also [Loading the Trace File](./4_tracing.md#loading-the-trace-file)).
 ```
 [...]
 states:
@@ -104,7 +104,15 @@ tool does not (yet) implement full automation. In the example of `sscanf`, a fut
 implementation could improve on this so that the format string is automatically added to the
 accessed memory pool.
 #### Hooks
-[circled.init.yaml](../morion/circled.init.yaml):
+Next, the [circled.init.yaml](../morion/circled.init.yaml) file typically defines information about
+hooks (`hooks:`). A hook is a **sequence of consecutive assembly instructions** (from an `entry` to
+a `leave` address) that will not be recorded in the trace. As a consequence, these instructions will
+later not be executed by the symbolic execution engine, which takes the recorded trace as input.
+Most of the time, hooks will correspond to function calls (such as
+`0x0000d040 (73 f1 ff eb): bl #0x9614 <fclose@plt>`), where the effective symbolic execution of all
+included assembly instructions does either not scale, is irrelevant for the intended purpose (e.g.
+exploit generation) or the function has well-known semantics that can be mimicked by a semantic
+function model (TODO: Add reference).
 ```
 hooks:
   lib:
@@ -120,6 +128,13 @@ hooks:
     - {entry: '0xcffc', leave: '0xd000', mode: 'model'}  # sscanf@plt
 [...]
 ```
+As can be seen in the code excerpt above, hooks include, beside `entry` and `leave` addresses, a
+parameter `mode`. This parameter can be used to distinguish multiple hooking implementations that
+will be executed instead of the actual function's assembly instructions.
+[Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
+common _libc_ functions, with supported modes of `skip`, `model` or `taint`. More details regarding
+hooking during trace collection can be found in section 
+[How Hooking Works](./4_tracing.md#how-hooking-works) below.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
