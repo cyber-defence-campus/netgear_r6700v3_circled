@@ -15,21 +15,19 @@
 6. [Exploitation](./6_exploitation.md)
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
-(known vulnerable - see [Vulnerability CVE-2022-27646](./3_vulnerability.md)) ARMv7 binary
-named *circled*. The trace is collected in a cross-platform remote setup, i.e. despite our host
-system being x86-based, the target runs on an (emulated) ARMv7-based device (see 
-[Emulation](./2_emulation.md)). The collected trace may later be used for different symbolic
-execution runs/analyses (see [Symbolic Execution](./5_symbex.md)), which can be done offline, for
-instance on a more powerful machine.
+known vulnerable ARMv7 binary named *circled* (see
+[Vulnerability CVE-2022-27646](./3_vulnerability.md)). The trace is collected in a cross-platform
+remote setup, i.e. despite our host system being x86-based, the target runs on an (emulated)
+ARMv7-based device (see [Emulation](./2_emulation.md)). The collected trace may later be used for
+different symbolic execution runs/analyses (see [Symbolic Execution](./5_symbex.md)), which can be
+done offline, for instance on a more powerful machine.
 
-<p align="center">
-  <figure>
-    <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
-    <figcaption>
-      Fig. 1: Morion Overview - Showing the two main phases of Morion, tracing and symbolic execution
-    </figcaption>
-  </figure> 
-</p>
+<figure align="center">
+  <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
+  <figcaption>
+    Fig. 1: Morion Overview - Showing the two main phases of Morion, tracing and symbolic execution
+  </figcaption>
+</figure>
 
 ## Setup
 Before collecting concrete execution traces of the target binary _circled_, the following files need
@@ -45,7 +43,7 @@ the trace can then be collected with the command `morion_trace`, a custom GDB co
 `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
 Alongside some stop addresses, `morion_trace` expects as argument a YAML file, into which the trace
 will be stored. As explained below in section [Init YAML File](./4_tracing.md#init-yaml-file), the
-inputted YAML file can hold additional information that steer how the trace will be collected (e.g.
+inputted YAML file can hold additional information that steers how the trace will be collected (e.g.
 by hooking certain functions).
 ```
 [...]
@@ -65,10 +63,10 @@ morion_trace debug circled.yaml 0xf1a4
 As can be seen in the code excerpt above, the trace we intend to collect should start/stop at 
 addresses `0xcfc0` and `0xf1a4`, respectively. Start and stop addresses of the trace need to be
 selected adequately for the intended purpose. In our specific case where we intend to generate an
-exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this means that the trace
-should include both the points where attacker-controllable inputs are introduced and where these
-inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a memory
-violation condition - as for instance found by a fuzzing campaign).
+exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), which means that the
+trace should include both the points where attacker-controllable inputs are introduced and where
+these inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a
+memory violation condition - as for instance found by a fuzzing campaign).
 ### Init YAML File
 Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined. It typically
 includes information about the trace's entry state (`states:entry:`), as well as about functions
@@ -76,8 +74,9 @@ that should be hooked (`hooks:`).
 #### States
 Typically, the [circled.init.yaml](../morion/circled.init.yaml) file first defines information about
 the trace's entry state (`states:entry:`). More specifically, we define concrete register and/or
-memory values, that [Morion](https://github.com/pdamian/morion), respectively GDB will set before
-collecting the trace (see also [Loading the Trace File](./4_tracing.md#loading-the-trace-file)).
+memory values, that [Morion](https://github.com/pdamian/morion) - respectively _GDB_ - will set
+before collecting the trace (see also
+[Loading the Trace File](./4_tracing.md#loading-the-trace-file)).
 ```
 [...]
 states:
@@ -92,16 +91,17 @@ states:
       '0x000120fd': ['0x00']  #
 [...]
 ```
-In the example above, we manually set a format string `%s %s`. Within the trace that we are about to
-collect, this format string is exclusively used by the function `sscanf` - a function that we hook
-(see next section on Hooks) and in consequence, do not trace all of its assembly instructions. Due
-to skipping the function's instructions, [Morion](https://github.com/pdamian/morion) does not record
-all memory locations accessed by it, which is why we need to add them manually.
+In the example of binary _circled_ above, we manually set a format string `%s %s`. Within the trace
+that we are about to collect, this format string is solely used by the function `sscanf` - a
+function that we hook (see next section on Hooks) and in consequence, do not trace all of its
+assembly instructions. Due to skipping the function's instructions,
+[Morion](https://github.com/pdamian/morion) does not record all memory locations accessed by it,
+which is why we need to add them manually.
 
 Here and in other places, [Morion](https://github.com/pdamian/morion) is designed with the intention
 to give an analyst extensive configuration flexibilities, so that cases can be handled where the
 tool does not (yet) implement full automation. In the example of `sscanf`, a future hooking
-implementation could improve on this so that the format string is automatically added to the
+implementation could improve on this, so that the format string is automatically added to the
 accessed memory pool.
 #### Hooks
 Next, the [circled.init.yaml](../morion/circled.init.yaml) file typically defines information about
@@ -128,12 +128,12 @@ hooks:
     - {entry: '0xcffc', leave: '0xd000', mode: 'model'}  # sscanf@plt
 [...]
 ```
-As can be seen in the code excerpt above, hooks include, beside `entry` and `leave` addresses, a
+As can be seen in the code excerpt above, hooks include - beside `entry` and `leave` addresses - a
 parameter `mode`. This parameter can be used to distinguish multiple hooking implementations that
 will be executed instead of the actual function's assembly instructions.
 [Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
-common _libc_ functions, with supported modes of `skip`, `model` or `taint`. More details regarding
-hooking during trace collection can be found in section 
+common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
+More details regarding hooking during trace collection can be found in section
 [How Hooking Works](./4_tracing.md#how-hooking-works) below.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
