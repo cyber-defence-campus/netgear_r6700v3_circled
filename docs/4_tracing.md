@@ -74,7 +74,16 @@ states:
       '0x000120fd': ['0x00']  #
 [...]
 ```
-In the example above, a format string (normally stored in the binary's `.data` section) is set, which the trace will rely on.
+In the example above, we manually set a format string `%s %s`. Within the trace that we are about to
+collect, this format string is exclusively used by the function `sscanf` - a function that we hook
+(see next section on Hooks) and in consequence, omit executing all of its assembly instructions
+individually. Due to skipping the function's instructions,
+[Morion](https://github.com/pdamian/morion) does not record the accessed memory locations, which is
+why we need to add them manually. [Morion](https://github.com/pdamian/morion) is designed with the
+intention to give an analyst extensive configuration flexibilities, so that you can deal with cases
+where the tool does not (yet) implement full automation. In the example of `sscanf`, a future
+hooking implementation could improve on this so that the format string is automatically added to the
+accessed memory pool.
 #### Hooks
 [circled.init.yaml](../morion/circled.init.yaml):
 ```
