@@ -263,7 +263,7 @@ symbolic state. Typically, this is required to address **scalability** issues of
 or to abstract away **environmental interactions** (e.g. with 3rd party libraries, inter-process
 communications, Kernel, device drivers, coprocessors, etc.).
 
-Below, we discuss how the hooking of two concrete _libc_ functions looks like while
+Below, we discuss how the hooking of two concrete _libc_ functions look like, while
 [Morion](https://github.com/pdamian/morion) collects a trace.
 #### Abstract Function Hook (Example libc:fclose)
 The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for entry and leave 
@@ -281,6 +281,11 @@ The described behavior can be observed in [Morion](https://github.com/pdamian/mo
 below. Instructions within the address range of `0xd040` and `0x1010` have been injected by
 [Morion](https://github.com/pdamian/morion) to set the correct concrete return value(s) of the
 function.
+
+Note: [Morion](https://github.com/pdamian/morion) also implements the concept of hooking arbitrary
+sequences of assembly instructions ("`hooks:lib:inst_hook:`"), not necessarily belonging to function
+calls. These are similar to the ones regarding functions, but do not inject any instructions for set
+return values.
 ```
 [...]
 [2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
