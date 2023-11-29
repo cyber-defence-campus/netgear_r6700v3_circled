@@ -158,24 +158,26 @@ _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fu
      gdb-multiarch -q -x circled.trace.gdb;   # Use GDB for cross-platform remote trace collection
      ```
 ## Discussion
+In the following, we discuss some aspects of the tracing process as implemented by
+[Morion](https://github.com/pdamian/morion).
 ### Loading the Trace File
 As seen above, the file `circled.yaml` (initially a copy of
 [circled.init.yaml](../morion/circled.init.yaml)) may define concrete **register**
-(`states:entry:regs:`) and/or **memory** (`states:entry:mems:`) values, which are set (using GDB)
+(`states:entry:regs:`) and/or **memory** (`states:entry:mems:`) values, which are set (using _GDB_)
 before starting the actual tracing process:
 ```
 [...]
 [2023-11-28 08:56:32] [INFO] Start loading trace file 'circled.yaml'...
 [2023-11-28 08:56:32] [DEBG] Regs:
 [2023-11-28 08:56:32] [DEBG] Mems:
-[2023-11-28 08:56:32] [DEBG] 	0x000120f8 = 0x25 %   # Setting a format string that will be accessed within the trace
+[2023-11-28 08:56:32] [DEBG] 	0x000120f8 = 0x25 %
 [2023-11-28 08:56:32] [DEBG] 	0x000120f9 = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fa = 0x20  
 [2023-11-28 08:56:32] [DEBG] 	0x000120fb = 0x25 %
 [2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
 ```
-Also, the **hooks** defined in `circled.yaml` are applied (using GDB), so that they take effect
+Also, the **hooks** defined in `circled.yaml` are applied (using _GDB_), so that they take effect
 (see also [How Hooking Works](./4_tracing.md#how-hooking-works)) when collecting the concrete
 execution trace:
 ```
@@ -257,13 +259,31 @@ states:
 The file `circled.yaml` serves as input for subsequent symbolic execution runs (see also
 [Symbolic Execution](./5_symbex.md)).
 ### How Hooking Works
-Hooking allows a specified **sequence of assembly instructions** (e.g. corresponding to a called
-function) not to be added to the trace. In consequence, these instructions will later on not be 
-executed by the symbolic execution engine and have therefore no effect on the symbolic state.
-Typically, this is required to address **scalability** issues of symbolic execution or to abstract
-away **environment interactions** (e.g. 3rd party libraries, inter-process communication, Kernel,
-device drivers, coprocessors, etc.).
-#### Mode: Skip
+As mentioned before, hooking allows a specified **sequence of assembly instructions** (e.g.
+corresponding to a called function) not to be added to the trace. In consequence, these instructions
+will later on not be executed by the symbolic execution engine and have therefore no effect on the
+symbolic state. Typically, this is required to address **scalability** issues of symbolic execution
+or to abstract away **environmental interactions** (e.g. with 3rd party libraries, inter-process
+communications, Kernel, device drivers, coprocessors, etc.).
+
+Below, we discuss how the hooking of two concrete _libc_ functions looks like while
+[Morion](https://github.com/pdamian/morion) collects a trace.
+#### Example libc:fclose (Mode Skip)
+The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for entry and leave 
+addresses `0xd040` and `0xd044`, respectively (and a mode of `skip`). The corresponding entry is
+located under the key `hooks:lib:func_hook:`, which means that a general hooking mechanism for
+functions should be used (see
+[Morion/Tracing/GDB/Hooking/](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
+for implementation details), as compared to a specific one, which will be the case in the second
+example below. The general function hooking mechanism will skip the actual assembly instructions of
+the function, but inject some instructions to move the value of the function's concrete execution to
+the return register(s) (`r0`/`r1` for ARMv7 architectures). This is needed so that during symbolic
+execution the return register(s) hold the correct concrete value(s).
+
+The described behavior can be observed in [Morion](https://github.com/pdamian/morion)'s debug output
+below. Instructions within the address range of `0xd040` and `0x1010` have been injected by
+[Morion](https://github.com/pdamian/morion) to set the correct concrete return value(s) of the
+function.
 ```
 [...]
 [2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
@@ -282,7 +302,7 @@ device drivers, coprocessors, etc.).
 [2023-11-28 08:56:37] [DEBG] 0x0000d048 (00 00 53 e3): cmp r3, #0                                            #
 [...]
 ```
-#### Mode: Model
+#### Example libc:fgets (Mode Model)
 ```
 [...]
 [2023-11-28 08:56:32] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5                                            #                                                                               
