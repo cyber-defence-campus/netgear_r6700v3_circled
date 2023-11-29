@@ -15,23 +15,38 @@
 6. [Exploitation](./6_exploitation.md)
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
-(known vulnerable) ARMv7 binary called *circled*. The trace is collected in a cross-platform remote
-setup, i.e. despite our host system being x86-based, the target runs on an (emulated) ARMv7-based
-device (see also  [Emulation](./2_emulation.md)). The collected trace may later on be used for
-different symbolic execution runs/analyses (see also [Symbolic Execution](./5_symbex.md)).
+(known vulnerable - see [Vulnerability CVE-2022-27646](./3_vulnerability.md)) ARMv7 binary
+called *circled*. The trace is collected in a cross-platform remote setup, i.e. despite our host
+system being x86-based, the target runs on an (emulated) ARMv7-based device (see 
+[Emulation](./2_emulation.md)). The collected trace may later be used for different symbolic
+execution runs/analyses (see [Symbolic Execution](./5_symbex.md)), which can be done offline and for
+instance on a more powerful machine.
+
 <p align="center">
-  <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
+  <figure>
+    <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
+    <figcaption>
+      Morion Overview: Showing the two main phases of Morion, tracing and symbolic execution.
+    </figcaption>
+  </figure> 
 </p>
 
 ## Setup
-To collect a concrete execution trace of the target binary _circled_, the following files need to be
-set up.
+Before collecting concrete execution traces of the target binary _circled_, the following files need
+to be set up.
 ### GDB Commands Script
-The file [circled.trace.gdb](../morion/circled.trace.gdb) is a commands script to be used with the
-_GNU Project Debugger (GDB)_. It contains GDB commands that bring the target to the point from which
-to start tracing. As show below, the trace can then be collected with the command `morion_trace`, a
-custom GDB command implemented by [Morion](https://github.com/pdamian/morion) (usage:
+The file [circled.trace.gdb](../morion/circled.trace.gdb) is a _GNU Project Debugger (GDB)_ commands
+script. As shown in the figure above, [Morion](https://github.com/pdamian/morion) uses GDB to
+interact with its target during the process of tracing. The script contains GDB commands that bring
+the target to the point from which tracing should start (e.g. to follow along and break the relevant
+thread when dealing with multi-threaded binaries, as it is the case with _circled_). As show below,
+the trace can then be collected with the command `morion_trace`, a custom GDB command implemented by
+[Morion](https://github.com/pdamian/morion) (usage:
 `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
+Amongst others, `morion_trace` expects as argument a YAML file, into which the trace will be stored.
+As explained below in section [Init YAML File](./4_tracing.md#init-yaml-file), the inputted YAML
+file can hold additional information that steer how the trace will be collected (e.g. by hooking
+certain functions).
 ```
 [...]
 # Addresses
@@ -39,7 +54,7 @@ custom GDB command implemented by [Morion](https://github.com/pdamian/morion) (u
 set $before_vulnerability     = 0xcfc0
 [...]
 
-# Break before vulnerabilty
+# Break before vulnerability
 break *$before_vulnerability
 continue
 
@@ -51,8 +66,8 @@ In the example above, the trace will start and stop at addresses `0xcfc0` and `0
 respectively. Start and stop addresses of the trace need to be selected adequately for the intended
 purpose. In our specific case this means that the trace should include both the points where
 attacker-controllable inputs are introduced and where these inputs lead to a potential vulnerability
-(e.g. the point the binary is crashing due to a memory violation situation - as for instance
-triggered by a fuzzer).
+(e.g. the point the binary is crashing due to a memory violation condition - as for instance found
+by a fuzzer).
 ### Init YAML File
 Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined.
 #### States
@@ -173,7 +188,7 @@ Collecting a trace includes the recording of the following pieces of information
 [2023-11-28 08:56:32] [DEBG] 	r3 = 0x0                                         # store value of accessed register r3 (initial access)
 [2023-11-28 08:56:32] [DEBG] 	r5 = 0xbeffc868                                  # store value of accessed register r5 (initial access)
 [2023-11-28 08:56:32] [DEBG] Mems:
-[2023-11-28 08:56:32] [DEBG] 	0xbeffc104 = 0x00                                # store value of memory 0xbeffc104 (inital access)
+[2023-11-28 08:56:32] [DEBG] 	0xbeffc104 = 0x00                                # store value of memory 0xbeffc104 (initial access)
 [2023-11-28 08:56:32] [DEBG] 0x0000cfc4 (64 32 9f e5): ldr r3, [pc, #0x264]      # store 2nd assembly instruction
 [2023-11-28 08:56:32] [DEBG] Regs:                                               # ignore value of accessed register r3 (stored before)
 [2023-11-28 08:56:32] [DEBG] Mems:
