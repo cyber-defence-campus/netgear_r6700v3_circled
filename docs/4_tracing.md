@@ -5,7 +5,7 @@
 4. [Tracing](./4_tracing.md#tracing)
    1. [Setup](./4_tracing.md#setup)
       1. [GDB Commands Script](./4_tracing.md#gdb-commands-script)
-      2. [Init YAML File](./4_tracing.md#init-yaml-file)
+      2. [YAML File](./4_tracing.md#yaml-file)
    2. [Run](./4_tracing.md#run)
    3. [Discussion](./4_tracing.md#discussion)
       1. [Loading the Trace File](./4_tracing.md#loading-the-trace-file)
@@ -42,7 +42,7 @@ the trace can then be collected with the command `morion_trace`, a custom GDB co
 [Morion](https://github.com/pdamian/morion) (usage:
 `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
 Alongside some stop addresses, `morion_trace` expects as argument a YAML file, into which the trace
-will be stored. As explained below in section [Init YAML File](./4_tracing.md#init-yaml-file), the
+will be stored. As explained below in section [YAML File](./4_tracing.md#yaml-file), the
 inputted YAML file can hold additional information that steers how the trace will be collected (e.g.
 by hooking certain functions).
 ```
@@ -67,7 +67,7 @@ exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), which
 trace should include both the points where attacker-controllable inputs are introduced and where
 these inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a
 memory violation condition - as for instance found by a fuzzing campaign).
-### Init YAML File
+### YAML File
 Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined. It typically
 includes information about the trace's entry state (`states:entry:`), as well as about functions
 that should be hooked (`hooks:`).
@@ -239,14 +239,17 @@ The initial values of register (`states:entry:regs:`) and memory locations (`sta
 are stored, so that they can later be set in the symbolic context. This is needed so that the
 symbolic execution engine uses the correct concrete values.
 
-The collected information (instructions and initial values) is stored in the `circled.yaml` file,
-i.e. the file is updated as shown below:
+The collected information (instructions and initial values) is stored in the file `circled.yaml`,
+i.e. the file is updated as shown in the next code excerpt. The file `circled.yaml` serves as input
+for subsequent symbolic execution runs (see also [Symbolic Execution](./5_symbex.md)).
 ```
 [...]
 instructions:
 - ['0x0000cfc0', 64 37 65 e5, 'strb r3, [r5, #-0x764]!', '']
 - ['0x0000cfc4', 64 32 9f e5, 'ldr r3, [pc, #0x264]', '']
 [...]
+- ['0x0000cf20', 03 db 8d e2, 'add sp, sp, #0xc00', '']
+- ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
 states:
   entry:
     addr: '0x0000cfc0'
@@ -272,8 +275,32 @@ states:
       '0xbeffc104': ['0x00']
       [...]
 ```
-The file `circled.yaml` serves as input for subsequent symbolic execution runs (see also
-[Symbolic Execution](./5_symbex.md)).
+
+If we look at the end of the tracing process, we can observe that the trace did not end at our
+configured stop address `0xf1a4`, but at address `0xcf24`:
+```
+[2023-11-30 13:37:05] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
+[2023-11-30 13:37:05] [DEBG] Regs:
+[2023-11-30 13:37:05] [DEBG] Mems:
+[2023-11-30 13:37:05] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+[2023-11-30 13:37:05] [DEBG] Regs:
+[2023-11-30 13:37:05] [DEBG] Mems:
+[2023-11-30 13:37:05] [DEBG] 	0xbeffc86c = 0x41 A
+[2023-11-30 13:37:05] [DEBG] 	0xbeffc86d = 0x41 A
+[...]
+[2023-11-30 13:37:05] [DEBG] 	0xbeffc88a = 0x41 A
+[2023-11-30 13:37:05] [DEBG] 	0xbeffc88b = 0x41 A
+[2023-11-30 13:37:05] [ERRO] 	Failed to execute instruction at address 0x0000cf24: 'Remote connection closed'
+[2023-11-30 13:37:05] [INFO] ... finished tracing (pc=0x0000cf24).
+[2023-11-30 13:37:05] [INFO] Start storing trace file 'circled.yaml'...
+[2023-11-30 13:37:07] [INFO] ... finished storing trace file 'circled.yaml'.
+```
+This is due to the fact, that our target binary **crashed** before reaching the intended stop address.
+More specifically, and as we will see in greater detail later on, the instruction
+`0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}` tried to pop a value from the 
+stack that led to an invalid program counter (`pc` register), and in consequence resulted in a 
+segmentation fault (segfault). We will learn later on how [symbolic execution](./5_symbex.md) can
+help us to decide whether this situation is exploitable or not, and if so, how we can do it.
 ### How Hooking Works
 As mentioned before, hooking allows a specified **sequence of assembly instructions** (e.g.
 corresponding to a called function) not to be added to the trace. In consequence, these instructions
