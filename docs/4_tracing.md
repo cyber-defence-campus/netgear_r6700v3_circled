@@ -287,8 +287,8 @@ Below, we discuss how the hooking of two concrete _libc_ functions look like, wh
 #### Abstract Function Hook (Example libc:fclose)
 The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for entry and leave 
 addresses `0xd040` and `0xd044`, respectively. The corresponding entry is located under the key
-"`hooks:lib:func_hook:`", which means that an abstract hooking mechanism for functions should be
-used (see
+`hooks:lib:func_hook:`, which means that an abstract hooking mechanism for functions should be used
+(see
 [morion/tracing/gdb/hooking/lib](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
 for implementation details), as compared to a specific one, which will be the case in the second
 example below. The **abstract function hooking** mechanism will skip the actual assembly
@@ -339,7 +339,11 @@ the symbolic execution to be correct. This is why specific function hooks might 
 One such function, with rather simple to cover side-effects, is _fgets_ from _libc_
 (synopsis: `char *fgets(char *s, int n, FILE *stream)`). The function reads a maximum of `n-1` bytes
 from a file `stream` to an address given by `s` (newline or end-of-file conditions can make the
-function to read less bytes).
+function read less bytes).
+In the file [circled.init.yaml](../morion/circled.init.yaml), the hook for function `fgets` is
+defined under the key `hooks:libc:fgets:`. [Morion](https://github.com/pdamian/morion) will
+therefore apply the specific _fgets_ implementation from file
+[morion/tracing/gdb/hooking/libc](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/libc.py).
 
 As can be seen in the debug output below, [Morion](https://github.com/pdamian/morion) injected
 instructions (addresses `0xcfe0`, `0x1000` - `0x6008`) that move the concrete string read by
