@@ -103,6 +103,20 @@ to give an analyst extensive configuration flexibilities, so that cases can be h
 tool does not (yet) implement full automation. In the example of `sscanf`, a future hooking
 implementation could improve on this, so that the format string is automatically added to the
 accessed memory pool.
+
+The general format to configure the **entry state** looks like this:
+```
+states:
+  entry:
+    regs:
+      'r0': ['0x00', '$$']
+    mems:
+      '0x00000000': ['0x00', '$$']
+```
+Beside setting concrete values, like `0x00` in the example above, we might also mark certain
+registers and/or memory locations as being symbolic (indicated by the specifier `$$`). The symbolic
+values have not yet any effect during tracing, but will be central during symbolic execution (see 
+[Symbolic Execution](./5_symbex.md)).
 #### Hooks
 Next, the [circled.init.yaml](../morion/circled.init.yaml) file typically defines information about
 hooks (`hooks:`). A hook is a **sequence of consecutive assembly instructions** (from an `entry` to
@@ -130,8 +144,8 @@ hooks:
 ```
 As can be seen in the code excerpt above, hooks include - beside `entry` and `leave` addresses - a
 parameter `mode`. This is only relevant during symbolic execution and will therefore be explained
-in [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace collection can
-be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
+in section [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace
+collection can be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
