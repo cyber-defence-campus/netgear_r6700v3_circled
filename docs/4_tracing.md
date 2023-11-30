@@ -279,21 +279,21 @@ states:
 If we look at the end of the tracing process's debug output, we can observe that the trace did not
 end at our configured stop address `0xf1a4`, but at address `0xcf24`:
 ```
-[2023-11-30 13:37:05] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
-[2023-11-30 13:37:05] [DEBG] Regs:
-[2023-11-30 13:37:05] [DEBG] Mems:
-[2023-11-30 13:37:05] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}
-[2023-11-30 13:37:05] [DEBG] Regs:
-[2023-11-30 13:37:05] [DEBG] Mems:
-[2023-11-30 13:37:05] [DEBG] 	0xbeffc86c = 0x41 A
-[2023-11-30 13:37:05] [DEBG] 	0xbeffc86d = 0x41 A
+[2023-11-30 08:56:41] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
+[2023-11-30 08:56:41] [DEBG] Regs:
+[2023-11-30 08:56:41] [DEBG] Mems:
+[2023-11-30 08:56:41] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+[2023-11-30 08:56:41] [DEBG] Regs:
+[2023-11-30 08:56:41] [DEBG] Mems:
+[2023-11-30 08:56:41] [DEBG] 	0xbeffc86c = 0x41 A
+[2023-11-30 08:56:41] [DEBG] 	0xbeffc86d = 0x41 A
 [...]
-[2023-11-30 13:37:05] [DEBG] 	0xbeffc88a = 0x41 A
-[2023-11-30 13:37:05] [DEBG] 	0xbeffc88b = 0x41 A
-[2023-11-30 13:37:05] [ERRO] 	Failed to execute instruction at address 0x0000cf24: 'Remote connection closed'
-[2023-11-30 13:37:05] [INFO] ... finished tracing (pc=0x0000cf24).
-[2023-11-30 13:37:05] [INFO] Start storing trace file 'circled.yaml'...
-[2023-11-30 13:37:07] [INFO] ... finished storing trace file 'circled.yaml'.
+[2023-11-30 08:56:41] [DEBG] 	0xbeffc88a = 0x41 A
+[2023-11-30 08:56:41] [DEBG] 	0xbeffc88b = 0x41 A
+[2023-11-30 08:56:41] [ERRO] 	Failed to execute instruction at address 0x0000cf24: 'Remote connection closed'
+[2023-11-30 08:56:41] [INFO] ... finished tracing (pc=0x0000cf24).
+[2023-11-30 08:56:41] [INFO] Start storing trace file 'circled.yaml'...
+[2023-11-30 08:56:43] [INFO] ... finished storing trace file 'circled.yaml'.
 ```
 This is due to the fact, that our target binary crashed before reaching the intended stop address.
 More specifically, and as we will see in greater detail later on, the instruction
