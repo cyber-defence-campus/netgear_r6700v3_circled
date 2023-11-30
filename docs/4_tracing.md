@@ -22,8 +22,8 @@ ARMv7-based device (see [Emulation](./2_emulation.md)). The collected trace may 
 different symbolic execution runs/analyses (see [Symbolic Execution](./5_symbex.md)), which can be
 done offline, for instance on a more powerful machine.
 
-<figure align="center">
-  <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
+<figure>
+  <img src="../images/Morion_Overview.svg" alt="Morion Overview" class="center"/>
   <figcaption>
     Fig. 1: Morion Overview - Showing the two main phases of Morion, tracing and symbolic execution
   </figcaption>
