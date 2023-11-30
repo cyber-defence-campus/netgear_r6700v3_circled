@@ -331,11 +331,20 @@ setting return values.
 [2023-11-28 08:56:37] [DEBG] 	0xbeffb877 = 0x00
 [...]
 ```
-In general, not only function return values, but **all side-effects** of a hooked function towards
-registers and/or memory locations need to be covered in order for the symbolic execution to be 
-correct. This is why dedicated function hooks might be needed.
 #### Dedicated Function Hook (Example libc:fgets)
-TODO: Maybe use sscanf instead!
+In general, not only function return values (as discussed in the previous section), but all
+**side-effects** with respect to registers and/or memory locations need to be covered, in order for 
+the symbolic execution to be correct. This is why dedicated function hooks might be needed.
+
+One such function, with rather simple to cover side-effects, is _fgets_ from _libc_
+(synopsis: `char *fgets(char *s, int n, FILE *stream)`). The function reads a maximum of `n-1` bytes
+from a file `stream` to an address given by `s` (newline or end-of-file conditions can make the
+function to read less bytes).
+
+As can be seen in the debug output below, [Morion](https://github.com/pdamian/morion) injected 
+instructions (addresses `0xcfe0`, `0x1000` - `0x6008`) that move the concrete string read by
+`fgets` (which actually corresponds to the PoV payload served by the HTTP server) to the appropriate 
+memory addresses.
 ```
 [...]
 [2023-11-28 08:56:32] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5                                            #                                                                               
