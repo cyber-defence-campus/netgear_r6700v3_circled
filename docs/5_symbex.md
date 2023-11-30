@@ -70,13 +70,6 @@ below:
 | morion_pwndbg           | Use _morion_ together with the GDB-plugin _pwndbg_. |
 
 ## Discussion
-In section [Exploitation](./6_exploitation.md) we will see how symbolic execution might help us to
-decide whether the crasher might be exploited or not, i.e. corresponds to an actual security
-vulnerability or just an annoying bug. We will also see, how symbolic execution can quickly give us
-a first high-level intuition about what capabilities (e.g. arbitrary read/write, control-flow
-hijacking, etc.) one might gain with the underlying issue. Also, we will show how symbolic execution
-might help us during the process of generating a working exploit for the targeted vulnerability
-(CVE-2022-27646).
 ### Loading the Trace File
 ```
 [2023-11-30 12:47:34] [INFO] Start loading file 'circled.yaml'...
@@ -197,3 +190,10 @@ might help us during the process of generating a working exploit for the targete
 [2023-11-30 12:48:39] [INFO] Start storing file 'circled.yaml'...
 [2023-11-30 12:48:41] [INFO] ... finished storing file 'circled.yaml'.
 ```
+In section [Exploitation](./6_exploitation.md) we will see how symbolic execution might help us to
+decide whether the crasher might be **exploitable** or not, i.e. corresponds to an actual security
+vulnerability or just an annoying bug. We will also see, how symbolic execution can quickly give us
+a first high-level intuition about what **capabilities** (e.g. arbitrary read/write, control-flow
+hijacking, etc.) one might gain with the underlying issue. Also, we will show how symbolic execution
+might help us during the process of generating a working **exploit** for the targeted vulnerability
+(CVE-2022-27646).
