@@ -301,8 +301,7 @@ The described behavior can be observed in [Morion](https://github.com/pdamian/mo
 below. Instructions with addresses `0xd040`, `0x1000` - `0x1010` have been injected by
 [Morion](https://github.com/pdamian/morion) to set the correct concrete return value(s) of the
 function. The last injected instruction at address `0x1010` transfers control back to the
-instruction immediately following the one at the `leave` address
-(`0x0000d048 (00 00 53 e3): cmp r3, #0`).
+instruction at the `leave` address (`0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]`).
 
 Note: [Morion](https://github.com/pdamian/morion) also implements the concept of hooking arbitrary
 sequences of assembly instructions ("`hooks:lib:inst_hook:`"), not necessarily belonging to function
@@ -323,7 +322,13 @@ setting return values.
 [2023-11-28 08:56:37] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0                                         # // Hook: lib:func_hook (on=leave, mode=skip)                                  
 [2023-11-28 08:56:37] [DEBG] 0x00001010 (0b 30 00 ea): b #0xc034                                             # // Hook: lib:func_hook (on=leave, mode=skip)                                  
 [2023-11-28 08:56:37] [INFO] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
-[2023-11-28 08:56:37] [DEBG] 0x0000d048 (00 00 53 e3): cmp r3, #0                                            #
+[2023-11-28 08:56:37] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]                                      #                                                                               
+[2023-11-28 08:56:37] [DEBG] Regs:
+[2023-11-28 08:56:37] [DEBG] Mems:
+[2023-11-28 08:56:37] [DEBG] 	0xbeffb874 = 0x06  
+[2023-11-28 08:56:37] [DEBG] 	0xbeffb875 = 0x00  
+[2023-11-28 08:56:37] [DEBG] 	0xbeffb876 = 0x00  
+[2023-11-28 08:56:37] [DEBG] 	0xbeffb877 = 0x00
 [...]
 ```
 In general, not only function return values, but **all side-effects** of a hooked function towards
