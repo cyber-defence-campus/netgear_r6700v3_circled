@@ -290,7 +290,7 @@ addresses `0xd040` and `0xd044`, respectively. The corresponding entry is locate
 "`hooks:lib:func_hook:`", which means that an abstract hooking mechanism for functions should be
 used (see
 [morion/tracing/gdb/hooking/lib](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
-for implementation details), as compared to a dedicated one, which will be the case in the second
+for implementation details), as compared to a specific one, which will be the case in the second
 example below. The **abstract function hooking** mechanism will skip the actual assembly
 instructions of the function, and instead inject instructions that move the function's concrete 
 return value to the appropriate return register(s) (`r0`/`r1` for ARMv7 architectures). This is
@@ -331,10 +331,10 @@ setting return values.
 [2023-11-28 08:56:37] [DEBG] 	0xbeffb877 = 0x00
 [...]
 ```
-#### Dedicated Function Hook (Example libc:fgets)
+#### Specific Function Hook (Example libc:fgets)
 In general, not only function return values (as discussed in the previous section), but all
 **side-effects** with respect to registers and/or memory locations need to be covered, in order for
-the symbolic execution to be correct. This is why dedicated function hooks might be needed.
+the symbolic execution to be correct. This is why specific function hooks might be needed.
 
 One such function, with rather simple to cover side-effects, is _fgets_ from _libc_
 (synopsis: `char *fgets(char *s, int n, FILE *stream)`). The function reads a maximum of `n-1` bytes
@@ -379,3 +379,8 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 [2023-11-28 08:56:33] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
 [2023-11-28 08:56:33] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0                                            #  
 ```
+The implementation of all a function's side-effects might not always be so simple as in the example 
+of `fgets`. In consequence, **simplifications/abstractions** might sometimes be needed, which as a
+drawback might introduce inconsistencies between the effective concrete and the symbolic execution.
+Depending on the intended task that you intend to solve with symbolic execution, this might be
+acceptable or not.
