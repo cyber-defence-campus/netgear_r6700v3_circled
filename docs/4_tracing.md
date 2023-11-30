@@ -146,6 +146,11 @@ As can be seen in the code excerpt above, hooks include - beside `entry` and `le
 parameter `mode`. This is only relevant during symbolic execution and will therefore be explained
 in section [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace
 collection can be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
+
+Note: As mentioned before, [Morion](https://github.com/pdamian/morion) generally intends to favor 
+configuration flexibility over full automation. Due to this, `leave` addresses of hooks (currently) 
+need to be configured manually, since in general the return address of a function is hard to 
+determine (e.g. tail calls).
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
