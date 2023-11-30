@@ -3,11 +3,11 @@
 2. [Emulation](./2_emulation.md)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
 4. [Tracing](./4_tracing.md)
-    1. [Setup](./4_tracing.md#setup)
-        1. [YAML File](./4_tracing.md#yaml-file)
-    2. [Run](./4_tracing.md#run)
-    3. [Discussion](./4_tracing.md#discussion)
 5. [Symbolic Execution](./5_symbex.md)
+    1. [Setup](./5_symbex.md#setup)
+        1. [YAML File](./5_symbex.md#yaml-file)
+    2. [Run](./5_symbex.md#run)
+    3. [Discussion](./5_symbex.md#discussion)
 6. [Exploitation](./6_exploitation.md)
 # Symbolic Execution
 ## TODO
@@ -37,15 +37,27 @@ hooks:
 [...]
 ```
 ## Run
-Use the following steps to **symbolically execute** a previously collected trace from a concrete
-execution  run of binary _circled_.
+Use the following step to **symbolically execute** a previously collected trace from a concrete
+execution run of binary _circled_:
 
-1. TODO
+1. Use _morion_ to execute the collected trace symbolically:
+    - System: [Host (morion)](./1_setup.md)
+    - Command:
+        ```
+        cd morion/;             # Ensure to be within the correct directory
+        morion -h;              # Optionally show usage help
+        morion circled.yaml;    # Execute program trace symbolically
+        ```
 
 Remember that if you followed along the instructions in section [Tracing](./4_tracing.md), the trace
 was collected while the vulnerable binary processed a sample payload leading to a
 **crasher/segfault** (as might have been identified by a fuzzer).
 ### Analysis Modules
+[Morion](https://github.com/pdamian/morion) implements different analysis modules that are based on
+symbolic execution. The chosen design attempts to make [Morion](https://github.com/pdamian/morion)
+easily extendable with new modules. The currently implemented ones are summarized in the table
+below:
+
 | Module                  | Description |
 |-------------------------|-------------|
 | morion                  | Perform symbolic execution on a binary's program trace. |
@@ -56,9 +68,6 @@ was collected while the vulnerable binary processed a sample payload leading to 
 | morion_control_hijacker | Symbolically execute a program trace to identify potential control flow hijacks. A control flow hijack corresponds to registers, influencing the control flow (such as PC), becoming (partly) symbolic. |
 | morion_rop_generator    | Symbolically execute a program trace to generate a ROP chain. |
 | morion_pwndbg           | Use _morion_ together with the GDB-plugin _pwndbg_. |
-
-TODO:
-- Use `-h` for help
 
 ## Discussion
 In section [Exploitation](./6_exploitation.md) we will see how symbolic execution might help us to
