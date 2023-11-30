@@ -276,8 +276,8 @@ states:
       [...]
 ```
 
-If we look at the end of the tracing process, we can observe that the trace did not end at our
-configured stop address `0xf1a4`, but at address `0xcf24`:
+If we look at the end of the tracing process's debug output, we can observe that the trace did not
+end at our configured stop address `0xf1a4`, but at address `0xcf24`:
 ```
 [2023-11-30 13:37:05] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
 [2023-11-30 13:37:05] [DEBG] Regs:
@@ -295,12 +295,13 @@ configured stop address `0xf1a4`, but at address `0xcf24`:
 [2023-11-30 13:37:05] [INFO] Start storing trace file 'circled.yaml'...
 [2023-11-30 13:37:07] [INFO] ... finished storing trace file 'circled.yaml'.
 ```
-This is due to the fact, that our target binary **crashed** before reaching the intended stop address.
+This is due to the fact, that our target binary crashed before reaching the intended stop address.
 More specifically, and as we will see in greater detail later on, the instruction
-`0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}` tried to pop a value from the 
-stack that led to an invalid program counter (`pc` register), and in consequence resulted in a 
-segmentation fault (segfault). We will learn later on how [symbolic execution](./5_symbex.md) can
-help us to decide whether this situation is exploitable or not, and if so, how we can do it.
+`0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}` tried to pop a value from the
+stack that led to an invalid program counter (`pc` register), and in consequence, resulted in a
+**segmentation fault** (segfault). We will learn later on how [symbolic execution](./5_symbex.md)
+can help us to decide whether this situation is [exploitable](./6_exploitation.md) or not, and if
+so, how we can do it.
 ### How Hooking Works
 As mentioned before, hooking allows a specified **sequence of assembly instructions** (e.g.
 corresponding to a called function) not to be added to the trace. In consequence, these instructions
