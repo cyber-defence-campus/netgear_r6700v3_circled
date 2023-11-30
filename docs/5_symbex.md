@@ -65,8 +65,8 @@ below:
 | morion_branch_analyzer  | Symbolically execute a program trace for branch analysis. The analysis identifies multi-way branches along the trace and outputs concrete values of how to reach the non-taken branch. A specific branch is only evaluated once. |
 | morion_path_analyzer    | Symbolically execute a program trace for path analysis. The analysis identifies unique paths along the trace and outputs concrete values of how to reach these paths. A path consists of a sequence of multi-way branches. The last multi-way branch in each outputted path is non- taken in the concrete execution of the trace. |
 | morion_memory_hijacker  | Symbolically execute a program trace to identify potential memory hijacks. A memory hijack corresponds to the target of a memory read or write operation being (partly) symbolic. |
-| morion_control_hijacker | Symbolically execute a program trace to identify potential control flow hijacks. A control flow hijack corresponds to registers, influencing the control flow (such as PC), becoming (partly) symbolic. |
-| morion_rop_generator    | Symbolically execute a program trace to generate a ROP chain. |
+| morion_control_hijacker | Symbolically execute a program trace to identify potential control flow hijacks. A control flow hijack corresponds to registers, influencing the control flow (such as pc), becoming (partly) symbolic. |
+| morion_rop_generator    | Symbolically execute a program trace to help generating a ROP chain. |
 | morion_pwndbg           | Use _morion_ together with the GDB-plugin _pwndbg_. |
 
 ## Discussion
