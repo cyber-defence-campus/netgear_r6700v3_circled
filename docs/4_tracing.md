@@ -333,7 +333,7 @@ setting return values.
 ```
 #### Dedicated Function Hook (Example libc:fgets)
 In general, not only function return values (as discussed in the previous section), but all
-**side-effects** with respect to registers and/or memory locations need to be covered, in order for 
+**side-effects** with respect to registers and/or memory locations need to be covered, in order for
 the symbolic execution to be correct. This is why dedicated function hooks might be needed.
 
 One such function, with rather simple to cover side-effects, is _fgets_ from _libc_
@@ -341,9 +341,9 @@ One such function, with rather simple to cover side-effects, is _fgets_ from _li
 from a file `stream` to an address given by `s` (newline or end-of-file conditions can make the
 function to read less bytes).
 
-As can be seen in the debug output below, [Morion](https://github.com/pdamian/morion) injected 
+As can be seen in the debug output below, [Morion](https://github.com/pdamian/morion) injected
 instructions (addresses `0xcfe0`, `0x1000` - `0x6008`) that move the concrete string read by
-`fgets` (which actually corresponds to the PoV payload served by the HTTP server) to the appropriate 
+`fgets` (which actually corresponds to the PoV payload served by the HTTP server) to the appropriate
 memory addresses.
 ```
 [...]
