@@ -334,7 +334,8 @@ setting return values.
 #### Specific Function Hook (Example libc:fgets)
 In general, not only function return values (as discussed in the previous section), but all
 **side-effects** with respect to registers and/or memory locations need to be covered, in order for
-the symbolic execution to be correct. This is why specific function hooks might be needed.
+the symbolic execution to be correct. This is why more specific function hook implementations might
+be needed.
 
 One such function, with rather simple to cover side-effects, is _fgets_ from _libc_
 (synopsis: `char *fgets(char *s, int n, FILE *stream)`). The function reads a maximum of `n-1` bytes
@@ -342,10 +343,10 @@ from a file `stream` to an address given by `s` (newline or end-of-file conditio
 function read less bytes).
 In the file [circled.init.yaml](../morion/circled.init.yaml), the hook for function `fgets` is
 defined under the key `hooks:libc:fgets:`. [Morion](https://github.com/pdamian/morion) will
-therefore apply the specific _fgets_ implementation from file
+therefore apply the specific _fgets_ implementation as defined in file
 [morion/tracing/gdb/hooking/libc](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/libc.py).
 
-As can be seen in the debug output below, [Morion](https://github.com/pdamian/morion) injected
+As can be seen in the output below, [Morion](https://github.com/pdamian/morion) injected
 instructions (addresses `0xcfe0`, `0x1000` - `0x6008`) that move the concrete string read by
 `fgets` (which actually corresponds to the PoV payload served by the HTTP server) to the appropriate
 memory addresses.
@@ -385,6 +386,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 ```
 The implementation of all a function's side-effects might not always be so simple as in the example 
 of `fgets`. In consequence, **simplifications/abstractions** might sometimes be needed, which as a
-drawback might introduce inconsistencies between the effective concrete and the symbolic execution.
+drawback might introduce inconsistencies between the effective concrete and symbolic execution.
 Depending on the intended task that you intend to solve with symbolic execution, this might be
 acceptable or not.
