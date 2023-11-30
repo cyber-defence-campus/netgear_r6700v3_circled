@@ -289,22 +289,25 @@ The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for ent
 addresses `0xd040` and `0xd044`, respectively. The corresponding entry is located under the key
 "`hooks:lib:func_hook:`", which means that an abstract hooking mechanism for functions should be
 used (see
-[Morion/Tracing/GDB/Hooking/](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
+[morion/tracing/gdb/hooking/lib](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
 for implementation details), as compared to a dedicated one, which will be the case in the second
 example below. The **abstract function hooking** mechanism will skip the actual assembly
-instructions of the function, but inject some instructions to move the value of the function's
-concrete execution to the return register(s) (`r0`/`r1` for ARMv7 architectures). This is needed so
-that during symbolic execution the return register(s) hold the correct concrete value(s).
+instructions of the function, and instead inject instructions that move the function's concrete 
+return value to the appropriate return register(s) (`r0`/`r1` for ARMv7 architectures). This is
+needed so that during symbolic execution the return register(s) hold the correct concrete value(s)
+and the symbolic execution proceeds in synchronization with the concrete one. 
 
 The described behavior can be observed in [Morion](https://github.com/pdamian/morion)'s debug output
-below. Instructions within the address range of `0xd040` and `0x1010` have been injected by
+below. Instructions with addresses `0xd040`, `0x1000` - `0x1010` have been injected by
 [Morion](https://github.com/pdamian/morion) to set the correct concrete return value(s) of the
-function.
+function. The last injected instruction at address `0x1010` transfers control back to the
+instruction immediately following the one at the `leave` address
+(`0x0000d048 (00 00 53 e3): cmp r3, #0`).
 
 Note: [Morion](https://github.com/pdamian/morion) also implements the concept of hooking arbitrary
 sequences of assembly instructions ("`hooks:lib:inst_hook:`"), not necessarily belonging to function
-calls. These are similar to the ones regarding functions, but do not inject any instructions for set
-return values.
+calls. These are similar to the ones regarding functions, but do not inject any instructions for
+setting return values.
 ```
 [...]
 [2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
@@ -324,8 +327,8 @@ return values.
 [...]
 ```
 In general, not only function return values, but **all side-effects** of a hooked function towards
-registers and memory locations need to covered in order for the symbolic execution to be correct.
-This is why dedicated function hooks might be needed.
+registers and/or memory locations need to be covered in order for the symbolic execution to be 
+correct. This is why dedicated function hooks might be needed.
 #### Dedicated Function Hook (Example libc:fgets)
 TODO: Maybe use sscanf instead!
 ```
