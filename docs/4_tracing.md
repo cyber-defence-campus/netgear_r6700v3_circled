@@ -415,5 +415,5 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 The implementation of all a function's side-effects might not always be so simple as in the example 
 of `fgets`. In consequence, **simplifications/abstractions** might sometimes be needed, which as a
 drawback might introduce inconsistencies between the effective concrete and symbolic execution.
-Depending on the intended task that you intend to solve with symbolic execution, this might be
-acceptable or not.
+Depending on the intended task that you intend to solve with symbolic execution, this might or might not be
+acceptable.
