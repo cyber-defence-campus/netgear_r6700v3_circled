@@ -63,7 +63,7 @@ morion_trace debug circled.yaml 0xf1a4
 As can be seen in the code excerpt above, the trace we intend to collect should start/stop at 
 addresses `0xcfc0` and `0xf1a4`, respectively. Start and stop addresses of the trace need to be
 selected adequately for the intended purpose. In our specific case where we intend to generate an
-exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), which means that the
+exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this means that the
 trace should include both the points where attacker-controllable inputs are introduced and where
 these inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a
 memory violation condition - as for instance found by a fuzzing campaign).
