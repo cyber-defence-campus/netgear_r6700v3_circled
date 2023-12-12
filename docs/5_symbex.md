@@ -8,8 +8,21 @@
         1. [YAML File](./5_symbex.md#yaml-file)
     2. [Run](./5_symbex.md#run)
     3. [Discussion](./5_symbex.md#discussion)
+      1. [Loading the Trace File](./5_symbex.md#loading-the-trace-file)
+      2. [How Hooking Works](./5_symbex.md#how-hooking-works)
+      3. [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state)
 6. [Exploitation](./6_exploitation.md)
 # Symbolic Execution
+Section [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
+target, which in our specific case is the ARMv7 binary *circled*. If you followed along the given
+instructions, this trace was stored in the file `circled.yaml`. As we will see below, this file may
+then be used as input to the different **analysis modules** implemented by Morion. These analysis
+modules execute the collected trace symbolically, which then allows for reasoning about the target's
+behavior by finding solutions for specified mathematical problems. An example of such a mathematical
+problem might be the question whether or not it is possible for the program counter (register `pc`)
+to take a certain value, and if so, how this can be achieved (leading to a control-flow hijacking
+condition).
+
 ## TODO
 This parameter is used to distinguish multiple symbolic hooking implementations (see
 [Symbolic Execution](./5_symbex.md)) that will be executed instead of the actual function's assembly
