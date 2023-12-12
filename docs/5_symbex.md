@@ -23,6 +23,13 @@ problem might be the question whether or not it is possible for the program coun
 to take a certain value, and if so, how this can be achieved (leading to a control-flow hijacking
 condition).
 
+<figure>
+  <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
+  <figcaption>
+    Fig. 1: Morion Overview - Showing Morion's two operation modes tracing and symbolic execution.
+  </figcaption>
+</figure>
+
 ## TODO
 This parameter is used to distinguish multiple symbolic hooking implementations (see
 [Symbolic Execution](./5_symbex.md)) that will be executed instead of the actual function's assembly
