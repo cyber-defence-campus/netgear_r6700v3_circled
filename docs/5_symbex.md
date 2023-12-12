@@ -5,12 +5,11 @@
 4. [Tracing](./4_tracing.md)
 5. [Symbolic Execution](./5_symbex.md)
     1. [Setup](./5_symbex.md#setup)
-        1. [YAML File](./5_symbex.md#yaml-file)
     2. [Run](./5_symbex.md#run)
     3. [Discussion](./5_symbex.md#discussion)
-      1. [Loading the Trace File](./5_symbex.md#loading-the-trace-file)
-      2. [How Hooking Works](./5_symbex.md#how-hooking-works)
-      3. [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state)
+        1. [Loading the Trace File](./5_symbex.md#loading-the-trace-file)
+        2. [How Hooking Works](./5_symbex.md#how-hooking-works)
+        3. [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state)
 6. [Exploitation](./6_exploitation.md)
 # Symbolic Execution
 Section [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
