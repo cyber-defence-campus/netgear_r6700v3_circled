@@ -25,7 +25,7 @@ done offline, for instance on a more powerful machine.
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
   <figcaption>
-    Fig. 1: Morion Overview - Showing the two main phases of Morion, tracing and symbolic execution
+    Fig. 1: Morion Overview - Showing the two main phases of Morion, tracing and symbolic execution.
   </figcaption>
 </figure>
 
@@ -63,7 +63,7 @@ morion_trace debug circled.yaml 0xf1a4
 As can be seen in the code excerpt above, the trace we intend to collect should start/stop at 
 addresses `0xcfc0` and `0xf1a4`, respectively. Start and stop addresses of the trace need to be
 selected adequately for the intended purpose. In our specific case where we intend to generate an
-exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this means that the
+exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), which means that the
 trace should include both the points where attacker-controllable inputs are introduced and where
 these inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a
 memory violation condition - as for instance found by a fuzzing campaign).
@@ -415,5 +415,5 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 The implementation of all a function's side-effects might not always be so simple as in the example 
 of `fgets`. In consequence, **simplifications/abstractions** might sometimes be needed, which as a
 drawback might introduce inconsistencies between the effective concrete and symbolic execution.
-Depending on the intended task that you intend to solve with symbolic execution, this might or might not be
-acceptable.
+Depending on the intended task that you intend to solve with symbolic execution, this might or might
+not be acceptable.
