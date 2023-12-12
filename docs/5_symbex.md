@@ -15,13 +15,13 @@
 # Symbolic Execution
 Section [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
 target, which in our specific case is the ARMv7 binary *circled*. If you followed along the given
-instructions, this trace was stored in the file `circled.yaml`. As we will see below, this file may
-then be used as input to the different **analysis modules** implemented by Morion. These analysis
-modules execute the collected trace symbolically, which then allows for reasoning about the target's
-behavior by finding solutions for specified mathematical problems. An example of such a mathematical
-problem might be the question whether or not it is possible for the program counter (register `pc`)
-to take a certain value, and if so, how this can be achieved (leading to a control-flow hijacking
-condition).
+instructions, this trace was stored in the file `circled.yaml`. As we will see below, this trace
+file may then be used as input for the different **analysis modules** implemented by Morion. These
+analysis modules execute the collected trace **symbolically**, which then allows for reasoning about
+the target's behavior by solving constraints for specified mathematical problems. An example for
+such a problem might for instance be the question of whether or not it is possible for the program
+counter (register `pc`) to become a certain value, and if so, how this can be achieved (leading to a
+control-flow hijacking condition).
 
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
@@ -30,15 +30,10 @@ condition).
   </figcaption>
 </figure>
 
-## TODO
-This parameter is used to distinguish multiple symbolic hooking implementations (see
-[Symbolic Execution](./5_symbex.md)) that will be executed instead of the actual function's assembly
-instructions.
-
-[Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
-common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
 ## Setup
+Before running one of Morion's symbolic analysis modules, the following file might be adjusted.
 ### YAML File
+#### States
 #### Hooks
 - parameter `mode`
 ```
@@ -111,19 +106,19 @@ below:
 [2023-11-30 12:47:37] [DEBG] 	v=0x0
 [2023-11-30 12:47:37] [DEBG] 	z=0x0
 [2023-11-30 12:47:37] [DEBG] Concrete Mems:
-[2023-11-30 12:47:37] [DEBG] 	0x0000d230=0xbc  
+[2023-11-30 12:47:37] [DEBG] 	0x0000d230=0xbc
 [2023-11-30 12:47:37] [DEBG] 	0x0000d231=0x6a j
-[2023-11-30 12:47:37] [DEBG] 	0x0000d232=0xff  
-[2023-11-30 12:47:37] [DEBG] 	0x0000d233=0xff  
-[...] 
+[2023-11-30 12:47:37] [DEBG] 	0x0000d232=0xff
+[2023-11-30 12:47:37] [DEBG] 	0x0000d233=0xff
+[...]
 [2023-11-30 12:47:37] [DEBG] 	0x000120f8=0x25 %
 [2023-11-30 12:47:37] [DEBG] 	0x000120f9=0x73 s
-[2023-11-30 12:47:37] [DEBG] 	0x000120fa=0x20  
+[2023-11-30 12:47:37] [DEBG] 	0x000120fa=0x20
 [2023-11-30 12:47:37] [DEBG] 	0x000120fb=0x25 %
 [2023-11-30 12:47:37] [DEBG] 	0x000120fc=0x73 s
-[2023-11-30 12:47:37] [DEBG] 	0x000120fd=0x00  
+[2023-11-30 12:47:37] [DEBG] 	0x000120fd=0x00
 [...]
-[2023-11-30 12:47:37] [DEBG] 	0xbeffc104=0x00  
+[2023-11-30 12:47:37] [DEBG] 	0xbeffc104=0x00
 [2023-11-30 12:47:37] [DEBG] 	0xbeffc86c=0x41 A
 [2023-11-30 12:47:37] [DEBG] 	0xbeffc86d=0x41 A
 [...]
@@ -217,3 +212,11 @@ a first high-level intuition about what **capabilities** (e.g. arbitrary read/wr
 hijacking, etc.) one might gain with the underlying issue. Also, we will show how symbolic execution
 might help us during the process of generating a working **exploit** for the targeted vulnerability
 (CVE-2022-27646).
+
+## TODO
+This parameter is used to distinguish multiple symbolic hooking implementations (see
+[Symbolic Execution](./5_symbex.md)) that will be executed instead of the actual function's assembly
+instructions.
+
+[Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
+common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
