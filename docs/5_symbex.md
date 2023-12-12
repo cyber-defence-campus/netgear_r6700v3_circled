@@ -16,12 +16,12 @@
 Section [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
 target, which in our specific case is the ARMv7 binary *circled*. If you followed along the given
 instructions, this trace was stored in the file `circled.yaml`. As we will see below, this trace
-file may then be used as input for the different **analysis modules** implemented by Morion. These
-analysis modules execute the collected trace **symbolically**, which then allows for reasoning about
-the target's behavior by solving constraints for specified mathematical problems. An example for
-such a problem might for instance be the question of whether or not it is possible for the program
-counter (register `pc`) to become a certain value, and if so, how this can be achieved (leading to a
-control-flow hijacking condition).
+file may then be used as input for the different **analysis modules** implemented by
+[Morion](https://github.com/pdamian/morion). These analysis modules execute the collected trace
+**symbolically**, which then allows for reasoning about the target's behavior by solving constraints
+for specified mathematical problems. An example for such a problem might for instance be the
+question of whether or not it is possible for the program counter (register `pc`) to become a
+certain value, and if so, how this can be achieved (leading to a control-flow hijacking condition).
 
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
@@ -31,26 +31,18 @@ control-flow hijacking condition).
 </figure>
 
 ## Setup
-Before running one of Morion's symbolic analysis modules, the following file might be adjusted.
-### YAML File
-#### States
-#### Hooks
-- parameter `mode`
-```
-hooks:
-  lib:
-    func_hook:
-    - {entry: '0xd040', leave: '0xd044', mode: 'skip'}   # fclose@plt
-    [...]
-    - {entry: '0xc9c4', leave: '0xc9c8', mode: 'skip'}   # free@plt
-  libc:
-    fgets:
-    - {entry: '0xcfe0', leave: '0xcfe4', mode: 'model'}  # fgets@plt
-    - {entry: '0xd094', leave: '0xd098', mode: 'model'}  # fgets@plt
-    sscanf:
-    - {entry: '0xcffc', leave: '0xd000', mode: 'model'}  # sscanf@plt
-[...]
-```
+Before running one of [Morion](https://github.com/pdamian/morion)'s symbolic analysis modules, the
+collected trace file `circled.yaml` might optionally be customized. Such **customizations** could
+for example be to:
+- Mark (additional) register values or memory locations as being symbolic
+- Modify the parameter `mode` of hooked functions
+- Add/remove assembly instructions to/from the trace
+- Add extra inputs for analysis modules (e.g. intended ROP chains for module `morion_rop_generator`)
+
+In our example, all relevant configurations have already been defined in the file
+[circled.init.yaml](../morion/circled.init.yaml), which during tracing got copied over to the file
+`circled.yaml`. In our specific example, no further customizations are needed.
+
 ## Run
 Use the following step to **symbolically execute** a previously collected trace from a concrete
 execution run of binary _circled_:
@@ -85,6 +77,8 @@ below:
 | morion_pwndbg           | Use _morion_ together with the GDB-plugin _pwndbg_. |
 
 ## Discussion
+In the following, we discuss some aspects of the symbolic execution process as implemented by
+[Morion](https://github.com/pdamian/morion).
 ### Loading the Trace File
 ```
 [2023-11-30 12:47:34] [INFO] Start loading file 'circled.yaml'...
@@ -220,3 +214,35 @@ instructions.
 
 [Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
 common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
+
+### YAML File
+#### States
+As explained in section [Collecting the Trace](./4_tracing.md#collecting-the-trace), the trace file
+recorded - besides the executed assembly instructions - initial values of all registers and memory
+locations accessed by the trace. These are stored in `states:entry:regs:` and `states:entry:mems`,
+respectively.
+```
+states:
+  entry:
+    regs:
+      'r0': ['0x00', '$$']
+    mems:
+      '0x00000000': ['0x00', '$$']
+```
+#### Hooks
+- parameter `mode`
+```
+hooks:
+  lib:
+    func_hook:
+    - {entry: '0xd040', leave: '0xd044', mode: 'skip'}   # fclose@plt
+    [...]
+    - {entry: '0xc9c4', leave: '0xc9c8', mode: 'skip'}   # free@plt
+  libc:
+    fgets:
+    - {entry: '0xcfe0', leave: '0xcfe4', mode: 'model'}  # fgets@plt
+    - {entry: '0xd094', leave: '0xd098', mode: 'model'}  # fgets@plt
+    sscanf:
+    - {entry: '0xcffc', leave: '0xd000', mode: 'model'}  # sscanf@plt
+[...]
+```
