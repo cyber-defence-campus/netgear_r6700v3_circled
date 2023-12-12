@@ -20,7 +20,8 @@ file may then be used as input for the different **analysis modules** implemente
 **symbolically**, which then allows for reasoning about the target's behavior by solving constraints
 for specified mathematical problems. An example for such a problem might for instance be the
 question of whether or not it is possible for the program counter (register `pc`) to become a
-certain value, and if so, how this can be achieved (leading to a control-flow hijacking condition).
+certain value, and if so, how this can be achieved (e.g. leading to a control-flow hijacking
+condition).
 
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
@@ -32,15 +33,16 @@ certain value, and if so, how this can be achieved (leading to a control-flow hi
 ## Setup
 Before running one of [Morion](https://github.com/pdamian/morion)'s symbolic analysis modules, the
 collected trace file `circled.yaml` might optionally be customized. Such **customizations** could
-for example be to:
+for example be:
 - Mark (additional) register values or memory locations as being symbolic
 - Modify the parameter `mode` of hooked functions
 - Add/remove assembly instructions to/from the trace
-- Add extra inputs for analysis modules (e.g. intended ROP chains for module `morion_rop_generator`)
+- Add extra inputs for analysis modules (e.g. intended ROP chains for analysis module
+  `morion_rop_generator`)
 
-In our example, all relevant configurations have already been defined in the file
-[circled.init.yaml](../morion/circled.init.yaml), which during tracing got copied over to the file
-`circled.yaml`. In our specific example, no further customizations are needed.
+In our documented example of the binary *circled*, all relevant configurations have already been
+defined in the file [circled.init.yaml](../morion/circled.init.yaml), which during tracing got
+copied over to the file `circled.yaml`. Therefore, no further customizations are needed.
 
 ## Run
 Use the following step to **symbolically execute** a previously collected trace from a concrete
@@ -73,7 +75,6 @@ below:
 | morion_memory_hijacker  | Symbolically execute a program trace to identify potential memory hijacks. A memory hijack corresponds to the target of a memory read or write operation being (partly) symbolic. |
 | morion_control_hijacker | Symbolically execute a program trace to identify potential control flow hijacks. A control flow hijack corresponds to registers, influencing the control flow (such as pc), becoming (partly) symbolic. |
 | morion_rop_generator    | Symbolically execute a program trace to help generating a ROP chain. |
-| morion_pwndbg           | Use _morion_ together with the GDB-plugin _pwndbg_. |
 
 ## Discussion
 In the following, we discuss some aspects of the symbolic execution process as implemented by
