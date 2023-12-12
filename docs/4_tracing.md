@@ -2,7 +2,7 @@
 1. [Setup](./1_setup.md)
 2. [Emulation](./2_emulation.md)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
-4. [Tracing](./4_tracing.md)
+4. [Tracing](./4_tracing.md#tracing)
     1. [Setup](./4_tracing.md#setup)
         1. [GDB Commands Script](./4_tracing.md#gdb-commands-script)
         2. [YAML File](./4_tracing.md#yaml-file)

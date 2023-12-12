@@ -1,5 +1,5 @@
 # Table of Contents
-1. [Setup](./1_setup.md)
+1. [Setup](./1_setup.md#setup)
 2. [Emulation](./2_emulation.md)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
 4. [Tracing](./4_tracing.md)

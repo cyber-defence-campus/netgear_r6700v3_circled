@@ -3,7 +3,7 @@
 2. [Emulation](./2_emulation.md)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
 4. [Tracing](./4_tracing.md)
-5. [Symbolic Execution](./5_symbex.md)
+5. [Symbolic Execution](./5_symbex.md#symbolic-execution)
     1. [Setup](./5_symbex.md#setup)
     2. [Run](./5_symbex.md#run)
     3. [Discussion](./5_symbex.md#discussion)

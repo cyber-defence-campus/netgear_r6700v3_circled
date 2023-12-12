@@ -1,6 +1,6 @@
 # Table of Contents
 1. [Setup](./1_setup.md)
-2. [Emulation](./2_emulation.md)
+2. [Emulation](./2_emulation.md#emulation)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
 4. [Tracing](./4_tracing.md)
 5. [Symbolic Execution](./5_symbex.md)
