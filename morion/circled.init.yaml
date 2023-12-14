@@ -38,10 +38,10 @@ ropchains:
   default:
     - preconditions:
         mems:
-          '0xbeffc88c': '0xb8'  # pc = [sp+8*4] = 0x0000c9b8
-          '0xbeffc88d': '0xc9'
-          '0xbeffc88e': '0x00'
-          '0xbeffc88f': '0x00'
+          '[sp+32+0]': '0xb8' # pc = [sp+8*4] = 0x0000c9b8
+          '[sp+32+1]': '0xc9'
+          '[sp+32+2]': '0x00'
+          '[sp+32+3]': '0x00'
       instruction:
         ['0x0000cf24', 'f0 8f bd e8', 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', 'Gadget 0.0']
     - preconditions:
