@@ -244,12 +244,13 @@ i.e. the file is updated as shown in the next code excerpt. The file `circled.ya
 for subsequent symbolic execution runs (see also [Symbolic Execution](./5_symbex.md)).
 ```
 [...]
-instructions:
-- ['0x0000cfc0', 64 37 65 e5, 'strb r3, [r5, #-0x764]!', '']
-- ['0x0000cfc4', 64 32 9f e5, 'ldr r3, [pc, #0x264]', '']
-[...]
-- ['0x0000cf20', 03 db 8d e2, 'add sp, sp, #0xc00', '']
-- ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
+trace:
+  instructions:
+  - ['0x0000cfc0', 64 37 65 e5, 'strb r3, [r5, #-0x764]!', '']
+  - ['0x0000cfc4', 64 32 9f e5, 'ldr r3, [pc, #0x264]', '']
+  [...]
+  - ['0x0000cf20', 03 db 8d e2, 'add sp, sp, #0xc00', '']
+  - ['0x0000cf24', f0 8f bd e8, 'pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}', '']
 states:
   entry:
     addr: '0x0000cfc0'
