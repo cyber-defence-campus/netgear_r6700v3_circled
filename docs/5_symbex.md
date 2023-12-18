@@ -13,7 +13,7 @@
 6. [Exploitation](./6_exploitation.md)
 # Symbolic Execution
 Section [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
-target, which in our specific case is the ARMv7 binary *circled*. If you followed along the given
+target, which in our specific case is the ARMv7 binary _circled_. If you followed along the given
 instructions, this trace was stored in the file `circled.yaml`. As we will see below, this trace
 file may then be used as input for the different **analysis modules** implemented by
 [Morion](https://github.com/pdamian/morion). These analysis modules execute the collected trace
@@ -34,13 +34,13 @@ condition).
 Before running one of [Morion](https://github.com/pdamian/morion)'s symbolic analysis modules, the
 collected trace file `circled.yaml` might optionally be customized. Such **customizations** could
 for example be:
-- Mark (additional) register values or memory locations as being symbolic
+- Mark (additional) register values or memory locations as being symbolic (in the entry state)
 - Modify the parameter `mode` of hooked functions
 - Add/remove assembly instructions to/from the trace
 - Add extra inputs for analysis modules (e.g. intended ROP chains for analysis module
-  `morion_rop_generator`)
+  `morion_rop_generator`, see e.g. section [Exploitation](./6_exploitation.md))
 
-In our documented example of the binary *circled*, all relevant configurations have already been
+In our documented example of the binary _circled_, all relevant configurations have already been
 defined in the file [circled.init.yaml](../morion/circled.init.yaml), which during tracing got
 copied over to the file `circled.yaml`. Therefore, no further customizations are needed.
 
@@ -80,9 +80,16 @@ below:
 In the following, we discuss some aspects of the symbolic execution process as implemented by
 [Morion](https://github.com/pdamian/morion).
 ### Loading the Trace File
+As explained in section [Collecting the Trace](./4_tracing.md#collecting-the-trace), beside the
+executed assembly instructions, the initial **concrete values** of all registers and/or memory
+locations accessed within the trace are recorded (in our specific example in file `circled.yaml`).
+Before starting the actual symbolic execution, these are used by
+[Morion](https://github.com/pdamian/morion) to initialize the corresponding concrete register and/or
+memory values within the context of the symbolic execution engine. This assures that the symbolic
+execution of the recorded trace uses the correct concrete register and/or memory values.
 ```
 [2023-11-30 12:47:34] [INFO] Start loading file 'circled.yaml'...
-[2023-11-30 12:47:37] [DEBG] Concrete Regs:
+[2023-11-30 12:47:37] [DEBG] Regs:
 [2023-11-30 12:47:37] [DEBG] 	n=0x0
 [2023-11-30 12:47:37] [DEBG] 	r0=0x21ae0
 [2023-11-30 12:47:37] [DEBG] 	r1=0x1
@@ -99,7 +106,7 @@ In the following, we discuss some aspects of the symbolic execution process as i
 [2023-11-30 12:47:37] [DEBG] 	sp=0xbeffb870
 [2023-11-30 12:47:37] [DEBG] 	v=0x0
 [2023-11-30 12:47:37] [DEBG] 	z=0x0
-[2023-11-30 12:47:37] [DEBG] Concrete Mems:
+[2023-11-30 12:47:37] [DEBG] Mems:
 [2023-11-30 12:47:37] [DEBG] 	0x0000d230=0xbc
 [2023-11-30 12:47:37] [DEBG] 	0x0000d231=0x6a j
 [2023-11-30 12:47:37] [DEBG] 	0x0000d232=0xff
@@ -118,8 +125,47 @@ In the following, we discuss some aspects of the symbolic execution process as i
 [...]
 [2023-11-30 12:47:37] [DEBG] 	0xbeffc88e=0x41 A
 [2023-11-30 12:47:37] [DEBG] 	0xbeffc88f=0x41 A
-[2023-11-30 12:47:37] [DEBG] Symbolic Regs:
-[2023-11-30 12:47:37] [DEBG] Symbolic Mems:
+[...]
+```
+In a similar manner, register and/or memory locations can be assigned a new **symbolic variable**,
+before the symbolic execution of the trace begins. To for example mark the register `r0` as being
+symbolic (alongside its concrete initial value of `0x00021ae0`), the trace file `circled.yaml`
+(respectively the file [circled.init.yaml](../morion/circled.init.yaml)) could contain an entry such
+as the one shown below:
+```
+[...]
+states:
+  entry:
+    regs:
+      'r0': ['0x00021ae0', '$$$$$$$$']  # Marking a register as being symbolic
+      [...]
+    mems:
+      '0x000120f8': ['0x25', '$$']      # Marking a memory address as being symbolic
+      [...]
+[...]
+```
+As can be seen in the excerpt above, [Morion](https://github.com/pdamian/morion) uses the specifier
+`$$` for referring to a symbolic byte. In the above example of a symbolic register `r0` and a
+symbolic memory location `0x000120f8`, [Morion](https://github.com/pdamian/morion)'s debug output
+would look like this:
+```
+[...]
+[2023-11-30 12:47:37] [DEBG] 	r0=0x21ae0
+[2023-11-30 12:47:37] [DEBG] 	r0=$$$$$$$$
+[...]
+[2023-11-30 12:47:37] [DEBG] 	0x000120f8=0x25 %
+[2023-11-30 12:47:37] [DEBG] 	0x000120f8=$$
+[...]
+```
+Note that in our example regarding binary _circled_, we do not manually mark any register and/or
+memory location as being symbolic. As will be explained in section
+[How Hooking Works](./5_symbex.md#how-hooking-works) below, in the case of bianry _circled_ all
+symbolic variables are automatically introduced by the model of the hooked function `fgets`.
+
+After initializing concrete and/or symbolic values of all necessary registers and/or memory
+locations, [Morion](https://github.com/pdamian/morion) sets up the defined function hooks:
+```
+[...]
 [2023-11-30 12:47:37] [DEBG] Hooks:
 [2023-11-30 12:47:37] [DEBG] 	0x0000cfe0: 'libc:fgets (on=entry, mode=model)'
 [2023-11-30 12:47:37] [DEBG] 	0x0000cfe4: 'libc:fgets (on=leave, mode=model)'
@@ -129,8 +175,10 @@ In the following, we discuss some aspects of the symbolic execution process as i
 [2023-11-30 12:47:37] [DEBG] 	0x0000d000: 'libc:sscanf (on=leave, mode=model)'
 [2023-11-30 12:47:37] [INFO] ... finished loading file 'circled.yaml'.
 ```
+How the hooking during symbolic execution works, is explained next.
 ### How Hooking Works
 ```
+[...]
 [2023-11-30 12:47:37] [INFO] Start symbolic execution...
 [2023-11-30 12:47:37] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]! #
 [...]
@@ -160,7 +208,7 @@ In the following, we discuss some aspects of the symbolic execution process as i
 [2023-11-30 12:47:37] [DEBG] 0x00006004 (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)
 [2023-11-30 12:47:37] [DEBG] 0x00006008 (f5 1b 00 ea): b #0xcfe4               # // Hook: libc:fgets (on=leave, mode=model)
 [2023-11-30 12:47:37] [DEBG] 	 s = 0xbeffc104
-[2023-11-30 12:47:37] [DEBG] 	*s = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA X'
+[2023-11-30 12:47:37] [DEBG] 	*s = 'AAA[...]AAA X'
 [2023-11-30 12:47:37] [DEBG] 	0xbeffc104 = $$
 [2023-11-30 12:47:37] [DEBG] 	...
 [2023-11-30 12:47:37] [DEBG] 	0xbeffc502 = $$
@@ -172,7 +220,13 @@ In the following, we discuss some aspects of the symbolic execution process as i
 [2023-11-30 12:47:37] [ERRO] Not terminated at a stop address: pc=0x41414140
 [2023-11-30 12:47:37] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}#
 [2023-11-30 12:47:37] [INFO] ... finished symbolic execution (pc=0x41414140).
+[...]
 ```
+TODO: Mention that we did not stop at one of our specified stop addresses. Looking at analyzing the
+symbolic state shows that the `pc` is symbolic, meaning that we might control it.
+
+TODO: Explain that the model of `fgets` introduces symbolic variables (representing 
+attacker-controllable bytes). If we do not want this, we could use `fgets` with mode `skip`.
 ### Analyzing Symbolic State
 ```
 [...]
@@ -222,16 +276,19 @@ recorded - besides the executed assembly instructions - initial values of all re
 locations accessed by the trace. These are stored in `states:entry:regs:` and `states:entry:mems`,
 respectively.
 ```
+[...]
 states:
   entry:
     regs:
-      'r0': ['0x00', '$$']
+      'r0': ['0x00', '$$$$$$$$']
     mems:
       '0x00000000': ['0x00', '$$']
+[...]
 ```
 #### Hooks
 - parameter `mode`
 ```
+[...]
 hooks:
   lib:
     func_hook:

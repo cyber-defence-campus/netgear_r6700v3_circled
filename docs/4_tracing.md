@@ -15,7 +15,7 @@
 6. [Exploitation](./6_exploitation.md)
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
-known vulnerable ARMv7 binary named *circled* (see
+known vulnerable ARMv7 binary named _circled_ (see
 [Vulnerability CVE-2022-27646](./3_vulnerability.md)). The trace is collected in a cross-platform
 remote setup, i.e. despite our host system being x86-based, the target runs on an (emulated)
 ARMv7-based device (see [Emulation](./2_emulation.md)). The collected trace may later be used for
@@ -109,12 +109,12 @@ The general format to configure the **entry state** looks like this:
 states:
   entry:
     regs:
-      'r0': ['0x00', '$$']
+      'r0': ['0x00', '$$$$$$$$']
     mems:
       '0x00000000': ['0x00', '$$']
 ```
 Beside setting concrete values, like `0x00` in the example above, we might also mark certain
-registers and/or memory locations as being symbolic (indicated by the specifier `$$`). The symbolic
+registers and/or memory bytes as being symbolic (indicated by the specifier `$$`). The symbolic
 values have not yet any effect during tracing, but will be central during symbolic execution (see 
 [Symbolic Execution](./5_symbex.md)).
 #### Hooks
@@ -128,6 +128,7 @@ included assembly instructions does either not scale, is irrelevant for the inte
 exploit generation) or the function has well-known semantics that can be mimicked by a semantic
 function model (TODO: Add reference).
 ```
+[...]
 hooks:
   lib:
     func_hook:
@@ -192,11 +193,13 @@ before starting the actual tracing process:
 [2023-11-28 08:56:32] [DEBG] 	0x000120fb = 0x25 %
 [2023-11-28 08:56:32] [DEBG] 	0x000120fc = 0x73 s
 [2023-11-28 08:56:32] [DEBG] 	0x000120fd = 0x00
+[...]
 ```
 Also, the **hooks** defined in `circled.yaml` are applied (using _GDB_), so that they take effect
 (see also [How Hooking Works](./4_tracing.md#how-hooking-works)) when collecting the concrete
 execution trace:
 ```
+[...]
 [2023-11-28 08:56:32] [DEBG] Hooks:
 [2023-11-28 08:56:32] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
 [2023-11-28 08:56:32] [DEBG] 	0x0000d044 'lib:func_hook (on=leave, mode=skip)'
@@ -219,6 +222,7 @@ Collecting a trace includes the recording of the following pieces of information
 - **Initial values** of all accessed registers and memory locations (e.g. `r3 = 0x0`,
   `r5 = 0xbeffc868` or `0xbeffc104 = 0x00`)
 ```
+[...]
 [2023-11-28 08:56:32] [INFO] Start tracing...
 [2023-11-28 08:56:32] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!   # store 1st assembly instruction
 [2023-11-28 08:56:32] [DEBG] Regs:
@@ -275,11 +279,13 @@ states:
       [...]
       '0xbeffc104': ['0x00']
       [...]
+[...]
 ```
 
 If we look at the end of the tracing process's debug output, we can observe that the trace did not
 end at our configured stop address `0xf1a4`, but at address `0xcf24`:
 ```
+[...]
 [2023-11-28 08:56:41] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
 [2023-11-28 08:56:41] [DEBG] Regs:
 [2023-11-28 08:56:41] [DEBG] Mems:
@@ -393,9 +399,7 @@ memory addresses.
 [2023-11-28 08:56:32] [DEBG] 0x0000cfe0 (06 d0 ff ea): b #-0xbfe0                                            # // Hook: libc:fgets (on=entry, mode=model)                                    
 [2023-11-28 08:56:32] [INFO]    ---
 [2023-11-28 08:56:33] [INFO] 	 s      = 0xbeffc104
-[2023-11-28 08:56:33] [INFO] 	*s      = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA X'
+[2023-11-28 08:56:33] [INFO] 	*s      = 'AAA[...]AAA X'
 [2023-11-28 08:56:33] [DEBG] 0x00001000 (04 01 0c e3): mov  r0, #0xc104                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
 [2023-11-28 08:56:33] [DEBG] 0x00001004 (ff 0e 4b e3): movt r0, #0xbeff                                      # // Hook: libc:fgets (on=leave, mode=model)                                    
 [2023-11-28 08:56:33] [DEBG] 0x00001008 (41 10 a0 e3): mov  r1, #0x41                                        # // Hook: libc:fgets (on=leave, mode=model)                                    
@@ -412,6 +416,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 [2023-11-28 08:56:33] [DEBG] 0x00006008 (f5 1b 00 ea): b #0x6fdc                                             # // Hook: libc:fgets (on=leave, mode=model)                                    
 [2023-11-28 08:56:33] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
 [2023-11-28 08:56:33] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0                                            #  
+[...]
 ```
 The implementation of all a function's side-effects might not always be so simple as in the example 
 of `fgets`. In consequence, **simplifications/abstractions** might sometimes be needed, which as a
