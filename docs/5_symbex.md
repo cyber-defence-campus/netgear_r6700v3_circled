@@ -82,8 +82,8 @@ In the following, we discuss some aspects of the symbolic execution process as i
 ### Loading the Trace File
 As explained in section [Collecting the Trace](./4_tracing.md#collecting-the-trace), beside the
 executed assembly instructions, the initial **concrete values** of all registers and/or memory
-locations accessed within the trace are recorded (in our specific example in file `circled.yaml`).
-Before starting the actual symbolic execution, these are used by
+locations accessed within the trace are recorded (in our specific example in the file
+`circled.yaml`). Before starting the actual symbolic execution, these are used by
 [Morion](https://github.com/pdamian/morion) to initialize the corresponding concrete register and/or
 memory values within the context of the symbolic execution engine. This assures that the symbolic
 execution of the recorded trace uses the correct concrete register and/or memory values.
@@ -129,7 +129,7 @@ execution of the recorded trace uses the correct concrete register and/or memory
 ```
 In a similar manner, register and/or memory locations can be assigned a new **symbolic variable**,
 before the symbolic execution of the trace begins. To for example mark the register `r0` as being
-symbolic (alongside its concrete initial value of `0x00021ae0`), the trace file `circled.yaml`
+symbolic (alongside its concrete initial value of `0x21ae0`), the trace file `circled.yaml`
 (respectively the file [circled.init.yaml](../morion/circled.init.yaml)) could contain an entry such
 as the one shown below:
 ```
@@ -137,17 +137,17 @@ as the one shown below:
 states:
   entry:
     regs:
-      'r0': ['0x00021ae0', '$$$$$$$$']  # Marking a register as being symbolic
+      'r0': ['0x21ae0', '$$$$$$$$']   # Marking register r0 as being symbolic
       [...]
     mems:
-      '0x000120f8': ['0x25', '$$']      # Marking a memory address as being symbolic
+      '0x000120f8': ['0x25', '$$'     # Marking memory location 0x120f8 as being symbolic
       [...]
 [...]
 ```
 As can be seen in the excerpt above, [Morion](https://github.com/pdamian/morion) uses the specifier
-`$$` for referring to a symbolic byte. In the above example of a symbolic register `r0` and a
-symbolic memory location `0x000120f8`, [Morion](https://github.com/pdamian/morion)'s debug output
-would look like this:
+`$$` for referring to a symbolic byte. In case of the above example where a symbolic register and a
+symbolic memory location were defined, [Morion](https://github.com/pdamian/morion)'s debug output
+would look like the following:
 ```
 [...]
 [2023-11-30 12:47:37] [DEBG] 	r0=0x21ae0
@@ -158,12 +158,12 @@ would look like this:
 [...]
 ```
 Note that in our example regarding binary _circled_, we do not manually mark any register and/or
-memory location as being symbolic. As will be explained in section
-[How Hooking Works](./5_symbex.md#how-hooking-works) below, in the case of bianry _circled_ all
+memory location as being symbolic (see [circled.init.yaml](../morion/circled.init.yaml)). Instead,
+and as will be explained in section [How Hooking Works](./5_symbex.md#how-hooking-works) below, all
 symbolic variables are automatically introduced by the model of the hooked function `fgets`.
 
 After initializing concrete and/or symbolic values of all necessary registers and/or memory
-locations, [Morion](https://github.com/pdamian/morion) sets up the defined function hooks:
+locations, [Morion](https://github.com/pdamian/morion) sets up the defined function **hooks**:
 ```
 [...]
 [2023-11-30 12:47:37] [DEBG] Hooks:
@@ -174,8 +174,9 @@ locations, [Morion](https://github.com/pdamian/morion) sets up the defined funct
 [2023-11-30 12:47:37] [DEBG] 	0x0000cffc: 'libc:sscanf (on=entry, mode=model)'
 [2023-11-30 12:47:37] [DEBG] 	0x0000d000: 'libc:sscanf (on=leave, mode=model)'
 [2023-11-30 12:47:37] [INFO] ... finished loading file 'circled.yaml'.
+[...]
 ```
-How the hooking during symbolic execution works, is explained next.
+How hooking works during symbolic execution is explained next.
 ### How Hooking Works
 ```
 [...]
