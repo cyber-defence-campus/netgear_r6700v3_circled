@@ -1,29 +1,29 @@
 hooks:
   lib:
     func_hook:
-    - {entry: '0xd040', leave: '0xd044', target: '0x1000', mode: 'skip'}  # fclose  
-    - {entry: '0xd058', leave: '0xd05c', target: '0x1000', mode: 'skip'}  # flock
-    - {entry: '0xd060', leave: '0xd064', target: '0x1000', mode: 'skip'}  # close
-    - {entry: '0xd074', leave: '0xd078', target: '0x1000', mode: 'skip'}  # popen
-    - {entry: '0xd0c0', leave: '0xd0c4', target: '0x1000', mode: 'skip'}  # snprintf
-    - {entry: '0xd0c8', leave: '0xd0cc', target: '0x1000', mode: 'skip'}  # FUN_0000cb10
-    - {entry: '0xd0d0', leave: '0xd0d4', target: '0x1000', mode: 'skip'}  # pclose
-    - {entry: '0xd104', leave: '0xd108', target: '0x1000', mode: 'skip'}  # log
-    - {entry: '0xd11c', leave: '0xd120', target: '0x1000', mode: 'skip'}  # snprintf
-    - {entry: '0xd124', leave: '0xd128', target: '0x1000', mode: 'skip'}  # log
-    - {entry: '0xd13c', leave: '0xd140', target: '0x1000', mode: 'skip'}  # snprintf
-    - {entry: '0xd144', leave: '0xd148', target: '0x1000', mode: 'skip'}  # log
-    - {entry: '0xc9bc', leave: '0xc9c0', target: '0x1000', mode: 'skip'}  # system
-    - {entry: '0xc9c4', leave: '0xc9c8', target: '0x1000', mode: 'skip'}  # free
+    - {entry: '0xd040', leave: '0xd044', mode: 'skip'}  # fclose
+    - {entry: '0xd058', leave: '0xd05c', mode: 'skip'}  # flock
+    - {entry: '0xd060', leave: '0xd064', mode: 'skip'}  # close
+    - {entry: '0xd074', leave: '0xd078', mode: 'skip'}  # popen
+    - {entry: '0xd0c0', leave: '0xd0c4', mode: 'skip'}  # snprintf
+    - {entry: '0xd0c8', leave: '0xd0cc', mode: 'skip'}  # FUN_0000cb10
+    - {entry: '0xd0d0', leave: '0xd0d4', mode: 'skip'}  # pclose
+    - {entry: '0xd104', leave: '0xd108', mode: 'skip'}  # log
+    - {entry: '0xd11c', leave: '0xd120', mode: 'skip'}  # snprintf
+    - {entry: '0xd124', leave: '0xd128', mode: 'skip'}  # log
+    - {entry: '0xd13c', leave: '0xd140', mode: 'skip'}  # snprintf
+    - {entry: '0xd144', leave: '0xd148', mode: 'skip'}  # log
+    - {entry: '0xc9bc', leave: '0xc9c0', mode: 'skip'}  # system
+    - {entry: '0xc9c4', leave: '0xc9c8', mode: 'skip'}  # free
   libc:
     fgets:
-    - {entry: '0xcfe0', leave: '0xcfe4', target: '0x1000', mode: 'model'}
-    - {entry: '0xd094', leave: '0xd098', target: '0x1000', mode: 'model'}
+    - {entry: '0xcfe0', leave: '0xcfe4', mode: 'model'}
+    - {entry: '0xd094', leave: '0xd098', mode: 'model'}
     sscanf:
-    - {entry: '0xcffc', leave: '0xd000', target: '0x1000', mode: 'model'}
+    - {entry: '0xcffc', leave: '0xd000', mode: 'model'}
     strcmp:
-    - {entry: '0xd010', leave: '0xd014', target: '0x1000', mode: 'skip'}
-    - {entry: '0xd0e8', leave: '0xd0ec', target: '0x1000', mode: 'skip'}
+    - {entry: '0xd010', leave: '0xd014', mode: 'skip'}
+    - {entry: '0xd0e8', leave: '0xd0ec', mode: 'skip'}
 states:
   entry:
     regs:
