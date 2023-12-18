@@ -181,6 +181,33 @@ locations, [Morion](https://github.com/pdamian/morion) sets up the defined funct
 ```
 How hooking works during symbolic execution is explained next.
 ### How Hooking Works
+#### Abstract Function Hook (Example libc:fclose)
+```
+[...]
+[2023-11-30 12:47:36] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8              #                                                 
+[2023-11-30 12:47:36] [DEBG] 0x0000d040 (ee cf ff ea): b #0x1000               # // Hook: lib:func_hook (on=entry, mode=skip)    
+[2023-11-30 12:47:36] [DEBG] 0x00001000 (00 00 a0 e3): mov r0, #0              # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2023-11-30 12:47:36] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0             # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2023-11-30 12:47:36] [DEBG] 0x00001008 (01 10 a0 e3): mov r1, #1              # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2023-11-30 12:47:36] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0             # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2023-11-30 12:47:36] [DEBG] 0x00001010 (0b 30 00 ea): b #0xd044               # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2023-11-30 12:47:36] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]        #
+[...]
+```
+#### Specific Function Hook (Example libc:fgets)
+TODO:
+- Move concrete values
+  - Memory side-effects:
+    - 'A' 0x41 to 0xbeffc104
+    - ...
+    - 'X' 0x58 to 0xbeffc503
+  - Register side-effects
+    - 0xbeffc104 to r0 (return value)
+- Mark bytes read from file as being symbolic
+  - 0xbeffc104 - 0xbeffc502
+  - Attacker-controllable
+  - Implemented by mode `model` of function `fgets`
+  - If we do not want this, use mode `skip`
 ```
 [...]
 [2023-11-30 12:47:37] [INFO] Start symbolic execution...
@@ -272,38 +299,3 @@ instructions.
 
 [Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
 common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
-
-### YAML File
-#### States
-As explained in section [Collecting the Trace](./4_tracing.md#collecting-the-trace), the trace file
-recorded - besides the executed assembly instructions - initial values of all registers and memory
-locations accessed by the trace. These are stored in `states:entry:regs:` and `states:entry:mems`,
-respectively.
-```
-[...]
-states:
-  entry:
-    regs:
-      'r0': ['0x00', '$$$$$$$$']
-    mems:
-      '0x00000000': ['0x00', '$$']
-[...]
-```
-#### Hooks
-- parameter `mode`
-```
-[...]
-hooks:
-  lib:
-    func_hook:
-    - {entry: '0xd040', leave: '0xd044', mode: 'skip'}   # fclose@plt
-    [...]
-    - {entry: '0xc9c4', leave: '0xc9c8', mode: 'skip'}   # free@plt
-  libc:
-    fgets:
-    - {entry: '0xcfe0', leave: '0xcfe4', mode: 'model'}  # fgets@plt
-    - {entry: '0xd094', leave: '0xd098', mode: 'model'}  # fgets@plt
-    sscanf:
-    - {entry: '0xcffc', leave: '0xd000', mode: 'model'}  # sscanf@plt
-[...]
-```
