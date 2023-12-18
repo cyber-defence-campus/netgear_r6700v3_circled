@@ -86,7 +86,9 @@ locations accessed within the trace are recorded (in our specific example in the
 `circled.yaml`). Before starting the actual symbolic execution, these are used by
 [Morion](https://github.com/pdamian/morion) to initialize the corresponding concrete register and/or
 memory values within the context of the symbolic execution engine. This assures that the symbolic
-execution of the recorded trace uses the correct concrete register and/or memory values.
+execution of the recorded trace uses the correct concrete register and/or memory values. This
+initialization of registers and/or memory locations can be observed in
+[Morion](https://github.com/pdamian/morion)'s debug output:
 ```
 [2023-11-30 12:47:34] [INFO] Start loading file 'circled.yaml'...
 [2023-11-30 12:47:37] [DEBG] Regs:
@@ -128,8 +130,8 @@ execution of the recorded trace uses the correct concrete register and/or memory
 [...]
 ```
 In a similar manner, register and/or memory locations can be assigned a new **symbolic variable**,
-before the symbolic execution of the trace begins. To for example mark the register `r0` as being
-symbolic (alongside its concrete initial value of `0x21ae0`), the trace file `circled.yaml`
+before the actual symbolic execution of the trace begins. To for example mark the register `r0` as
+being symbolic (alongside its concrete initial value of `0x21ae0`), the trace file `circled.yaml`
 (respectively the file [circled.init.yaml](../morion/circled.init.yaml)) could contain an entry such
 as the one shown below:
 ```
@@ -145,9 +147,9 @@ states:
 [...]
 ```
 As can be seen in the excerpt above, [Morion](https://github.com/pdamian/morion) uses the specifier
-`$$` for referring to a symbolic byte. In case of the above example where a symbolic register and a
-symbolic memory location were defined, [Morion](https://github.com/pdamian/morion)'s debug output
-would look like the following:
+`$$` for referring to a **symbolic byte**. In case of the above example where a symbolic register
+and a symbolic memory location were defined, [Morion](https://github.com/pdamian/morion)'s debug
+output, while loading the trace file, would look like the following:
 ```
 [...]
 [2023-11-30 12:47:37] [DEBG] 	r0=0x21ae0
@@ -158,9 +160,10 @@ would look like the following:
 [...]
 ```
 Note that in our example regarding binary _circled_, we do not manually mark any register and/or
-memory location as being symbolic (see [circled.init.yaml](../morion/circled.init.yaml)). Instead,
-and as will be explained in section [How Hooking Works](./5_symbex.md#how-hooking-works) below, all
-symbolic variables are automatically introduced by the model of the hooked function `fgets`.
+memory location as being symbolic (see entry state of file
+[circled.init.yaml](../morion/circled.init.yaml)). Instead, and as will be explained in section
+[How Hooking Works](./5_symbex.md#how-hooking-works) below, all symbolic variables are automatically
+introduced by the model of the hooked `libc` function `fgets`.
 
 After initializing concrete and/or symbolic values of all necessary registers and/or memory
 locations, [Morion](https://github.com/pdamian/morion) sets up the defined function **hooks**:
