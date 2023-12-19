@@ -85,7 +85,8 @@ executed assembly instructions, the initial **concrete values** of all registers
 locations accessed within the trace are recorded (in our specific example in the file
 `circled.yaml`). Before starting the actual symbolic execution, these are used by
 [Morion](https://github.com/pdamian/morion) to initialize the corresponding concrete register and/or
-memory values within the context of the symbolic execution engine. This assures that the symbolic
+memory values within the context of the symbolic execution engine
+(which in our case is [Triton](https://triton-library.github.io/)). This assures that the symbolic
 execution of the recorded trace uses the correct concrete register and/or memory values. This
 initialization of registers and/or memory locations can be observed in
 [Morion](https://github.com/pdamian/morion)'s debug output:
@@ -129,7 +130,7 @@ initialization of registers and/or memory locations can be observed in
 [2023-11-30 12:47:37] [DEBG] 	0xbeffc88f=0x41 A
 [...]
 ```
-In a similar manner, register and/or memory locations can be assigned a new **symbolic variable**,
+In a similar manner, registers and/or memory locations can be assigned a new **symbolic variable**,
 before the actual symbolic execution of the trace begins. To for example mark the register `r0` as
 being symbolic (alongside its concrete initial value of `0x21ae0`), the trace file `circled.yaml`
 (respectively the file [circled.init.yaml](../morion/circled.init.yaml)) could contain an entry such
@@ -147,9 +148,9 @@ states:
 [...]
 ```
 As can be seen in the excerpt above, [Morion](https://github.com/pdamian/morion) uses the specifier
-`$$` for referring to a **symbolic byte**. In case of the above example where a symbolic register
-and a symbolic memory location were defined, [Morion](https://github.com/pdamian/morion)'s debug
-output, while loading the trace file, would look like the following:
+`$$` for referring to a **symbolic byte**. In the above example, where a symbolic register and a
+symbolic memory location were defined, [Morion](https://github.com/pdamian/morion)'s debug output,
+while loading the trace file, would look like this:
 ```
 [...]
 [2023-11-30 12:47:37] [DEBG] 	r0=0x21ae0
@@ -160,13 +161,15 @@ output, while loading the trace file, would look like the following:
 [...]
 ```
 Note that in our example regarding binary _circled_, we do not manually mark any register and/or
-memory location as being symbolic (see entry state of file
+memory location as being symbolic (there are no `$$` specifiers in the entry state of file
 [circled.init.yaml](../morion/circled.init.yaml)). Instead, and as will be explained in section
 [How Hooking Works](./5_symbex.md#how-hooking-works) below, all symbolic variables are automatically
-introduced by the model of the hooked `libc` function `fgets`.
+introduced by [Morion](https://github.com/pdamian/morion) and its model for the hooked `libc`
+function `fgets`.
 
 After initializing concrete and/or symbolic values of all necessary registers and/or memory
-locations, [Morion](https://github.com/pdamian/morion) sets up the defined function **hooks**:
+locations in the context of the symbolic execution engine,
+[Morion](https://github.com/pdamian/morion) sets up the defined function **hooks**:
 ```
 [...]
 [2023-11-30 12:47:37] [DEBG] Hooks:
@@ -179,7 +182,7 @@ locations, [Morion](https://github.com/pdamian/morion) sets up the defined funct
 [2023-11-30 12:47:37] [INFO] ... finished loading file 'circled.yaml'.
 [...]
 ```
-How hooking works during symbolic execution is explained next.
+How hooking works, while executing a trace symbolically, is explained next.
 ### How Hooking Works
 #### Abstract Function Hook (Example libc:fclose)
 ```
@@ -259,6 +262,9 @@ symbolic state shows that the `pc` is symbolic, meaning that we might control it
 TODO: Explain that the model of `fgets` introduces symbolic variables (representing 
 attacker-controllable bytes). If we do not want this, we could use `fgets` with mode `skip`.
 ### Analyzing Symbolic State
+TODO:
+- If we mark inputs an attacker can control symbolic, we can see what and how they influence (which)
+  part of the register and/or memory locations.
 ```
 [...]
 [2023-11-30 12:47:37] [INFO] Start analyzing symbolic state...
