@@ -184,7 +184,21 @@ locations in the context of the symbolic execution engine,
 ```
 How hooking works, while executing a trace symbolically, is explained next.
 ### How Hooking Works
+We already discussed how hooking works during tracing in section
+[How Hooking Works](./4_tracing.md#how-hooking-works). Here, we discuss some aspects about hooking
+while executing a trace symbolically.
 #### Abstract Function Hook (Example libc:fclose)
+In the chapter about tracing (see section [How Hooking Works](./4_tracing.md#how-hooking-works)), we
+have already seen that the file [circled.init.yaml](../morion/circled.init.yaml) defines a hook for
+entry and leave addresses `0xd040` and `0xd044`, respectively. The hook corresponds to a call to
+function `fclose` (synopsis: `int fclose(FILE *stream);`) from `libc` (or to be more specific,
+`uclibc` in case of the binary _circled_). The effective assembly instructions of the function
+itself have not been traced, due to the hooking mode `skip`. Instead
+[Morion](https://github.com/pdamian/morion) injected some instructions to mimic some of the
+function's side-effects. Since we used an abstract function hook, the only modelled side-effect
+corresponds to setting the correct return value(s). For the ARMv7 architecture that we target, a
+function's return value is generally stored in register `r0` (and potentially `r1`). This is exactly
+what instructions `0x1000` - `0x1010` do.
 ```
 [...]
 [2023-11-30 12:47:36] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8              #                                                 
