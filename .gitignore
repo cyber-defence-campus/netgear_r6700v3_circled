@@ -5,10 +5,7 @@ firmware/*
 !firmware/R6700v3-V1.0.4.120_10.0.91.zip
 !firmware/circled.patch.py
 !firmware/circled.sh
-!firmware/bins/*
-# !firmware/bins/libnvram.so
-# !firmware/bins/libcircled.so
-#!firmware/bins/gdbserver
+!firmware/bins/
 # Ignore object files
 libcircled/*
 !libcircled/Makefile
