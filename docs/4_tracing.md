@@ -63,7 +63,7 @@ morion_trace debug circled.yaml 0xf1a4
 As can be seen in the code excerpt above, the trace we intend to collect should start/stop at 
 addresses `0xcfc0` and `0xf1a4`, respectively. Start and stop addresses of the trace need to be
 selected adequately for the intended purpose. In our specific case where we intend to generate an
-exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), which means that the
+exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this means that the
 trace should include both the points where attacker-controllable inputs are introduced and where
 these inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a
 memory violation condition - as for instance found by a fuzzing campaign).
@@ -149,9 +149,11 @@ in section [Symbolic Execution](./5_symbex.md). More details regarding hooking d
 collection can be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
 
 Note: As mentioned before, [Morion](https://github.com/pdamian/morion) generally intends to favor
-configuration flexibility over full automation. Due to this, `leave` addresses of hooks (currently)
+configuration flexibility over full automation. Therefore, `leave` addresses of hooks (currently)
 need to be configured manually, since in general, the return address of a function is hard to
-determine (e.g. tail calls).
+determine (e.g. tail calls). And more importantly, [Morion](https://github.com/pdamian/morion)'s
+hooking feature intends not to be limited to function calls, but be applicable in more generic
+cases, i.e. for any sequence of subsequent assembly instructions.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
@@ -317,7 +319,7 @@ symbolic state. Typically, this is required to address **scalability** issues of
 or to abstract away **environmental interactions** (e.g. with 3rd party libraries, inter-process
 communications, Kernel, device drivers, coprocessors, etc.).
 
-Below, we discuss how the hooking of two concrete _libc_ functions look like, while
+Below, we discuss how the hooking of two concrete _libc_ functions looks like, while
 [Morion](https://github.com/pdamian/morion) collects a trace.
 #### Abstract Function Hook (Example libc:fclose)
 The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for entry and leave 
