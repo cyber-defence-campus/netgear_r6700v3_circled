@@ -198,7 +198,9 @@ itself have not been traced, due to the hooking mode `skip`. Instead
 function's side-effects. Since we used an abstract function hook, the only modelled side-effect
 corresponds to setting the correct return value(s). For the ARMv7 architecture that we target, a
 function's return value is generally stored in register `r0` (and potentially `r1`). This is exactly
-what instructions `0x1000` - `0x1010` do.
+what instructions `0x1000` - `0x1010` are used for. [Morion](https://github.com/pdamian/morion)
+injected assembly instructions to move the effective concrete return value of function `fclose`
+(here `0` for a successful closure of the corresponding file stream) to the return register(s).
 ```
 [...]
 [2023-11-30 12:47:36] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8              #                                                 
@@ -319,3 +321,5 @@ instructions.
 
 [Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
 common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
+
+- [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
