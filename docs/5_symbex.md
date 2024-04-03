@@ -173,6 +173,11 @@ locations in the context of the symbolic execution engine,
 ```
 [...]
 [2023-11-30 12:47:37] [DEBG] Hooks:
+[2023-11-30 12:47:37] [DEBG] 	0x0000d040: 'lib:func_hook (on=entry, mode=skip)'
+[2023-11-30 12:47:37] [DEBG] 	0x0000d044: 'lib:func_hook (on=leave, mode=skip)'
+[...]
+[2023-11-30 12:47:37] [DEBG] 	0x0000c9c4: 'lib:func_hook (on=entry, mode=skip)'
+[2023-11-30 12:47:37] [DEBG] 	0x0000c9c8: 'lib:func_hook (on=leave, mode=skip)'
 [2023-11-30 12:47:37] [DEBG] 	0x0000cfe0: 'libc:fgets (on=entry, mode=model)'
 [2023-11-30 12:47:37] [DEBG] 	0x0000cfe4: 'libc:fgets (on=leave, mode=model)'
 [2023-11-30 12:47:37] [DEBG] 	0x0000d094: 'libc:fgets (on=entry, mode=model)'
@@ -199,22 +204,44 @@ function's side-effects. Since we used an abstract function hook (`hooks:lib:fun
 modelled side-effect corresponds to setting the correct return value(s). For the ARMv7 architecture
 that we target, a function's return value is generally stored in register `r0` (and potentially
 `r1`). This is exactly what instructions `0x1000` - `0x100c` are used for.
-[Morion](https://github.com/pdamian/morion) injected assembly instructions to move the effective
-concrete return value of function `fclose` (here `0`, meaning a successful closure of the
+[Morion](https://github.com/pdamian/morion) injected assembly instructions to move the trace's
+effective return value of function `fclose` (here `0`, meaning a successful closure of the
 corresponding file stream) to the return register(s).
 ```
 [...]
 [2023-11-30 12:47:36] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8              #                                                 
+[2023-11-30 12:47:36] [DEBG] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
+[2023-11-30 12:47:36] [DEBG]           'func_hook'
+[2023-11-30 12:47:36] [DEBG]     ---
 [2023-11-30 12:47:36] [DEBG] 0x0000d040 (ee cf ff ea): b #0x1000               # // Hook: lib:func_hook (on=entry, mode=skip)    
 [2023-11-30 12:47:36] [DEBG] 0x00001000 (00 00 a0 e3): mov r0, #0              # // Hook: lib:func_hook (on=leave, mode=skip)    
 [2023-11-30 12:47:36] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0             # // Hook: lib:func_hook (on=leave, mode=skip)    
 [2023-11-30 12:47:36] [DEBG] 0x00001008 (01 10 a0 e3): mov r1, #1              # // Hook: lib:func_hook (on=leave, mode=skip)    
 [2023-11-30 12:47:36] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0             # // Hook: lib:func_hook (on=leave, mode=skip)    
 [2023-11-30 12:47:36] [DEBG] 0x00001010 (0b 30 00 ea): b #0xd044               # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2023-11-30 12:47:36] [DEBG]     ---
+[2023-11-30 12:47:36] [DEBG] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
 [2023-11-30 12:47:36] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]        #
 [...]
 ```
+TODO: 
+
+In the case of hooks with mode `skip`, all the symbolic execution engine does is to execute the
+injected assembly instructions, which may modify part of the concrete state, but have no effect on
+the symbolic state.
+
+In the case of abstract function hooks, the symbolic execution engine
+
+Abstract function hook, nothing done symbolically beside executing injected instructions
 #### Specific Function Hook (Example libc:fgets)
+In section [How Hooking Works](./4_tracing.md#how-hooking-works) we explained that
+
+As explained in section [How Hooking Works](./4_tracing.md#how-hooking-works)
+
+Symbolize each character/byte of string `s` (see
+https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12)
+
+
 TODO:
 - Move concrete values
   - Memory side-effects:
@@ -322,5 +349,23 @@ instructions.
 
 [Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
 common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
+
+Tracing:
+| Type            | Side-Effects on Concrete State       |
+|-----------------|--------------------------------------|
+| `lib:inst_hook` | -                                    |
+| `lib:func_hook` | Return value                         |
+| `libc:fgets`    | Move stream[i] to s[i], return value |
+
+Symbolic Execution:
+| Type        |
+|-------------|
+| `inst_hook` | -
+| `func_hook` | - 
+
+| Type        | Description                   | Side-Effect on Concrete State                         | Side-Effect on Symbolic State
+|-------------|-------------------------------|-------------------------------------------------------|
+| `inst_hook` | Hook sequence of instructions | -                                                     |
+| `func_hook` | Hook function                 | Inject instructions to set function's return value(s) |
 
 - [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
