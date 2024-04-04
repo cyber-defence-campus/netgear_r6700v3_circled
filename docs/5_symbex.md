@@ -296,19 +296,21 @@ the symbolic state might be performed. These modifications can happen either at 
 leaving the hook. The model implementation of `fgets` (see
 [libc.py#L12](https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12) for
 more details), for instance, makes the string `s` symbolic. This means that new symbolic variables
-get assigned to each character/byte of the read string. But why does one want to make `s` symbolic?
+get assigned to each character/byte of the read string.
+
+But why does one want to make `s` symbolic?
 Well, `s` is read in from a resource external to the targeted binary (here a file), which is
 potentially controllable by a (malicious) user. By making `s` symbolic we might conduct various
 analysis about how it, respectively an attacker, can influence our target program. As will be
 explained in the next section [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state), in
-the case of binary *circled* we for instance immediately see that the program counter (`pc`) at the
-end of the trace is symbolic, i.e. can somehow be influenced by attacker-controllable values,
-potentially leading to a control-flow hijacking attack.
+the case of binary *circled*, we for instance immediately see that the program counter (`pc`) at the
+end of the trace is symbolic. Phrased differently, the `pc` can (somehow) be influenced by
+attacker-controllable values, potentially leading to control-flow hijacking attacks.
 
-Note: In case you want to hook invocations of function `fets` without marking read values as being
+**Note**: In case you want to hook invocations of function `fets` without marking read values as being
 symbolic, make the corresponding hook to use mode `skip`.
 
-Note: [Morion](https://github.com/pdamian/morion) is a *proof-of-concept (PoC)* tool intended to be
+**Note**: [Morion](https://github.com/pdamian/morion) is a *proof-of-concept (PoC)* tool intended to be
 used for experimenting with symbolic execution on (real-world) (ARMv7) binaries. It currently
 implements (only) a handful of hooks for common `libc` functions. These should be extended in future
 work (pull requests are welcome).
