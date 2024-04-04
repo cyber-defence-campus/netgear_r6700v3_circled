@@ -11,6 +11,11 @@
         2. [How Hooking Works](./5_symbex.md#how-hooking-works)
         3. [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state)
 6. [Exploitation](./6_exploitation.md)
+<!--TODO--------------------------------------------------------------------------------------------
+- [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
+- [ ] Change text of links and validate them
+- [ ] Refer to a page as chapter (not section)
+--------------------------------------------------------------------------------------------------->
 # Symbolic Execution
 Chapter [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
 target, which in our specific case is the ARMv7 binary _circled_. If you followed along the given
@@ -315,9 +320,15 @@ used for experimenting with symbolic execution on (real-world) (ARMv7) binaries.
 implements (only) a handful of hooks for common `libc` functions. These should be extended in future
 work (pull requests are welcome).
 ### Analyzing Symbolic State
-TODO:
-- If we mark inputs an attacker can control symbolic, we can see what and how they influence (which)
-  part of the register and/or memory locations.
+If we symbolize inputs an attacker can control, symbolic execution not only allows us to see which
+parts of our target binary can be influence, but also how this may happen.
+At the end of a symbolic execution run, [Morion](https://github.com/pdamian/morion) for instance
+analyzes the symbolic state (can be disabled using option `--skip_state_analysis`). This means that
+an overview is given about which registers and memory locations are based on symbolic variable(s).
+In the example of the collected trace of binary *circled*, one immediately sees that the program
+counter (register `pc`) is one of these candidates. Remember that we only marked inputs an attacker
+might control as being symbolic, meaning that an attacker can potentially influence the program's
+control-flow.
 ```
 [...]
 [2023-11-30 12:47:37] [INFO] Start analyzing symbolic state...
@@ -343,35 +354,10 @@ TODO:
 [2023-11-30 12:48:39] [INFO] Start storing file 'circled.yaml'...
 [2023-11-30 12:48:41] [INFO] ... finished storing file 'circled.yaml'.
 ```
-In section [Exploitation](./6_exploitation.md) we will see how symbolic execution might help us to
-decide whether the crasher might be **exploitable** or not, i.e. corresponds to an actual security
-vulnerability or just an annoying bug. We will also see, how symbolic execution can quickly give us
-a first high-level intuition about what **capabilities** (e.g. arbitrary read/write, control-flow
-hijacking, etc.) one might gain with the underlying issue. Also, we will show how symbolic execution
-might help us during the process of generating a working **exploit** for the targeted vulnerability
-(CVE-2022-27646).
-
-## TODO
-
-
-Tracing:
-| Type            | Side-Effects on Concrete State       |
-|-----------------|--------------------------------------|
-| `lib:inst_hook` | -                                    |
-| `lib:func_hook` | Return value                         |
-| `libc:fgets`    | Move stream[i] to s[i], return value |
-
-Symbolic Execution:
-| Type        |
-|-------------|
-| `inst_hook` | -
-| `func_hook` | - 
-
-| Type        | Description                   | Side-Effect on Concrete State                         | Side-Effect on Symbolic State
-|-------------|-------------------------------|-------------------------------------------------------|
-| `inst_hook` | Hook sequence of instructions | -                                                     |
-| `func_hook` | Hook function                 | Inject instructions to set function's return value(s) |
-
-- [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
-- [ ] Change text of links and validate them
-- [ ] Refer to a page as chapter (not section)
+In the next chapter about [Exploitation](./6_exploitation.md) we will see how symbolic execution
+might help us to decide whether the crasher might be **exploitable** or not, i.e. corresponds to an
+actual security vulnerability or just an annoying bug. We will also see, how symbolic execution can
+quickly give us a first high-level intuition about what **capabilities** (e.g. arbitrary read/write,
+control-flow hijacking, etc.) one might gain with the underlying issue. Also, we will show how
+symbolic execution might help us during the process of generating a working **exploit** for the
+targeted vulnerability (CVE-2022-27646).
