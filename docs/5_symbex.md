@@ -12,7 +12,7 @@
         3. [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state)
 6. [Exploitation](./6_exploitation.md)
 # Symbolic Execution
-Section [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
+Chapter [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
 target, which in our specific case is the ARMv7 binary _circled_. If you followed along the given
 instructions, this trace was stored in the file `circled.yaml`. As we will see below, this trace
 file may then be used as input for the different **analysis modules** implemented by
@@ -38,7 +38,7 @@ for example be:
 - Modify the parameter `mode` of hooked functions
 - Add/remove assembly instructions to/from the trace
 - Add extra inputs for analysis modules (e.g. intended ROP chains for analysis module
-  `morion_rop_generator`, see e.g. section [Exploitation](./6_exploitation.md))
+  `morion_rop_generator`, see e.g. chapter [Exploitation](./6_exploitation.md))
 
 In our documented example of the binary _circled_, all relevant configurations have already been
 defined in the file [circled.init.yaml](../morion/circled.init.yaml), which during tracing got
@@ -57,7 +57,7 @@ execution run of binary _circled_:
         morion circled.yaml;    # Execute program trace symbolically
         ```
 
-Remember that if you followed along the instructions in section [Tracing](./4_tracing.md), the trace
+Remember that if you followed along the instructions in chapter [Tracing](./4_tracing.md), the trace
 was collected while the vulnerable binary processed a sample payload leading to a
 **crasher/segfault** (as might have been identified by a fuzzer).
 ### Analysis Modules
@@ -80,8 +80,8 @@ below:
 In the following, we discuss some aspects of the symbolic execution process as implemented by
 [Morion](https://github.com/pdamian/morion).
 ### Loading the Trace File
-As explained in section [Collecting the Trace](./4_tracing.md#collecting-the-trace), beside the
-executed assembly instructions, the initial **concrete values** of all registers and/or memory
+As explained in section [Tracing: Collecting the Trace](./4_tracing.md#collecting-the-trace), beside
+the executed assembly instructions, the initial **concrete values** of all registers and/or memory
 locations accessed within the trace are recorded (in our specific example in the file
 `circled.yaml`). Before starting the actual symbolic execution, these are used by
 [Morion](https://github.com/pdamian/morion) to initialize the corresponding concrete register and/or
@@ -163,9 +163,9 @@ while loading the trace file, would look like this:
 Note that in our example of binary _circled_, we do not manually mark any register and/or memory
 location as being symbolic (there are no `$$` specifiers in the entry state of file
 [circled.init.yaml](../morion/circled.init.yaml)). Instead, and as will be explained in section
-[How Hooking Works](./5_symbex.md#how-hooking-works) below, all symbolic variables are automatically
-introduced by [Morion](https://github.com/pdamian/morion) and its model for the hooked `libc`
-function `fgets`.
+[Symbex: How Hooking Works](./5_symbex.md#how-hooking-works) below, all symbolic variables are
+automatically introduced by [Morion](https://github.com/pdamian/morion) and its model for the hooked
+`libc` function `fgets`.
 
 After initializing concrete and/or symbolic values of all necessary registers and/or memory
 locations in the context of the symbolic execution engine,
@@ -198,15 +198,15 @@ In the chapter about tracing (see section
 [circled.init.yaml](../morion/circled.init.yaml) defines a hook for entry and leave addresses
 `0xd040` and `0xd044`, respectively. The hook corresponds to a call to function `fclose` (synopsis:
 `int fclose(FILE *stream);`) from `libc` (or to be more specific, `uclibc` in case of the binary
-_circled_). The effective assembly instructions of the function itself have not been traced, due to
-the configured hooking mode `skip`. Instead [Morion](https://github.com/pdamian/morion) injected
-some instructions to reproduce some of the function's side-effects. Since we used an abstract
-function hook (`hooks:lib:func_hook:`), the only modelled side-effect corresponds to setting the
-correct return value(s). For the ARMv7 architecture that we target, a function's return value is
-generally stored in register `r0` (and potentially `r1`). This is exactly what instructions
-`0x1000` - `0x100c` are used for. [Morion](https://github.com/pdamian/morion) injected assembly
-instructions to move the trace's effective return value of function `fclose` (here `0`, meaning a
-successful closure of the corresponding file stream) to the return register(s).
+_circled_). Due to the hooking, the effective assembly instructions of the function itself have not
+been traced. Instead [Morion](https://github.com/pdamian/morion) injected some instructions to
+reproduce some of the function's side-effects. Since we used an abstract function hook
+(`hooks:lib:func_hook:`), the only modelled side-effect corresponds to setting the correct return
+value(s). For the ARMv7 architecture that we target, a function's return value is generally stored
+in register `r0` (and potentially `r1`). This is exactly what instructions `0x1000` - `0x100c` are
+used for. [Morion](https://github.com/pdamian/morion) injected assembly instructions to move the
+trace's effective return value of function `fclose` (here `0`, meaning a successful closure of the
+corresponding file stream) to the return register(s).
 ```
 [...]
 [2023-11-30 12:47:36] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8              #                                                 
@@ -231,27 +231,19 @@ our case). For hooks with mode `skip`, no additional modifications to the symbol
 performed. As we will see in the next example, this might be different when using a hook with mode
 `model`.
 #### Specific Function Hook with Mode Model (Example libc:fgets)
-In section [How Hooking Works](./4_tracing.md#how-hooking-works) we explained that
-
-As explained in section [How Hooking Works](./4_tracing.md#how-hooking-works)
-
-Symbolize each character/byte of string `s` (see
-https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12)
-
-
-TODO:
-- Move concrete values
-  - Memory side-effects:
-    - 'A' 0x41 to 0xbeffc104
-    - ...
-    - 'X' 0x58 to 0xbeffc503
-  - Register side-effects
-    - 0xbeffc104 to r0 (return value)
-- Mark bytes read from file as being symbolic
-  - 0xbeffc104 - 0xbeffc502
-  - Attacker-controllable
-  - Implemented by mode `model` of function `fgets`
-  - If we do not want this, use mode `skip`
+As mentioned in section [Tracing: How Hooking Works](./4_tracing.md#how-hooking-works), the file
+[circled.init.yaml](../morion/circled.init.yaml), beside others, also defines a hook for entry and
+leave addresses `0xcfe0` and `0xcfe4`, respectively. The hook is intended to catch calls to
+function `fgets` (synopsis: `char *fgets(char *s, int n, FILE *stream)`) of library `uclibc`. Again,
+due to the hooking, the effective assembly instructions of the function itself have not been
+recorded during tracing. Instead, some instructions got injected to reproduce the side-effects
+that the function has on the memory and register contexts. When looking closely to the injected
+instructions, one observes that first the effective bytes of string `s` are set
+(`0xbeffc104: 0x41 'A'` - `0xbeffc502: 0x58 'X'`, `0xbeffc503: 0x00`), and second the
+correct return value (`0xbeffc104` - the address of string `s`) is placed into register `r0`. In
+contrast to an abstract function hook (`hooks:lib:func_hook:`), where only instructions to handle
+correct function return values are injected, specific function hooks (`hooks:libc:fgets`) handle
+additional function-specific side-effects to the memory and register contexts.
 ```
 [...]
 [2023-11-30 12:47:37] [INFO] Start symbolic execution...
@@ -271,6 +263,8 @@ TODO:
 [2023-11-30 12:47:37] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)
 [2023-11-30 12:47:37] [DEBG] 0x00001010 (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)
 [...]
+[2023-11-30 12:47:37] [DEBG] 0x00005fd8 (02 05 0c e3): movw r0, #0xc502        # // Hook: libc:fgets (on=leave, mode=model)      
+[2023-11-30 12:47:37] [DEBG] 0x00005fdc (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)
 [2023-11-30 12:47:37] [DEBG] 0x00005fe0 (58 10 a0 e3): mov r1, #0x58           # // Hook: libc:fgets (on=leave, mode=model)
 [2023-11-30 12:47:37] [DEBG] 0x00005fe4 (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)
 [2023-11-30 12:47:37] [DEBG] 0x00005fe8 (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)
@@ -297,6 +291,29 @@ TODO:
 [2023-11-30 12:47:37] [INFO] ... finished symbolic execution (pc=0x41414140).
 [...]
 ```
+Make the string `s`, read from file by function `fgets`, symbolic. More specifically, assign new
+symbolic variables to each character/byte of the string.
+user/attacker-controllable
+
+Symbolize each character/byte of string `s` (see
+https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12)
+
+
+TODO:
+- Move concrete values
+  - Memory side-effects:
+    - 'A' 0x41 to 0xbeffc104
+    - ...
+    - 'X' 0x58 to 0xbeffc503
+  - Register side-effects
+    - 0xbeffc104 to r0 (return value)
+- Mark bytes read from file as being symbolic
+  - 0xbeffc104 - 0xbeffc502
+  - Attacker-controllable
+  - Implemented by mode `model` of function `fgets`
+  - If we do not want this, use mode `skip`
+
+
 TODO: Mention that we did not stop at one of our specified stop addresses. Looking at analyzing the
 symbolic state shows that the `pc` is symbolic, meaning that we might control it.
 
@@ -367,3 +384,4 @@ Symbolic Execution:
 
 - [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
 - [ ] Change text of links and validate them
+- [ ] Refer to a page as chapter (not section)
