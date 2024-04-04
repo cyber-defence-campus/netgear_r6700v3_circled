@@ -38,7 +38,7 @@ condition).
 ## Setup
 Before running one of [Morion](https://github.com/pdamian/morion)'s symbolic analysis modules, the
 collected trace file `circled.yaml` might optionally be customized. Such **customizations** could
-for example be:
+for example be to:
 - Mark (additional) register values or memory locations as being symbolic (in the entry state)
 - Modify the parameter `mode` of hooked functions
 - Add/remove assembly instructions to/from the trace
@@ -68,7 +68,7 @@ was collected while the vulnerable binary processed a sample payload leading to 
 ### Analysis Modules
 [Morion](https://github.com/pdamian/morion) implements different analysis modules that are based on
 symbolic execution. The chosen design attempts to make [Morion](https://github.com/pdamian/morion)
-easily extendable with new modules. The currently implemented ones are summarized in the table
+easily **extendable** with new modules. The currently implemented ones are summarized in the table
 below:
 
 | Module                  | Description |
@@ -205,7 +205,7 @@ In the chapter about tracing (see section
 `int fclose(FILE *stream);`) from `libc` (or to be more specific, `uclibc` in case of the binary
 _circled_). Due to the hooking, the effective assembly instructions of the function itself have not
 been traced. Instead [Morion](https://github.com/pdamian/morion) injected some instructions to
-reproduce some of the function's side-effects. Since we used an abstract function hook
+reproduce some of the function's side-effects. Since we used an **abstract function hook**
 (`hooks:lib:func_hook:`), the only modelled side-effect corresponds to setting the correct return
 value(s). For the ARMv7 architecture that we target, a function's return value is generally stored
 in register `r0` (and potentially `r1`). This is exactly what instructions `0x1000` - `0x100c` are
@@ -247,7 +247,7 @@ instructions, one observes that first the effective bytes of string `s` are set
 (`0xbeffc104: 0x41 'A'` - `0xbeffc502: 0x58 'X'`, `0xbeffc503: 0x00`), and second the
 correct return value (`0xbeffc104` - the address of string `s`) is placed into register `r0`. In
 contrast to an abstract function hook (`hooks:lib:func_hook:`) where only instructions to handle
-correct function return values are injected, specific function hooks (`hooks:libc:fgets`) handle
+correct function return values are injected, **specific function hooks** (`hooks:libc:fgets`) handle
 additional function-specific side-effects to the memory and register contexts.
 ```
 [...]
@@ -297,7 +297,7 @@ additional function-specific side-effects to the memory and register contexts.
 [...]
 ```
 Since we defined a function-specific hook to be used with mode `model`, additional modifications to
-the symbolic state might be performed. These modifications can happen either at entry or when
+the **symbolic state** might be performed. These modifications can happen either at entry or when
 leaving the hook. The model implementation of `fgets` (see
 [libc.py#L12](https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12) for
 more details), for instance, makes the string `s` symbolic. This means that new symbolic variables
@@ -312,20 +312,20 @@ the case of binary *circled*, we for instance immediately see that the program c
 end of the trace is symbolic. Phrased differently, the `pc` can (somehow) be influenced by
 attacker-controllable values, potentially leading to control-flow hijacking attacks.
 
-**Note**: In case you want to hook invocations of function `fets` without marking read values as being
-symbolic, make the corresponding hook to use mode `skip`.
+**Note**: In case you want to hook invocations of function `fgets` without making the read string
+symbolic, define the corresponding hook to use mode `skip`.
 
 **Note**: [Morion](https://github.com/pdamian/morion) is a *proof-of-concept (PoC)* tool intended to be
 used for experimenting with symbolic execution on (real-world) (ARMv7) binaries. It currently
 implements (only) a handful of hooks for common `libc` functions. These should be extended in future
 work (pull requests are welcome).
 ### Analyzing Symbolic State
-If we symbolize inputs an attacker can control, symbolic execution not only allows us to see which
-parts of our target binary can be influence, but also how this may happen.
-At the end of a symbolic execution run, [Morion](https://github.com/pdamian/morion) for instance
-analyzes the symbolic state (can be disabled using option `--skip_state_analysis`). This means that
-an overview is given about which registers and memory locations are based on symbolic variable(s).
-In the example of the collected trace of binary *circled*, one immediately sees that the program
+If we symbolize inputs that an attacker can control, symbolic execution not only allows us to see
+which parts of a target binary can be influenced, but also how this may happen. At the end of a
+symbolic execution run, [Morion](https://github.com/pdamian/morion) for instance analyzes the
+**symbolic state** (can be disabled using option `--skip_state_analysis`). This means that an
+overview is given about which registers and memory locations are based on symbolic variable(s). In
+the example of the collected trace of binary *circled*, one immediately sees that the program
 counter (register `pc`) is one of these candidates. Remember that we only marked inputs an attacker
 might control as being symbolic, meaning that an attacker can potentially influence the program's
 control-flow.
@@ -355,9 +355,9 @@ control-flow.
 [2023-11-30 12:48:41] [INFO] ... finished storing file 'circled.yaml'.
 ```
 In the next chapter about [Exploitation](./6_exploitation.md) we will see how symbolic execution
-might help us to decide whether the crasher might be **exploitable** or not, i.e. corresponds to an
-actual security vulnerability or just an annoying bug. We will also see, how symbolic execution can
-quickly give us a first high-level intuition about what **capabilities** (e.g. arbitrary read/write,
-control-flow hijacking, etc.) one might gain with the underlying issue. Also, we will show how
-symbolic execution might help us during the process of generating a working **exploit** for the
-targeted vulnerability (CVE-2022-27646).
+might help us to decide whether the crasher we traced might be **exploitable** or not, i.e.
+corresponds to an actual security vulnerability or just an annoying bug. We will also see, how
+symbolic execution can quickly give us a first high-level intuition about what **capabilities**
+(e.g. arbitrary read/write, control-flow hijacking, etc.) one might gain with the underlying issue.
+Also, we will show how symbolic execution might help us during the process of generating a working
+**exploit** for the targeted vulnerability (CVE-2022-27646).
