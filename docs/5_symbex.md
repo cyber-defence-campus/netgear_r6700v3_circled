@@ -227,7 +227,7 @@ corresponding file stream) to the return register(s).
 When running a trace symbolically, [Morion](https://github.com/pdamian/morion) follows along the
 recorded instructions (including the ones injected by hooks during tracing) and executes them one by
 one using its underlying symbolic execution engine ([Triton](https://triton-library.github.io/) in
-our case). For hooks with mode `skip`, no additional modifications to the symbolic state are
+our case). For hooks with mode `skip`, no additional modifications of the symbolic state are
 performed. As we will see in the next example, this might be different when using a hook with mode
 `model`.
 #### Specific Function Hook with Mode Model (Example libc:fgets)
@@ -241,7 +241,7 @@ that the function has on the memory and register contexts. When looking closely 
 instructions, one observes that first the effective bytes of string `s` are set
 (`0xbeffc104: 0x41 'A'` - `0xbeffc502: 0x58 'X'`, `0xbeffc503: 0x00`), and second the
 correct return value (`0xbeffc104` - the address of string `s`) is placed into register `r0`. In
-contrast to an abstract function hook (`hooks:lib:func_hook:`), where only instructions to handle
+contrast to an abstract function hook (`hooks:lib:func_hook:`) where only instructions to handle
 correct function return values are injected, specific function hooks (`hooks:libc:fgets`) handle
 additional function-specific side-effects to the memory and register contexts.
 ```
@@ -291,34 +291,25 @@ additional function-specific side-effects to the memory and register contexts.
 [2023-11-30 12:47:37] [INFO] ... finished symbolic execution (pc=0x41414140).
 [...]
 ```
-Make the string `s`, read from file by function `fgets`, symbolic. More specifically, assign new
-symbolic variables to each character/byte of the string.
-user/attacker-controllable
-
-Symbolize each character/byte of string `s` (see
-https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12)
-
-
-TODO:
-- Move concrete values
-  - Memory side-effects:
-    - 'A' 0x41 to 0xbeffc104
-    - ...
-    - 'X' 0x58 to 0xbeffc503
-  - Register side-effects
-    - 0xbeffc104 to r0 (return value)
-- Mark bytes read from file as being symbolic
-  - 0xbeffc104 - 0xbeffc502
-  - Attacker-controllable
-  - Implemented by mode `model` of function `fgets`
-  - If we do not want this, use mode `skip`
-
-
-TODO: Mention that we did not stop at one of our specified stop addresses. Looking at analyzing the
-symbolic state shows that the `pc` is symbolic, meaning that we might control it.
-
-TODO: Explain that the model of `fgets` introduces symbolic variables (representing 
-attacker-controllable bytes). If we do not want this, we could use `fgets` with mode `skip`.
+Since we defined a function-specific hook to be used with mode `model`, additional modifications to
+the symbolic state might be performed. These modifications can happen either at entry or when
+leaving the hook. The model implementation of `fgets` (see
+[libc.py#L12](https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12) for
+more details), for instance, makes the string `s` symbolic. This means that new symbolic variables
+get assigned to each character/byte of the read string. But why does one want to make `s` symbolic?
+Well, `s` is read in from a resource external to the targeted binary (here a file), which is
+potentially controllable by a (malicious) user. By making `s` symbolic we might conduct various
+analysis about how it, respectively an attacker can influence our target program. As will be
+explained in the next section [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state), in
+the case of binary *circled* we for instance immediately see that the program counter (`pc`) at the
+end of the trace is symbolic, i.e. is somehow influence by attacker-controllable values, potentially
+leading to a control-flow hijacking attack.
+Note: In case you want to hook invocations of function `fets` without marking read values as being
+symbolic, make the corresponding hook to use mode `skip`.
+Note: [Morion](https://github.com/pdamian/morion) is a *proof-of-concept (PoC)* tool intended to be
+used for experimenting with symbolic execution on (real-world) (ARMv7) binaries. It currently
+implements (only) a handful of hooks for common `libc` functions. These should be extended in future
+work (pull requests are welcome).
 ### Analyzing Symbolic State
 TODO:
 - If we mark inputs an attacker can control symbolic, we can see what and how they influence (which)
@@ -357,12 +348,7 @@ might help us during the process of generating a working **exploit** for the tar
 (CVE-2022-27646).
 
 ## TODO
-This parameter is used to distinguish multiple symbolic hooking implementations (see
-[Symbolic Execution](./5_symbex.md)) that will be executed instead of the actual function's assembly
-instructions.
 
-[Morion](https://github.com/pdamian/morion) currently implements (only) a handful of hooks for
-common _libc_ functions, with supported modes of `skip`, `model` or `taint` (TODO: Add reference).
 
 Tracing:
 | Type            | Side-Effects on Concrete State       |
