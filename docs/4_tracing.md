@@ -148,12 +148,13 @@ parameter `mode`. This is only relevant during symbolic execution and will there
 in chapter [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace
 collection can be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
 
-Note: As mentioned before, [Morion](https://github.com/pdamian/morion) generally intends to favor
-configuration flexibility over full automation. Therefore, `leave` addresses of hooks (currently)
-need to be configured manually, since in general, the return address of a function is hard to
-determine (e.g. tail calls). And more importantly, [Morion](https://github.com/pdamian/morion)'s
-hooking feature intends not to be limited to function calls, but be applicable in more generic
-cases, i.e. for any sequence of subsequent assembly instructions.
+**Note**: As mentioned before, [Morion](https://github.com/pdamian/morion) generally intends to
+favor configuration flexibility over full automation. Therefore, `leave` addresses of hooks
+(currently) need to be configured manually, since in general, the return address of a function is
+hard to determine (e.g. tail calls). And more importantly,
+[Morion](https://github.com/pdamian/morion)'s hooking feature intends not to be limited to function
+calls, but be applicable in more generic cases, i.e. for any sequence of subsequent assembly
+instructions.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
@@ -340,10 +341,10 @@ below. Instructions with addresses `0xd040`, `0x1000` - `0x1010` have been injec
 function. The last injected instruction at address `0x1010` transfers control back to the
 instruction at the `leave` address (`0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]`).
 
-Note: [Morion](https://github.com/pdamian/morion) also implements the concept of hooking arbitrary
-sequences of assembly instructions ("`hooks:lib:inst_hook:`"), not necessarily belonging to function
-calls. These are similar to the ones regarding functions, but do not inject any instructions for
-setting return values.
+**Note**: [Morion](https://github.com/pdamian/morion) also implements the concept of hooking
+arbitrary sequences of assembly instructions ("`hooks:lib:inst_hook:`"), not necessarily belonging
+to function calls. These are similar to the ones regarding functions, but do not inject any
+instructions for setting return values.
 ```
 [...]
 [2023-11-28 08:56:37] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8                                            #                                                                               
