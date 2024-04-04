@@ -160,8 +160,8 @@ while loading the trace file, would look like this:
 [2023-11-30 12:47:37] [DEBG] 	0x000120f8=$$
 [...]
 ```
-Note that in our example regarding binary _circled_, we do not manually mark any register and/or
-memory location as being symbolic (there are no `$$` specifiers in the entry state of file
+Note that in our example of binary _circled_, we do not manually mark any register and/or memory
+location as being symbolic (there are no `$$` specifiers in the entry state of file
 [circled.init.yaml](../morion/circled.init.yaml)). Instead, and as will be explained in section
 [How Hooking Works](./5_symbex.md#how-hooking-works) below, all symbolic variables are automatically
 introduced by [Morion](https://github.com/pdamian/morion) and its model for the hooked `libc`
@@ -192,7 +192,7 @@ How hooking works, while executing a trace symbolically, is explained next.
 We already discussed how hooking works during tracing in section
 [How Hooking Works](./4_tracing.md#how-hooking-works). Here, we discuss some aspects about hooking
 while executing a trace symbolically.
-#### Abstract Function Hook (Example libc:fclose)
+#### Abstract Function Hook with Mode Skip (Example libc:fclose)
 In the chapter about tracing (see section [How Hooking Works](./4_tracing.md#how-hooking-works)), we
 have already seen that the file [circled.init.yaml](../morion/circled.init.yaml) defines a hook for
 entry and leave addresses `0xd040` and `0xd044`, respectively. The hook corresponds to a call to
@@ -224,16 +224,11 @@ corresponding file stream) to the return register(s).
 [2023-11-30 12:47:36] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]        #
 [...]
 ```
-TODO: 
-
-In the case of hooks with mode `skip`, all the symbolic execution engine does is to execute the
-injected assembly instructions, which may modify part of the concrete state, but have no effect on
-the symbolic state.
-
-In the case of abstract function hooks, the symbolic execution engine
-
-Abstract function hook, nothing done symbolically beside executing injected instructions
-#### Specific Function Hook (Example libc:fgets)
+When executing the trace symbolically, [Morion](https://github.com/pdamian/morion) follows along the
+recorded instructions (including the ones injected by hooks during tracing). In case of a hook with
+mode `skip`, no additional modifications to the symbolic state are performed. As we will see in the
+next example, this might be different when using a hook with mode `model`.
+#### Specific Function Hook with Mode Model (Example libc:fgets)
 In section [How Hooking Works](./4_tracing.md#how-hooking-works) we explained that
 
 As explained in section [How Hooking Works](./4_tracing.md#how-hooking-works)

@@ -321,7 +321,7 @@ communications, Kernel, device drivers, coprocessors, etc.).
 
 Below, we discuss how the hooking of two concrete _libc_ functions looks like, while
 [Morion](https://github.com/pdamian/morion) collects a trace.
-#### Abstract Function Hook (Example libc:fclose)
+#### Abstract Function Hook with Mode Skip (Example libc:fclose)
 The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for entry and leave 
 addresses `0xd040` and `0xd044`, respectively. The corresponding entry is located under the key
 `hooks:lib:func_hook:`, which means that an abstract hooking mechanism for functions should be used
@@ -368,7 +368,7 @@ setting return values.
 [2023-11-28 08:56:37] [DEBG] 	0xbeffb877 = 0x00
 [...]
 ```
-#### Specific Function Hook (Example libc:fgets)
+#### Specific Function Hook with Mode Model (Example libc:fgets)
 In general, not only function return values (as discussed in the previous section), but all
 **side-effects** with respect to registers and/or memory locations need to be covered, in order for
 the symbolic execution to be correct. This is why more specific function hook implementations might
