@@ -145,7 +145,7 @@ hooks:
 ```
 As can be seen in the code excerpt above, hooks include - beside `entry` and `leave` addresses - a
 parameter `mode`. This is only relevant during symbolic execution and will therefore be explained
-in section [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace
+in chapter [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace
 collection can be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
 
 Note: As mentioned before, [Morion](https://github.com/pdamian/morion) generally intends to favor
