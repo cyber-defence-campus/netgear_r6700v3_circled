@@ -190,23 +190,23 @@ locations in the context of the symbolic execution engine,
 How hooking works, while executing a trace symbolically, is explained next.
 ### How Hooking Works
 We already discussed how hooking works during tracing in section
-[How Hooking Works](./4_tracing.md#how-hooking-works). Here, we discuss some aspects about hooking
-while executing a trace symbolically.
+[Tracing: How Hooking Works](./4_tracing.md#how-hooking-works). Here, we discuss some aspects about
+hooking while executing a trace symbolically.
 #### Abstract Function Hook with Mode Skip (Example libc:fclose)
-In the chapter about tracing (see section [How Hooking Works](./4_tracing.md#how-hooking-works)), we
-have already seen that the file [circled.init.yaml](../morion/circled.init.yaml) defines a hook for
-entry and leave addresses `0xd040` and `0xd044`, respectively. The hook corresponds to a call to
-function `fclose` (synopsis: `int fclose(FILE *stream);`) from `libc` (or to be more specific,
-`uclibc` in case of the binary _circled_). The effective assembly instructions of the function
-itself have not been traced, due to the hooking mode `skip`. Instead
-[Morion](https://github.com/pdamian/morion) injected some instructions to mimic some of the
-function's side-effects. Since we used an abstract function hook (`hooks:lib:func_hook:`), the only
-modelled side-effect corresponds to setting the correct return value(s). For the ARMv7 architecture
-that we target, a function's return value is generally stored in register `r0` (and potentially
-`r1`). This is exactly what instructions `0x1000` - `0x100c` are used for.
-[Morion](https://github.com/pdamian/morion) injected assembly instructions to move the trace's
-effective return value of function `fclose` (here `0`, meaning a successful closure of the
-corresponding file stream) to the return register(s).
+In the chapter about tracing (see section
+[Tracing: How Hooking Works](./4_tracing.md#how-hooking-works)), we have already seen that the file
+[circled.init.yaml](../morion/circled.init.yaml) defines a hook for entry and leave addresses
+`0xd040` and `0xd044`, respectively. The hook corresponds to a call to function `fclose` (synopsis:
+`int fclose(FILE *stream);`) from `libc` (or to be more specific, `uclibc` in case of the binary
+_circled_). The effective assembly instructions of the function itself have not been traced, due to
+the configured hooking mode `skip`. Instead [Morion](https://github.com/pdamian/morion) injected
+some instructions to reproduce some of the function's side-effects. Since we used an abstract
+function hook (`hooks:lib:func_hook:`), the only modelled side-effect corresponds to setting the
+correct return value(s). For the ARMv7 architecture that we target, a function's return value is
+generally stored in register `r0` (and potentially `r1`). This is exactly what instructions
+`0x1000` - `0x100c` are used for. [Morion](https://github.com/pdamian/morion) injected assembly
+instructions to move the trace's effective return value of function `fclose` (here `0`, meaning a
+successful closure of the corresponding file stream) to the return register(s).
 ```
 [...]
 [2023-11-30 12:47:36] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8              #                                                 
@@ -224,10 +224,12 @@ corresponding file stream) to the return register(s).
 [2023-11-30 12:47:36] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]        #
 [...]
 ```
-When executing the trace symbolically, [Morion](https://github.com/pdamian/morion) follows along the
-recorded instructions (including the ones injected by hooks during tracing). In case of a hook with
-mode `skip`, no additional modifications to the symbolic state are performed. As we will see in the
-next example, this might be different when using a hook with mode `model`.
+When running a trace symbolically, [Morion](https://github.com/pdamian/morion) follows along the
+recorded instructions (including the ones injected by hooks during tracing) and executes them one by
+one using its underlying symbolic execution engine ([Triton](https://triton-library.github.io/) in
+our case). For hooks with mode `skip`, no additional modifications to the symbolic state are
+performed. As we will see in the next example, this might be different when using a hook with mode
+`model`.
 #### Specific Function Hook with Mode Model (Example libc:fgets)
 In section [How Hooking Works](./4_tracing.md#how-hooking-works) we explained that
 
@@ -364,3 +366,4 @@ Symbolic Execution:
 | `func_hook` | Hook function                 | Inject instructions to set function's return value(s) |
 
 - [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
+- [ ] Change text of links and validate them
