@@ -1,4 +1,4 @@
-# Exploiting a Stack Buffer Overflow on the Netgear R6700v3 (CVE-2022-27646)
+# Exploiting a Stack Buffer Overflow on the Netgear R6700v3 (CVE-2022-27646) with the Help of Symbolic Execution
 <!--TODO--------------------------------------------------------------------------------------------
 - [ ] Revise references
 --------------------------------------------------------------------------------------------------->
