@@ -1,4 +1,27 @@
 # Exploiting a Stack Buffer Overflow on the Netgear R6700v3 (CVE-2022-27646)
+<!--TODO--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------->
+This repository is intended to demonstrate some functionalities of
+**[Morion](https://github.com/pdamian/morion)**, a proof-of-concept (PoC) tool to experiment with
+**symbolic execution** on real-world (ARMv7) binaries. We show some of Morion's capabilities by
+giving a concrete example, namely, how it can assist during the process of creating a working
+exploit for **CVE-2022-27646** - a stack buffer overflow vulnerability in Netgear R6700v3 routers
+(version 10.04.120_10.0.91).
+
+The repository contains all files needed to follow along (e.g. scripts to emulate the vulnerable
+firmware) and reproduce the discussed steps of how to use *Morion* for exploit development. The
+documentation to demonstrate Morion's workings is structured as follows:
+1. [Setup](./1_setup.md) - Explains how to setup analysis (running *Morion*) and target systems
+    (emulating the vulnerable firmware).
+2. [Emulation](./2_emulation.md) - Explains how to emulate the vulnerable target binary.
+3. [Vulnerability CVE-2022-27646](./3_vulnerability.md) - Provides some background information to
+    the leverage security vulnerability.
+4. [Tracing](./4_tracing.md) - Explains how to record a concrete execution trace of a target binary
+    using *Morion*.
+5. [Symbolic Execution](./5_symbex.md) - Explains how to use *Morion* for analyzing a recorded trace
+    symbolically.
+6. [Exploitation](./6_exploitation.md) - Explains how *Morion* might assist in crafting an exploit.
+<!--REMOVE----------------------------------------------------------------------------------------->
 ## 1. Preparation / Setup
 ### 1.1 Host System
 - Install the following dependencies:
