@@ -16,7 +16,7 @@ of how to make use of [Morion](https://github.com/pdamian/morion). The **documen
 (under `docs/`) to demonstrate [Morion](https://github.com/pdamian/morion)'s workings contains the
 following chapters:
 1. [Setup](docs/1_setup.md) - Explains how to setup analysis (running *Morion*) and target systems
-    (running target binary).
+    (running target binary *circled*).
 2. [Emulation](docs/2_emulation.md) - Explains how to emulate the vulnerable target binary.
 3. [Vulnerability CVE-2022-27646](docs/3_vulnerability.md) - Provides some background information to
     the targeted security vulnerability.
