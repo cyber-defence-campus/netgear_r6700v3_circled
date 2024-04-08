@@ -1,17 +1,22 @@
 # Table of Contents
 1. [Setup](./1_setup.md#setup)
+    1. [Host System](./1_setup.md#host-system)
+    2. [ARMHF Guest System](./1_setup.md#armhf-guest-system)
 2. [Emulation](./2_emulation.md)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
 4. [Tracing](./4_tracing.md)
 5. [Symbolic Execution](./5_symbex.md)
 6. [Exploitation](./6_exploitation.md)
 <!--TODO--------------------------------------------------------------------------------------------
+- [ ] Document how to install Morion
+- [ ] Step-by-step test the documented setup
 --------------------------------------------------------------------------------------------------->
 # Setup
 ## Host System
 - Install the following dependencies:
   - git
   - binwalk (https://github.com/ReFirmLabs/binwalk)
+  - morion (https://github.com/pdamian/morion)
 - Clone the project repository:
   ```
   git clone https://github.com/pdamian/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
