@@ -10,10 +10,10 @@ This repository is intended to demonstrate some functionalities of
 it can assist during the process of creating a working **exploit for CVE-2022-27646** - a stack
 buffer overflow vulnerability in Netgear R6700v3 routers (version 10.04.120_10.0.91).
 
-The repository contains all files needed to follow along (e.g. scripts to emulate the vulnerable
-ARMv7 binary) and reproduce the discussed steps of how to make use of
-[Morion](https://github.com/pdamian/morion). The **documentation** (`docs/`) to demonstrate
-[Morion](https://github.com/pdamian/morion)'s workings contains the following chapters:
+The repository contains all files (`firmware/`, `libcircled/` and `server/`) needed to follow along
+(e.g. scripts to emulate the vulnerable ARMv7 binary) and reproduce the discussed steps of how to
+make use of [Morion](https://github.com/pdamian/morion). The **documentation** (`docs/`) to
+demonstrate [Morion](https://github.com/pdamian/morion)'s workings contains the following chapters:
 1. [Setup](docs/1_setup.md) - Explains how to setup analysis (running *Morion*) and target systems
     (running target binary).
 2. [Emulation](docs/2_emulation.md) - Explains how to emulate the vulnerable target binary.
