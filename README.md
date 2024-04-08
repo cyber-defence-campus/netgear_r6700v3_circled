@@ -13,16 +13,16 @@ giving a concrete example, namely, how it can assist during the process of creat
 The repository contains all files needed to follow along (e.g. scripts to emulate the vulnerable
 firmware) and reproduce the discussed steps of how to use *Morion* for exploit development. The
 **documentation** (`docs/`) to demonstrate Morion's workings is structured as follows:
-1. [Setup](./docs/1_setup.md) - Explains how to setup analysis (running *Morion*) and target systems
+1. [Setup](docs/1_setup.md) - Explains how to setup analysis (running *Morion*) and target systems
     (emulating the vulnerable firmware).
-2. [Emulation](./docs/2_emulation.md) - Explains how to emulate the vulnerable target binary.
-3. [Vulnerability CVE-2022-27646](./docs/3_vulnerability.md) - Provides some background information
+2. [Emulation](docs/2_emulation.md) - Explains how to emulate the vulnerable target binary.
+3. [Vulnerability CVE-2022-27646](docs/3_vulnerability.md) - Provides some background information
     to the leverage security vulnerability.
-4. [Tracing](./docs/4_tracing.md) - Explains how to record a concrete execution trace of a target
+4. [Tracing](docs/4_tracing.md) - Explains how to record a concrete execution trace of a target
     binary using *Morion*.
-5. [Symbolic Execution](./docs/5_symbex.md) - Explains how to use *Morion* for analyzing a recorded
+5. [Symbolic Execution](docs/5_symbex.md) - Explains how to use *Morion* for analyzing a recorded
     trace symbolically.
-6. [Exploitation](./docs/6_exploitation.md) - Explains how *Morion* might assist in crafting an
+6. [Exploitation](docs/6_exploitation.md) - Explains how *Morion* might assist in crafting an
     exploit.
 ## References
 - Emulating Netgear R6700v3 cicled binary:
