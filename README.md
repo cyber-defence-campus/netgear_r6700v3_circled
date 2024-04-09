@@ -29,7 +29,7 @@ following chapters:
   - https://github.com/pdamian/morion
 - Defeating the Netgear R6700v3:
   - https://www.synacktiv.com/en/publications/pwn2own-austin-2021-defeating-the-netgear-r6700v3.html
-- Emulating Netgear R6700v3 *cicled* Binary:
+- Emulating, Debugging and Exploiting Netgear R6700v3 *cicled* Binary:
   - https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2
   - https://medium.com/@INTfinity/1-2-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-2-cf1571493117
   - https://medium.com/@INTfinity/1-3-exploiting-and-debugging-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-a80dbaf1245d
