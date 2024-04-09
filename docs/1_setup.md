@@ -18,7 +18,6 @@ execution traces that can then be analyzed symbolically.
 - Install the following dependencies:
   - git
   - binwalk (https://github.com/ReFirmLabs/binwalk)
-- Install [Morion](https://github.com/pdamian/morion#installation).
 - Clone the project repository:
   ```
   git clone https://github.com/pdamian/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
@@ -46,6 +45,7 @@ execution traces that can then be analyzed symbolically.
   # Copy circled.sh script (wrapper to emulate binary circled)
   cp firmware/circled.sh $ROOTFS/circled.sh
   ```
+- Install [Morion](https://github.com/pdamian/morion#installation).
 ## ARMHF Guest System
 **Note**: In the following, we assume that the variable $ROOTFS points to the firmware's root filesystem, as set in section [Analysis/Host System](./1_setup.md#analysis--host-system).
 - Setup an ARMHF guest system (recommended: *QEMU* ARMHF Debian VM).
