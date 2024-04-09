@@ -1,6 +1,5 @@
 # Exploiting a Stack Buffer Overflow on the Netgear R6700v3 (CVE-2022-27646) with the Help of Symbolic Execution
 <!--TODO--------------------------------------------------------------------------------------------
-- [ ] Revise references
 --------------------------------------------------------------------------------------------------->
 ## Introduction
 This repository is intended to demonstrate some functionalities of
@@ -19,27 +18,22 @@ following chapters:
     (running target binary *circled*).
 2. [Emulation](docs/2_emulation.md) - Explains how to emulate the vulnerable target binary.
 3. [Vulnerability CVE-2022-27646](docs/3_vulnerability.md) - Provides some background information to
-    the targeted security vulnerability.
+    the targeted vulnerability.
 4. [Tracing](docs/4_tracing.md) - Explains how to record a concrete execution trace of the target
     binary using *Morion*.
-5. [Symbolic Execution](docs/5_symbex.md) - Explains how to use *Morion* for analyzing the recordedd
+5. [Symbolic Execution](docs/5_symbex.md) - Explains how to use *Morion* for analyzing the recorded
      trace symbolically.
-6. [Exploitation](docs/6_exploitation.md) - Explains how *Morion* might assist in crafting an
-    exploit.
+6. [Exploitation](docs/6_exploitation.md) - Explains how *Morion* can assist in crafting an exploit.
 ## References
-- Morion PoC tool:
+- Morion PoC Tool:
   - https://github.com/pdamian/morion
-- Emulating Netgear R6700v3 cicled binary:
+- Defeating the Netgear R6700v3:
+  - https://www.synacktiv.com/en/publications/pwn2own-austin-2021-defeating-the-netgear-r6700v3.html
+- Emulating Netgear R6700v3 *cicled* Binary:
   - https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2
   - https://medium.com/@INTfinity/1-2-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-2-cf1571493117
   - https://medium.com/@INTfinity/1-3-exploiting-and-debugging-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-a80dbaf1245d
-- Emulating IoT Firmware Made Easy:
-  - https://boschko.ca/qemu-emulating-firmware/
-- Defeating the Netgear R6700v3:
-  - https://www.synacktiv.com/en/publications/pwn2own-austin-2021-defeating-the-netgear-r6700v3.html
-- Chroot:
-  - https://wiki.archlinux.org/title/Chroot#Using_chroot
-- Ready-to-Use Cross-Compilation Toolchains:
-  - https://toolchains.bootlin.com/
 - NVRAM Emulator:
   - https://github.com/firmadyne/libnvram
+- Ready-to-Use Cross-Compilation Toolchains:
+  - https://toolchains.bootlin.com/
