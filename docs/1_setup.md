@@ -66,4 +66,4 @@ Execute the following instructions within the ARMHF guest system:
   ```
 
 ----------------------------------------------------------------------------------------------------
-[Back-to-Top](./1_setup.md)
+[Back-to-Top](./1_setup.md#table-of-contents)
