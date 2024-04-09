@@ -1,7 +1,7 @@
 # Table of Contents
 1. [Setup](./1_setup.md)
 2. [Emulation](./2_emulation.md#emulation)
-    1. [circled.patch.py](./2_emulation.md#cicrledpatchpy)
+    1. [circled.patch.py](./2_emulation.md#circledpatchpy)
     2. [libnvram.so](./2_emulation.md#libnvramso)
     3. [libcircled.so](./2_emulation.md#libcircledso)
     4. [circled.sh](./2_emulation.md#circledsh)
@@ -13,8 +13,8 @@
 <!--TODO--------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------->
 # Emulation
-In this chapter we briefly mention a handful of files and scripts that can be used to run the
-intended target, the binary *circled* from Netgear R6700v3 routers (firmware version
+In this chapter, we briefly mention a handful of **files** and **scripts** that can be used to
+emulate the intended target, the binary *circled* from Netgear R6700v3 routers (firmware version
 10.04.120_10.0.91). For each of these files, a short explanation about its purpose is given.
 
 **Note**: Although not exactly the same, our emulation got inspired by 
@@ -49,5 +49,6 @@ peripherals by storing key-value pairs into a `tmpfs` mounted at `/firmadyne/lib
 - clean up
 ### circled.server.py
 `server/circled.server.py`
+
 ----------------------------------------------------------------------------------------------------
 [Back-to-Top](./2_emulation.md#table-of-contents)
