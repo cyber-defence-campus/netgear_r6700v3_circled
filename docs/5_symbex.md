@@ -361,3 +361,6 @@ symbolic execution can quickly give us a first high-level intuition about what *
 (e.g. arbitrary read/write, control-flow hijacking, etc.) one might gain with the underlying issue.
 Also, we will show how symbolic execution might help us during the process of generating a working
 **exploit** for the targeted vulnerability (CVE-2022-27646).
+
+----------------------------------------------------------------------------------------------------
+[Back-to-Top](./5_symbex.md#table-of-contents)

@@ -170,7 +170,7 @@ _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fu
    - System: [Guest (chroot)](./1_setup.md)
    - Command:
      ```
-     /circled.sh --gdb
+     /circled.driver.sh --gdb
 3. Collect an execution trace of the binary _circled_:
    - System: [Host (morion)](./1_setup.md)
    - Command:
@@ -428,3 +428,6 @@ of `fgets`. In consequence, **simplifications/abstractions** might sometimes be 
 drawback might introduce inconsistencies between the effective concrete and symbolic execution.
 Depending on the intended task that you intend to solve with symbolic execution, this might or might
 not be acceptable.
+
+----------------------------------------------------------------------------------------------------
+[Back-to-Top](./4_tracing.md)#table-of-contents
