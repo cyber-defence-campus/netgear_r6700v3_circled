@@ -47,7 +47,8 @@ execution traces that can then be analyzed symbolically.
   ```
 - Install [Morion](https://github.com/pdamian/morion#installation).
 ## ARMHF Guest System
-**Note**: In the following, we assume that the variable $ROOTFS points to the firmware's root filesystem, as set in section [Analysis/Host System](./1_setup.md#analysis--host-system).
+**Note**: In the following, we assume that the variable $ROOTFS points to the firmware's root
+filesystem, as set in section [Analysis / Host System](./1_setup.md#analysis--host-system).
 - Setup an ARMHF guest system (recommended: *QEMU* ARMHF Debian VM).
 - Copy the directories `$ROOTFS/` and `server/` to the ARMHF guest system.
 
