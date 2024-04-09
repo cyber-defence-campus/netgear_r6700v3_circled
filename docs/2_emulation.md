@@ -16,9 +16,9 @@
 # Emulation
 In this chapter, we briefly mention a handful of **files** and **scripts** that can be used to
 emulate the intended target, the binary *circled* from Netgear R6700v3 routers (firmware version
-10.04.120_10.0.91). For each of these files, a short explanation about its purpose is given.
+10.04.120_10.0.91). For each of these files, a brief explanation of its purpose is provided.
 
-**Note**: Although not exactly the same, our emulation got inspired by 
+**Note**: While not identical, our emulation was inspired by 
 [Emulating, Debugging and Exploiting Netgear R6700v3 cicled Binary](../README.md#references).
 ### circled.patch.py
 The purpose of the first file ([`firmware/circled.patch.py`](../firmware/circled.patch.py)) is to
@@ -32,15 +32,16 @@ The target binary *circled* relies on the presence of some **NVRAM peripherals**
 by preloading (using the `LD_PRELOAD` environment variable) the binary with the open-source library
 [libnvram](https://github.com/firmadyne/libnvram). The library emulates the behavior of NVRAM
 peripherals by storing key-value pairs into a `tmpfs` mounted at `/firmadyne/libnvram/`. The file
-[`firmware/bins/libnvram.so`](../firmware/bins/libnvram.so) is a pre-compiled version of the
-library.
+[`firmware/bins/libnvram.so`](../firmware/bins/libnvram.so) is a pre-compiled version
+(cross-compiled for `armv7-eabihf` with `uclibc`) of the library.
 ### libcircled.so
 The file [`firmware/bins/libcircled.so`](../firmware/bins/libcircled.so) is another shared library
 that is going to be preloaded when invoking the target binary *circled*. It has been pre-compiled
-from the source file [`libcircled/circled.c`](../libcircled/circled.c) and contains two hooks for
-`uclibc` functions `fgets` and `system`. While `fgets` is hooked only to print out some debugging
-information, function `system` modifies two invocations of the `curl` command-line tool that
-download files [`circleinfo.txt`](../server/resources/circleinfo.txt) and
+(cross-compiled for `armv7-eabihf` with `uclibc`) from the source file
+[`libcircled/circled.c`](../libcircled/circled.c) and contains two hooks for `uclibc` functions
+`fgets` and `system`. While `fgets` is hooked only to print out some debugging information, function
+`system` modifies two invocations of the `curl` command-line tool that download files
+[`circleinfo.txt`](../server/resources/circleinfo.txt) and
 [`database.bin`](../server/resources/database.bin) from remote Netgear **update servers**. As
 explained in more details in chapter [Vulnerability CVE-2022-27646](./3_vulnerability.md), these
 download requests perform no certificate validation to authenticate the update servers, what might
