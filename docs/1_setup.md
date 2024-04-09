@@ -42,8 +42,8 @@ execution traces that can then be analyzed symbolically.
   # Patch out the anti-debugging functionality (allow LDPRELOAD) of the circled binary
   python3 firmware/circled.patch.py $ROOTFS/bin/circled $ROOTFS/bin/circled.patched
   
-  # Copy circled.sh script (wrapper to emulate binary circled)
-  cp firmware/circled.sh $ROOTFS/circled.sh
+  # Copy circled.driver.sh script (wrapper to emulate binary circled)
+  cp firmware/circled.driver.sh $ROOTFS/circled.driver.sh
   ```
 - Install [Morion](https://github.com/pdamian/morion#installation).
 ## ARMHF Guest System

@@ -5,7 +5,7 @@
     2. [libnvram.so](./2_emulation.md#libnvramso)
     3. [libcircled.so](./2_emulation.md#libcircledso)
     4. [circled.server.py](./2_emulation.md#circledserverpy)
-    5. [circled.sh](./2_emulation.md#circledsh)
+    5. [circled.driver.sh](./2_emulation.md#circleddriversh)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
 4. [Tracing](./4_tracing.md)
 5. [Symbolic Execution](./5_symbex.md)
@@ -53,8 +53,8 @@ may deliver different versions of files [`circleinfo.txt`](../server/resources/c
 [`database.bin`](../server/resources/database.bin). As explained in chapter
 [Vulnerability CVE-2022-27646](./3_vulnerability.md), these files will contain the actual payloads
 triggering the vulnerability we want to exploit.
-### circled.sh
-The file [`firmware/circled.sh`](../firmware/circled.sh) is a simple **driver script** that sets up
+### circled.driver.sh
+The file [`firmware/circled.driver.sh`](../firmware/circled.driver.sh) is a simple **driver script** that sets up
 NVRAM/NAND media, runs the target binary *circled* with all the preloaded libraries, and cleans up
 after termination of the target. The script allows to specify a command-line argument `--gdb`, which
 when given, leads to the target being run with `gdbserver` attached.
