@@ -14,6 +14,7 @@
 5. [Symbolic Execution](./5_symbex.md)
 6. [Exploitation](./6_exploitation.md)
 <!--TODO--------------------------------------------------------------------------------------------
+- [ ] Update section Run so that it makes the Setup chapter
 --------------------------------------------------------------------------------------------------->
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
