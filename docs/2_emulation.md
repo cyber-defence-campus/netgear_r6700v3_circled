@@ -15,11 +15,11 @@
 --------------------------------------------------------------------------------------------------->
 # Emulation
 In this chapter, we briefly mention a handful of **files** and **scripts** that can be used to
-emulate the intended target, the binary *circled* from Netgear R6700v3 routers (firmware version
+emulate the intended target, the binary *circled* from NETGEAR R6700v3 routers (firmware version
 10.04.120_10.0.91). For each of these files, a brief explanation of its purpose is provided.
 
 **Note**: While not identical, our emulation was inspired by 
-[Emulating, Debugging and Exploiting Netgear R6700v3 cicled Binary](../README.md#references).
+[Emulating, Debugging and Exploiting NETGEAR R6700v3 cicled Binary](../README.md#references).
 ### circled.patch.py
 The purpose of the first file ([`firmware/circled.patch.py`](../firmware/circled.patch.py)) is to
 apply a simple **patch** to the target binary *circled*. The patch removes the invocation of a
@@ -42,7 +42,7 @@ that is going to be preloaded when invoking the target binary *circled*. It has 
 `fgets` and `system`. While `fgets` is hooked only to print out some debugging information, function
 `system` modifies two invocations of the `curl` command-line tool that download files
 [`circleinfo.txt`](../server/resources/circleinfo.txt) and
-[`database.bin`](../server/resources/database.bin) from remote Netgear **update servers**. As
+[`database.bin`](../server/resources/database.bin) from remote NETGEAR **update servers**. As
 explained in more details in chapter [Vulnerability CVE-2022-27646](./3_vulnerability.md), these
 download requests perform no certificate validation to authenticate the update servers, what might
 allow attackers to force routers to download malicious versions of the files (e.g. using DNS or TCP

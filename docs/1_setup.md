@@ -53,7 +53,7 @@ filesystem, as set in section [Analysis / Host System](./1_setup.md#analysis--ho
 - Copy the directories `$ROOTFS/` and `server/` to the ARMHF guest system.
 
 Execute the following instructions within the ARMHF guest system:
-- Configure conservative ASLR (as being used on the Netgear R6700v3 routers):
+- Configure conservative ASLR (as being used on the NETGEAR R6700v3 routers):
   ```
   echo 1 | sudo tee /proc/sys/kernel/randomize_va_spac
   ```

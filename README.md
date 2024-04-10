@@ -1,4 +1,4 @@
-# Exploiting a Stack Buffer Overflow on the Netgear R6700v3 (CVE-2022-27646) with the Help of Symbolic Execution
+# Exploiting a Stack Buffer Overflow on the NETGEAR R6700v3 (CVE-2022-27646) with the Help of Symbolic Execution
 <!--TODO--------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------->
 ## Introduction
@@ -7,7 +7,7 @@ This repository is intended to demonstrate some functionalities of
 **symbolic execution** on real-world (ARMv7) binaries. We show some of
 [Morion](https://github.com/pdamian/morion)'s capabilities by giving a concrete example, namely, how
 it can assist during the process of creating a working **exploit for CVE-2022-27646** - a stack
-buffer overflow vulnerability in Netgear R6700v3 routers (version 10.04.120_10.0.91).
+buffer overflow vulnerability in NETGEAR R6700v3 routers (version 10.04.120_10.0.91).
 
 The repository contains all **files** (under `firmware/`, `libcircled/` and `server/`) needed to
 follow along (e.g. scripts to emulate the vulnerable ARMv7 binary) and reproduce the discussed steps
@@ -27,9 +27,9 @@ following chapters:
 ## References
 - Morion PoC Tool:
   - https://github.com/pdamian/morion
-- Defeating the Netgear R6700v3:
+- Defeating the NETGEAR R6700v3:
   - https://www.synacktiv.com/en/publications/pwn2own-austin-2021-defeating-the-netgear-r6700v3.html
-- Emulating, Debugging and Exploiting Netgear R6700v3 *cicled* Binary:
+- Emulating, Debugging and Exploiting NETGEAR R6700v3 *cicled* Binary:
   - https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2
   - https://medium.com/@INTfinity/1-2-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-2-cf1571493117
   - https://medium.com/@INTfinity/1-3-exploiting-and-debugging-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-a80dbaf1245d
