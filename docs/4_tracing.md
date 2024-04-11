@@ -433,4 +433,4 @@ Depending on the intended task that you intend to solve with symbolic execution,
 not be acceptable.
 
 ----------------------------------------------------------------------------------------------------
-[Back-to-Top](./4_tracing.md)#table-of-contents
+[Back-to-Top](./4_tracing.md#table-of-contents)
