@@ -1,4 +1,5 @@
 # Table of Contents
+0. [Introduction](../README.md#introduction)
 1. [Setup](./1_setup.md)
 2. [Emulation](./2_emulation.md)
 3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
