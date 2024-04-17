@@ -20,7 +20,7 @@ emulate the intended target, the binary *circled* from NETGEAR R6700v3 routers (
 10.04.120_10.0.91). For each of these files, a brief explanation of its purpose is provided.
 
 **Note**: While not identical, our emulation was inspired by 
-[Emulating, Debugging and Exploiting NETGEAR R6700v3 cicled Binary](../README.md#references).
+[Emulating, Debugging and Exploiting NETGEAR R6700v3 cicled Binary](https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2).
 ### circled.patch.py
 The purpose of the first file ([`firmware/circled.patch.py`](../firmware/circled.patch.py)) is to
 apply a simple **patch** to the target binary *circled*. The patch removes the invocation of a
@@ -53,8 +53,8 @@ web server (see next [section](./2_emulation.md#circledserverpy)), simulating su
 File [`server/circled.server.py`](../server/circled.server.py) implements a simple web server that
 may deliver different versions of files [`circleinfo.txt`](../server/resources/circleinfo.txt) and
 [`database.bin`](../server/resources/database.bin). As explained in chapter
-[Vulnerability CVE-2022-27646](./5_vulnerability.md), these files will contain the actual payloads
-triggering the vulnerability we want to exploit.
+[Exploitation](./6_exploitation.md), these files will contain the actual payloads triggering the
+vulnerability we want to exploit.
 ### circled.driver.sh
 The file [`firmware/circled.driver.sh`](../firmware/circled.driver.sh) is a simple **driver script** that sets up
 NVRAM/NAND media, runs the target binary *circled* with all the preloaded libraries, and cleans up

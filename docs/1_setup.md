@@ -1,7 +1,7 @@
 # Table of Contents
 0. [Introduction](../README.md#introduction)
 1. [Setup](./1_setup.md#setup)
-    1. [Analysis / Host System](./1_setup.md#host-system)
+    1. [Analysis / Host System](./1_setup.md#analysis--host-system)
     2. [ARMHF Guest System](./1_setup.md#armhf-guest-system)
 2. [Emulation](./2_emulation.md)
 3. [Tracing](./3_tracing.md)
@@ -9,7 +9,6 @@
 5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
 <!--TODO--------------------------------------------------------------------------------------------
-- [ ] Validate all links
 --------------------------------------------------------------------------------------------------->
 # Setup
 This chapter lists instructions on how to set up an **analysis system** (also referred to as the
@@ -49,7 +48,7 @@ execution traces that can then be analyzed symbolically.
   ```
 - Install [Morion](https://github.com/pdamian/morion#installation).
 ## ARMHF Guest System
-**Note**: In the following, we assume that the variable $ROOTFS points to the firmware's root
+**Note**: In the following, we assume that the variable `$ROOTFS` points to the firmware's root
 filesystem, as set in section [Analysis / Host System](./1_setup.md#analysis--host-system).
 - Setup an ARMHF guest system (recommended: *QEMU* ARMHF Debian VM).
 - Copy the directories `$ROOTFS/` and `server/` to the ARMHF guest system.
