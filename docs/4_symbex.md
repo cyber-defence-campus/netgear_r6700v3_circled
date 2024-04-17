@@ -56,7 +56,7 @@ Use the following step to **symbolically execute** a previously collected trace 
 execution run of binary _circled_:
 
 1. Use _morion_ to execute the collected trace symbolically:
-    - System: [Host (morion)](./1_setup.md)
+    - System: [Analysis / Host (morion)](./1_setup.md#analysis--host-system)
     - Command:
         ```
         cd morion/;             # Ensure to be within the correct directory
@@ -355,13 +355,13 @@ control-flow.
 [2024-04-11 10:47:23] [INFO] Start storing file 'circled.yaml'...
 [2024-04-11 10:47:25] [INFO] ... finished storing file 'circled.yaml'.
 ```
-In the next chapter about [Exploitation](./6_exploitation.md) we will see how symbolic execution
-might help us to decide whether the crasher we traced might be **exploitable** or not, i.e.
-corresponds to an actual security vulnerability or just an annoying bug. We will also see, how
-symbolic execution can quickly give us a first high-level intuition about what **capabilities**
-(e.g. arbitrary read/write, control-flow hijacking, etc.) one might gain with the underlying issue.
-Also, we will show how symbolic execution might help us during the process of generating a working
-**exploit** for the targeted vulnerability (CVE-2022-27646).
+In chapter [Exploitation](./6_exploitation.md), we will see how symbolic execution might help us to
+decide whether the crasher we traced might be **exploitable** or not, i.e. corresponds to an actual
+security vulnerability or just an annoying bug. We will also see, how symbolic execution can quickly
+give us a first high-level intuition about what **capabilities** (e.g. arbitrary read/write,
+control-flow hijacking, etc.) one might gain with the underlying issue. Also, we will show how
+symbolic execution might help us during the process of generating a working **exploit** for the
+targeted vulnerability (CVE-2022-27646).
 
 ----------------------------------------------------------------------------------------------------
 [Back-to-Top](./4_symbex.md#table-of-contents)
