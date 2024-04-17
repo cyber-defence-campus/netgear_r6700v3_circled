@@ -4,11 +4,12 @@
     1. [Analysis / Host System](./1_setup.md#host-system)
     2. [ARMHF Guest System](./1_setup.md#armhf-guest-system)
 2. [Emulation](./2_emulation.md)
-3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
-4. [Tracing](./4_tracing.md)
-5. [Symbolic Execution](./5_symbex.md)
+3. [Tracing](./3_tracing.md)
+4. [Symbolic Execution](./4_symbex.md)
+5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
 <!--TODO--------------------------------------------------------------------------------------------
+- [ ] Validate all links
 --------------------------------------------------------------------------------------------------->
 # Setup
 This chapter lists instructions on how to set up an **analysis system** (also referred to as the

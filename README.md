@@ -17,12 +17,12 @@ following chapters:
 1. [Setup](docs/1_setup.md) - Explains how to setup analysis (running *Morion*) and target systems
     (running target binary *circled*).
 2. [Emulation](docs/2_emulation.md) - Explains how to emulate the vulnerable target binary.
-3. [Vulnerability CVE-2022-27646](docs/3_vulnerability.md) - Provides some background information to
-    the targeted vulnerability.
-4. [Tracing](docs/4_tracing.md) - Explains how to record a concrete execution trace of the target
+3. [Tracing](docs/3_tracing.md) - Explains how to record a concrete execution trace of the target
     binary using *Morion*.
-5. [Symbolic Execution](docs/5_symbex.md) - Explains how to use *Morion* for analyzing the recorded
+4. [Symbolic Execution](docs/4_symbex.md) - Explains how to use *Morion* for analyzing the recorded
      trace symbolically.
+5. [Vulnerability CVE-2022-27646](docs/5_vulnerability.md) - Provides some background information to
+    the targeted vulnerability.
 6. [Exploitation](docs/6_exploitation.md) - Explains how *Morion* can assist in crafting an exploit.
 ## References
 - Morion PoC Tool:

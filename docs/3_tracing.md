@@ -2,17 +2,17 @@
 0. [Introduction](../README.md#introduction)
 1. [Setup](./1_setup.md)
 2. [Emulation](./2_emulation.md)
-3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
-4. [Tracing](./4_tracing.md#tracing)
-    1. [Setup](./4_tracing.md#setup)
-        1. [GDB Commands Script](./4_tracing.md#gdb-commands-script)
-        2. [YAML File](./4_tracing.md#yaml-file)
-    2. [Run](./4_tracing.md#run)
-    3. [Discussion](./4_tracing.md#discussion)
-        1. [Loading the Trace File](./4_tracing.md#loading-the-trace-file)
-        2. [Collecting the Trace](./4_tracing.md#collecting-the-trace)
-        3. [How Hooking Works](./4_tracing.md#how-hooking-works)
-5. [Symbolic Execution](./5_symbex.md)
+3. [Tracing](./3_tracing.md#tracing)
+    1. [Setup](./3_tracing.md#setup)
+        1. [GDB Commands Script](./3_tracing.md#gdb-commands-script)
+        2. [YAML File](./3_tracing.md#yaml-file)
+    2. [Run](./3_tracing.md#run)
+    3. [Discussion](./3_tracing.md#discussion)
+        1. [Loading the Trace File](./3_tracing.md#loading-the-trace-file)
+        2. [Collecting the Trace](./3_tracing.md#collecting-the-trace)
+        3. [How Hooking Works](./3_tracing.md#how-hooking-works)
+4. [Symbolic Execution](./4_symbex.md)
+5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
 <!--TODO--------------------------------------------------------------------------------------------
 - [ ] Update section Run so that it makes the Setup chapter
@@ -21,10 +21,10 @@
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
 known vulnerable ARMv7 binary named _circled_ (see
-[Vulnerability CVE-2022-27646](./3_vulnerability.md)). The trace is collected in a cross-platform
+[Vulnerability CVE-2022-27646](./5_vulnerability.md)). The trace is collected in a cross-platform
 remote setup, i.e. despite our host system being x86-based, the target runs on an (emulated)
 ARMv7-based device (see [Emulation](./2_emulation.md)). The collected trace may later be used for
-different symbolic execution runs/analyses (see [Symbolic Execution](./5_symbex.md)), which can be
+different symbolic execution runs/analyses (see [Symbolic Execution](./4_symbex.md)), which can be
 done offline, for instance on a more powerful machine.
 
 <figure>
@@ -47,7 +47,7 @@ the trace can then be collected with the command `morion_trace`, a custom GDB co
 [Morion](https://github.com/pdamian/morion) (usage:
 `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
 Alongside some stop addresses, `morion_trace` expects as argument a YAML file, into which the trace
-will be stored. As explained below in section [YAML File](./4_tracing.md#yaml-file), the
+will be stored. As explained below in section [YAML File](./3_tracing.md#yaml-file), the
 inputted YAML file can hold additional information that steers how the trace will be collected (e.g.
 by hooking certain functions).
 ```
@@ -81,7 +81,7 @@ Typically, the [circled.init.yaml](../morion/circled.init.yaml) file first defin
 the trace's entry state (`states:entry:`). More specifically, we define concrete register and/or
 memory values, that [Morion](https://github.com/pdamian/morion) - respectively _GDB_ - will set
 before collecting the trace (see also
-[Loading the Trace File](./4_tracing.md#loading-the-trace-file)).
+[Loading the Trace File](./3_tracing.md#loading-the-trace-file)).
 ```
 [...]
 states:
@@ -121,7 +121,7 @@ states:
 Beside setting concrete values, like `0x00` in the example above, we might also mark certain
 registers and/or memory bytes as being symbolic (indicated by the specifier `$$`). The symbolic
 values have not yet any effect during tracing, but will be central during symbolic execution (see 
-[Symbolic Execution](./5_symbex.md)).
+[Symbolic Execution](./4_symbex.md)).
 #### Hooks
 Next, the [circled.init.yaml](../morion/circled.init.yaml) file typically defines information about
 hooks (`hooks:`). A hook is a **sequence of consecutive assembly instructions** (from an `entry` to
@@ -150,8 +150,8 @@ hooks:
 ```
 As can be seen in the code excerpt above, hooks include - beside `entry` and `leave` addresses - a
 parameter `mode`. This is only relevant during symbolic execution and will therefore be explained
-in chapter [Symbolic Execution](./5_symbex.md). More details regarding hooking during trace
-collection can be found in section [How Hooking Works](./4_tracing.md#how-hooking-works) below.
+in chapter [Symbolic Execution](./4_symbex.md). More details regarding hooking during trace
+collection can be found in section [How Hooking Works](./3_tracing.md#how-hooking-works) below.
 
 **Note**: As mentioned before, [Morion](https://github.com/pdamian/morion) generally intends to
 favor configuration flexibility over full automation. Therefore, `leave` addresses of hooks
@@ -204,7 +204,7 @@ before starting the actual tracing process:
 [...]
 ```
 Also, the **hooks** defined in `circled.yaml` are applied (using _GDB_), so that they take effect
-(see also [How Hooking Works](./4_tracing.md#how-hooking-works)) when collecting the concrete
+(see also [How Hooking Works](./3_tracing.md#how-hooking-works)) when collecting the concrete
 execution trace:
 ```
 [...]
@@ -254,7 +254,7 @@ symbolic execution engine uses the correct concrete values.
 
 The collected information (instructions and initial values) is stored in the file `circled.yaml`,
 i.e. the file is updated as shown in the next code excerpt. The file `circled.yaml` serves as input
-for subsequent symbolic execution runs (see also [Symbolic Execution](./5_symbex.md)).
+for subsequent symbolic execution runs (see also [Symbolic Execution](./4_symbex.md)).
 ```
 [...]
 trace:
@@ -315,7 +315,7 @@ This is due to the fact, that our target binary crashed before reaching the inte
 More specifically, and as we will see in greater detail later on, the instruction
 `0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}` tried to pop a value from the
 stack that led to an invalid program counter (`pc` register), and in consequence, resulted in a
-**segmentation fault** (segfault). We will learn later on how [symbolic execution](./5_symbex.md)
+**segmentation fault** (segfault). We will learn later on how [symbolic execution](./4_symbex.md)
 can help us to decide whether this situation is [exploitable](./6_exploitation.md) or not, and if
 so, how we can do it.
 ### How Hooking Works
@@ -434,4 +434,4 @@ Depending on the intended task that you intend to solve with symbolic execution,
 not be acceptable.
 
 ----------------------------------------------------------------------------------------------------
-[Back-to-Top](./4_tracing.md#table-of-contents)
+[Back-to-Top](./3_tracing.md#table-of-contents)

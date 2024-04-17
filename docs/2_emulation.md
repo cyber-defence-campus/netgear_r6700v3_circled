@@ -7,9 +7,9 @@
     3. [libcircled.so](./2_emulation.md#libcircledso)
     4. [circled.server.py](./2_emulation.md#circledserverpy)
     5. [circled.driver.sh](./2_emulation.md#circleddriversh)
-3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
-4. [Tracing](./4_tracing.md)
-5. [Symbolic Execution](./5_symbex.md)
+3. [Tracing](./3_tracing.md)
+4. [Symbolic Execution](./4_symbex.md)
+5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
 <!--TODO--------------------------------------------------------------------------------------------
 - [ ] DNS and TCP redirection
@@ -44,7 +44,7 @@ that is going to be preloaded when invoking the target binary *circled*. It has 
 `system` modifies two invocations of the `curl` command-line tool that download files
 [`circleinfo.txt`](../server/resources/circleinfo.txt) and
 [`database.bin`](../server/resources/database.bin) from remote NETGEAR **update servers**. As
-explained in more details in chapter [Vulnerability CVE-2022-27646](./3_vulnerability.md), these
+explained in more details in chapter [Vulnerability CVE-2022-27646](./5_vulnerability.md), these
 download requests perform no certificate validation to authenticate the update servers, what might
 allow attackers to force routers to download malicious versions of the files (e.g. using DNS or TCP
 redirection). With `libcircled.so` we hook the `curl` invocations to download files from our local
@@ -53,7 +53,7 @@ web server (see next [section](./2_emulation.md#circledserverpy)), simulating su
 File [`server/circled.server.py`](../server/circled.server.py) implements a simple web server that
 may deliver different versions of files [`circleinfo.txt`](../server/resources/circleinfo.txt) and
 [`database.bin`](../server/resources/database.bin). As explained in chapter
-[Vulnerability CVE-2022-27646](./3_vulnerability.md), these files will contain the actual payloads
+[Vulnerability CVE-2022-27646](./5_vulnerability.md), these files will contain the actual payloads
 triggering the vulnerability we want to exploit.
 ### circled.driver.sh
 The file [`firmware/circled.driver.sh`](../firmware/circled.driver.sh) is a simple **driver script** that sets up

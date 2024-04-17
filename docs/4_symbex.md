@@ -2,15 +2,15 @@
 0. [Introduction](../README.md#introduction)
 1. [Setup](./1_setup.md)
 2. [Emulation](./2_emulation.md)
-3. [Vulnerability CVE-2022-27646](./3_vulnerability.md)
-4. [Tracing](./4_tracing.md)
-5. [Symbolic Execution](./5_symbex.md#symbolic-execution)
-    1. [Setup](./5_symbex.md#setup)
-    2. [Run](./5_symbex.md#run)
-    3. [Discussion](./5_symbex.md#discussion)
-        1. [Loading the Trace File](./5_symbex.md#loading-the-trace-file)
-        2. [How Hooking Works](./5_symbex.md#how-hooking-works)
-        3. [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state)
+3. [Tracing](./3_tracing.md)
+4. [Symbolic Execution](./4_symbex.md#symbolic-execution)
+    1. [Setup](./4_symbex.md#setup)
+    2. [Run](./4_symbex.md#run)
+    3. [Discussion](./4_symbex.md#discussion)
+        1. [Loading the Trace File](./4_symbex.md#loading-the-trace-file)
+        2. [How Hooking Works](./4_symbex.md#how-hooking-works)
+        3. [Analyzing Symbolic State](./4_symbex.md#analyzing-symbolic-state)
+5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
 <!--TODO--------------------------------------------------------------------------------------------
 - [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
@@ -19,7 +19,7 @@
 - [ ] Review whether all addresses/values are consistent
 --------------------------------------------------------------------------------------------------->
 # Symbolic Execution
-Chapter [Tracing](./4_tracing.md) explained how to collect a concrete execution trace of your
+Chapter [Tracing](./3_tracing.md) explained how to collect a concrete execution trace of your
 target, which in our specific case is the ARMv7 binary _circled_. If you followed along the given
 instructions, this trace was stored in the file `circled.yaml`. As we will see below, this trace
 file may then be used as input for the different **analysis modules** implemented by
@@ -64,7 +64,7 @@ execution run of binary _circled_:
         morion circled.yaml;    # Execute program trace symbolically
         ```
 
-Remember that if you followed along the instructions in chapter [Tracing](./4_tracing.md), the trace
+Remember that if you followed along the instructions in chapter [Tracing](./3_tracing.md), the trace
 was collected while the vulnerable binary processed a sample payload leading to a
 **crasher/segfault** (as might have been identified by a fuzzer).
 ### Analysis Modules
@@ -87,7 +87,7 @@ below:
 In the following, we discuss some aspects of the symbolic execution process as implemented by
 [Morion](https://github.com/pdamian/morion).
 ### Loading the Trace File
-As explained in section [Tracing: Collecting the Trace](./4_tracing.md#collecting-the-trace), beside
+As explained in section [Tracing: Collecting the Trace](./3_tracing.md#collecting-the-trace), beside
 the executed assembly instructions, the initial **concrete values** of all registers and/or memory
 locations accessed within the trace are recorded (in our specific example in the file
 `circled.yaml`). Before starting the actual symbolic execution, these are used by
@@ -170,7 +170,7 @@ while loading the trace file, would look like this:
 Note that in our example of binary _circled_, we do not manually mark any register and/or memory
 location as being symbolic (there are no `$$` specifiers in the entry state of file
 [circled.init.yaml](../morion/circled.init.yaml)). Instead, and as will be explained in section
-[Symbex: How Hooking Works](./5_symbex.md#how-hooking-works) below, all symbolic variables are
+[Symbex: How Hooking Works](./4_symbex.md#how-hooking-works) below, all symbolic variables are
 automatically introduced by [Morion](https://github.com/pdamian/morion) and its model for the hooked
 `libc` function `fgets`.
 
@@ -197,11 +197,11 @@ locations in the context of the symbolic execution engine,
 How hooking works, while executing a trace symbolically, is explained next.
 ### How Hooking Works
 We already discussed how hooking works during tracing in section
-[Tracing: How Hooking Works](./4_tracing.md#how-hooking-works). Here, we discuss some aspects about
+[Tracing: How Hooking Works](./3_tracing.md#how-hooking-works). Here, we discuss some aspects about
 hooking while executing a trace symbolically.
 #### Abstract Function Hook with Mode Skip (Example libc:fclose)
 In the chapter about tracing (see section
-[Tracing: How Hooking Works](./4_tracing.md#how-hooking-works)), we have already seen that the file
+[Tracing: How Hooking Works](./3_tracing.md#how-hooking-works)), we have already seen that the file
 [circled.init.yaml](../morion/circled.init.yaml) defines a hook for entry and leave addresses
 `0xd040` and `0xd044`, respectively. The hook corresponds to a call to function `fclose` (synopsis:
 `int fclose(FILE *stream);`) from `libc` (or to be more specific, `uclibc` in case of the binary
@@ -238,7 +238,7 @@ our case). For hooks with mode `skip`, no additional modifications of the symbol
 performed. As we will see in the next example, this might be different when using a hook with mode
 `model`.
 #### Specific Function Hook with Mode Model (Example libc:fgets)
-As mentioned in section [Tracing: How Hooking Works](./4_tracing.md#how-hooking-works), the file
+As mentioned in section [Tracing: How Hooking Works](./3_tracing.md#how-hooking-works), the file
 [circled.init.yaml](../morion/circled.init.yaml), beside others, also defines a hook for entry and
 leave addresses `0xcfe0` and `0xcfe4`, respectively. The hook is intended to catch calls to
 function `fgets` (synopsis: `char *fgets(char *s, int n, FILE *stream)`) of library `uclibc`. Again,
@@ -308,7 +308,7 @@ But why does one want to make `s` symbolic?
 Well, `s` is read in from a resource external to the targeted binary (here a file), which is
 potentially controllable by a (malicious) user. By making `s` symbolic we might conduct various
 analysis about how it, respectively an attacker, can influence our target program. As will be
-explained in the next section [Analyzing Symbolic State](./5_symbex.md#analyzing-symbolic-state), in
+explained in the next section [Analyzing Symbolic State](./4_symbex.md#analyzing-symbolic-state), in
 the case of binary *circled*, we for instance immediately see that the program counter (`pc`) at the
 end of the trace is symbolic. Phrased differently, the `pc` can (somehow) be influenced by
 attacker-controllable values, potentially leading to control-flow hijacking attacks.
@@ -364,4 +364,4 @@ Also, we will show how symbolic execution might help us during the process of ge
 **exploit** for the targeted vulnerability (CVE-2022-27646).
 
 ----------------------------------------------------------------------------------------------------
-[Back-to-Top](./5_symbex.md#table-of-contents)
+[Back-to-Top](./4_symbex.md#table-of-contents)
