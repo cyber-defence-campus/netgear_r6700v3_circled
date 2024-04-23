@@ -29,13 +29,14 @@ for specified mathematical problems. An example for such a problem might for ins
 question of whether or not it is possible for the program counter (register `pc`) to become a
 certain value, and if so, how this can be achieved (e.g. leading to a control-flow hijacking
 condition).
-
+<hr>
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
   <figcaption>
     Figure 1: Morion Overview - Showing Morion's two operation modes tracing and symbolic execution.
   </figcaption>
 </figure>
+<hr>
 
 ## Setup
 Before running one of [Morion](https://github.com/pdamian/morion)'s symbolic analysis modules, the

@@ -26,13 +26,14 @@ remote setup, i.e. despite our host system being x86-based, the target runs on a
 ARMv7-based device (see [Emulation](./2_emulation.md)). The collected trace may later be used for
 different symbolic execution runs/analyses (see [Symbolic Execution](./4_symbex.md)), which can be
 done offline, for instance on a more powerful machine.
-
+<hr>
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
   <figcaption>
     Figure 1: Morion Overview - Showing Morion's two operation modes tracing and symbolic execution.
   </figcaption>
 </figure>
+<hr>
 
 ## Setup
 Before collecting concrete execution traces of the target binary _circled_, the following files need
