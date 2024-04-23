@@ -30,7 +30,7 @@ done offline, for instance on a more powerful machine.
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
   <figcaption>
-    Fig. 1: Morion Overview - Showing Morion's two operation modes tracing and symbolic execution.
+    Figure 1: Morion Overview - Showing Morion's two operation modes tracing and symbolic execution.
   </figcaption>
 </figure>
 
