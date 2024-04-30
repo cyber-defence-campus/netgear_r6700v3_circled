@@ -33,7 +33,8 @@ condition).
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
   <figcaption>
-    Figure 1: Morion Overview - Showing Morion's two operation modes tracing and symbolic execution.
+    Figure 4.1: Morion Overview - Showing Morion's two operation modes tracing and symbolic 
+    execution.
   </figcaption>
 </figure>
 <hr>

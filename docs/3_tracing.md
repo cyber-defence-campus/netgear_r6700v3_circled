@@ -30,7 +30,8 @@ done offline, for instance on a more powerful machine.
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
   <figcaption>
-    Figure 1: Morion Overview - Showing Morion's two operation modes tracing and symbolic execution.
+    Figure 3.1: Morion Overview - Showing Morion's two operation modes tracing and symbolic
+    execution.
   </figcaption>
 </figure>
 <hr>
@@ -40,7 +41,7 @@ Before collecting concrete execution traces of the target binary _circled_, the 
 to be set up.
 ### GDB Commands Script
 The file [circled.trace.gdb](../morion/circled.trace.gdb) is a _GNU Project Debugger (GDB)_ commands
-script. As shown in the figure above, [Morion](https://github.com/pdamian/morion) uses GDB to
+script. As shown in the Figure 3.1 above, [Morion](https://github.com/pdamian/morion) uses GDB to
 interact with its target during the process of tracing. The script contains GDB commands that bring
 the target to the point from which tracing should start (e.g. to follow along and break the relevant
 thread when dealing with multi-threaded binaries, as it is the case with _circled_). As show below,
