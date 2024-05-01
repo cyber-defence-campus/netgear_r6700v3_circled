@@ -49,7 +49,7 @@ ropchains:
         ['0x0000c9b8', '06 00 a0 e1', 'mov r0, r6', 'Gadget 1.0']
     - preconditions:
         regs:
-          'r0': '0xbeffc250'    # r6 == 0xbeffc0c4+396 == 0xbeffc250
+          'r0': '0xbeffc250'    # r0 == 0xbeffc0c4+396 == 0xbeffc250
         mems:
           '0xbeffc250': '0x69'  # 'i'
           '0xbeffc251': '0x64'  # 'd'
