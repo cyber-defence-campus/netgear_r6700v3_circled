@@ -7,7 +7,7 @@ from triton import CPUSIZE, MemoryAccess
 ctx = ctx
 ast = ast
 
-# OS command
+# System command
 cmd         = "id>/id;#"
 cmd_addr    = 0xbeffc250
 
