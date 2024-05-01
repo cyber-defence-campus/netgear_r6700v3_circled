@@ -176,13 +176,14 @@ _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fu
    - Command:
      ```
      /circled.driver.sh --gdb
+     ```
 3. Collect an execution trace of the binary _circled_:
    - System: [Analysis / Host (morion)](./1_setup.md#analysis--host-system)
    - Command:
      ```
-     cd morion/;                              # Ensure to be within the correct directory
-     cp circled.init.yaml circled.yaml;       # Start with a fresh circled.yaml file
-     gdb-multiarch -q -x circled.trace.gdb;   # Use GDB for cross-platform remote trace collection
+     cd morion/                               # Ensure to be within the correct directory
+     cp circled.init.yaml circled.yaml        # Start with a fresh circled.yaml file
+     gdb-multiarch -q -x circled.trace.gdb    # Use GDB for cross-platform remote trace collection
      ```
 ## Discussion
 In the following, we discuss some aspects of the tracing process as implemented by
