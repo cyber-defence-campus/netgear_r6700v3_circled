@@ -1,5 +1,6 @@
 # Exploiting a Stack Buffer Overflow on the NETGEAR R6700v3 (CVE-2022-27646) with the Help of Symbolic Execution
 <!--TODO--------------------------------------------------------------------------------------------
+- [ ] Add all external references
 --------------------------------------------------------------------------------------------------->
 ## Introduction
 This repository is intended to demonstrate some functionalities of
@@ -38,3 +39,8 @@ the following chapters:
   - https://github.com/firmadyne/libnvram
 - Ready-to-Use Cross-Compilation Toolchains:
   - https://toolchains.bootlin.com/
+- Other Tools:
+  - https://github.com/pwndbg/pwndbg
+  - https://github.com/slimm609/checksec.sh
+  - https://github.com/sashs/Ropper
+  - https://github.com/JonathanSalwan/ROPgadget
