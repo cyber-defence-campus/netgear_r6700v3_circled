@@ -165,11 +165,11 @@ instructions.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
-1. Start a HTTP server, delivering PoV payloads:
+1. Start a HTTP server, delivering the PoV payload:
    - System: [ARMHF Guest](./1_setup.md#armhf-guest-system)
    - Command:
       ```
-      python3 server/circled.server.py --payload "pov"
+      python3 ./server/circled.server.py --payload "pov"
       ```
 2. Emulate the binary _circled_ with GDB attached (and therefore not using ASRL):
    - System: [ARMHF Guest (chroot)](./1_setup.md#armhf-guest-system)
