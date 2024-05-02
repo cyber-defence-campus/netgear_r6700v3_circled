@@ -12,7 +12,7 @@ buffer overflow vulnerability in NETGEAR R6700v3 routers (version 10.04.120_10.0
 
 The repository contains all **files** (under [firmware](./firmware/), [libcircled](./libcircled/),
 [morion](./morion/) and [server](./server/)) needed to follow along (e.g. scripts to emulate the
-vulnerable ARMv7 binary) and reproduce the discussed steps of how to make use of
+vulnerable ARMv7 binary) and reproduce the discussed steps of how to use
 [Morion](https://github.com/pdamian/morion). The **documentation** (under [docs](./docs/) and
 [logs](./logs/)), to demonstrate [Morion](https://github.com/pdamian/morion)'s workings, contains
 the following chapters:
@@ -25,7 +25,8 @@ the following chapters:
      trace symbolically.
 5. [Vulnerability CVE-2022-27646](docs/5_vulnerability.md) - Provides some background information to
     the targeted vulnerability.
-6. [Exploitation](docs/6_exploitation.md) - Explains how *Morion* can assist in crafting an exploit.
+6. [Exploitation](docs/6_exploitation.md) - Explains how *Morion* can assist during the process of
+    crafting an exploit.
 ## References
 - Morion PoC Tool:
   - https://github.com/pdamian/morion
