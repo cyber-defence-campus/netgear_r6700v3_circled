@@ -41,6 +41,7 @@ the following chapters:
 - Ready-to-Use Cross-Compilation Toolchains:
   - https://toolchains.bootlin.com/
 - Other Tools:
+  - https://github.com/ReFirmLabs/binwalk
   - https://github.com/pwndbg/pwndbg
   - https://github.com/slimm609/checksec.sh
   - https://github.com/sashs/Ropper
