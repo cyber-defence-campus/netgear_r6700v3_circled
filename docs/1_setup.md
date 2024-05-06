@@ -55,13 +55,15 @@ filesystem, as set in section [Analysis / Host System](./1_setup.md#analysis--ho
 
 Execute the following instructions within the ARMHF guest system:
 - Configure conservative ASLR (as being used on the NETGEAR R6700v3 routers):
-  ```
+  ```shell
   echo 1 | sudo tee /proc/sys/kernel/randomize_va_spac
+  ```
+- Mount `/proc`, `/sys` and `/dev`:
+  ```shell
+  ./mount.sh    # Use flag -u to unmount
   ```
 - Chroot into the root filesystem:
   ```shell
-  # Mount proc, sys and dev (use flag -u to unmount)
-  ./mount.sh
   sudo chroot $ROOTFS /usr/bin/env -i SHELL="/bin/ash" PS1="(r6700v3) # " /bin/ash
   ```
 
