@@ -59,12 +59,10 @@ Execute the following instructions within the ARMHF guest system:
   echo 1 | sudo tee /proc/sys/kernel/randomize_va_spac
   ```
 - Chroot into the root filesystem:
-  ```
-  sudo mount -t proc /proc/ $ROOTFS/proc/
-  sudo mount -t sysfs /sys/ $ROOTFS/sys/
-  sudo mount -o bind /dev/ $ROOTFS/dev/
-  sudo chroot $ROOTFS/ /bin/sh
-  export SHELL=/bin/sh
+  ```shell
+  # Mount proc, sys and dev (use flag -u to unmount)
+  ./mount.sh
+  sudo chroot $ROOTFS /usr/bin/env -i SHELL="/bin/ash" PS1="(r6700v3) # " /bin/ash
   ```
 
 ----------------------------------------------------------------------------------------------------
