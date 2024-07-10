@@ -46,3 +46,5 @@ the following chapters:
   - https://github.com/slimm609/checksec.sh
   - https://github.com/sashs/Ropper
   - https://github.com/JonathanSalwan/ROPgadget
+## Authors
+- [Damian Pfammatter](https://github.com/pdamian), [Cyber-Defense Campus (ar S+T)](https://www.cydcampus.admin.ch/)
