@@ -17,7 +17,7 @@
 # Emulation
 In this chapter, we briefly mention a handful of **files** and **scripts** that can be used to
 emulate the intended target, the binary *circled* from NETGEAR R6700v3 routers (firmware version
-10.04.120_10.0.91). For each of these files, a brief explanation of its purpose is provided.
+1.0.4.120_10.0.91). For each of these files, a brief explanation of its purpose is provided.
 
 **Note**: While not identical, our emulation was inspired by 
 [Emulating, Debugging and Exploiting NETGEAR R6700v3 cicled Binary](https://medium.com/@INTfinity/1-1-emulating-netgear-r6700v3-circled-binary-cve-2022-27644-cve-2022-27646-part-1-5bab391c91f2).

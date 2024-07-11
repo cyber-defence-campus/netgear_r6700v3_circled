@@ -8,7 +8,8 @@ This repository is intended to demonstrate some functionalities of
 **symbolic execution** on real-world (ARMv7) binaries. We show some of
 [Morion](https://github.com/pdamian/morion)'s capabilities by giving a concrete example, namely, how
 it can assist during the process of creating a working **exploit for CVE-2022-27646** - a stack
-buffer overflow vulnerability in NETGEAR R6700v3 routers (version 10.04.120_10.0.91).
+buffer overflow vulnerability in NETGEAR R6700v3 routers (affected version 1.0.4.120_10.0.91, fixed
+in later versions).
 
 The repository contains all **files** (under [firmware](./firmware/), [libcircled](./libcircled/),
 [morion](./morion/) and [server](./server/)) needed to follow along (e.g. scripts to emulate the
