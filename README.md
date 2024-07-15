@@ -1,22 +1,20 @@
 # Exploiting a Stack Buffer Overflow on the NETGEAR R6700v3 (CVE-2022-27646) with the Help of Symbolic Execution
-<!--TODO--------------------------------------------------------------------------------------------
-- [ ] Add all external references
---------------------------------------------------------------------------------------------------->
 ## Introduction
 This repository is intended to demonstrate some functionalities of
-[Morion](https://github.com/pdamian/morion), a proof-of-concept (PoC) tool to experiment with
-**symbolic execution** on real-world (ARMv7) binaries. We show some of
-[Morion](https://github.com/pdamian/morion)'s capabilities by giving a concrete example, namely, how
-it can assist during the process of creating a working **exploit for CVE-2022-27646** - a stack
-buffer overflow vulnerability in NETGEAR R6700v3 routers (affected version 1.0.4.120_10.0.91, fixed
-in later versions).
+[Morion](https://github.com/cyber-defence-campus/morion), a proof-of-concept (PoC) tool to
+experiment with **symbolic execution** on real-world (ARMv7) binaries. We show some of
+[Morion](https://github.com/cyber-defence-campus/morion)'s capabilities by giving a concrete
+example, namely, how it can assist during the process of creating a working
+**exploit for CVE-2022-27646** - a stack buffer overflow vulnerability in NETGEAR R6700v3 routers
+(affected version 1.0.4.120_10.0.91, fixed in later versions).
 
 The repository contains all **files** (under [firmware](./firmware/), [libcircled](./libcircled/),
 [morion](./morion/) and [server](./server/)) needed to follow along (e.g. scripts to emulate the
 vulnerable ARMv7 binary) and reproduce the discussed steps of how to use
-[Morion](https://github.com/pdamian/morion). The **documentation** (under [docs](./docs/) and
-[logs](./logs/)), to demonstrate [Morion](https://github.com/pdamian/morion)'s workings, contains
-the following chapters:
+[Morion](https://github.com/cyber-defence-campus/morion). The **documentation**
+(under [docs](./docs/) and [logs](./logs/)), to demonstrate
+[Morion](https://github.com/cyber-defence-campus/morion)'s workings, contains the following
+chapters:
 1. [Setup](docs/1_setup.md) - Explains how to setup analysis (running *Morion*) and target systems
     (running target binary *circled*).
 2. [Emulation](docs/2_emulation.md) - Explains how to emulate the vulnerable target binary.
@@ -30,7 +28,7 @@ the following chapters:
     crafting an exploit.
 ## References
 - Morion PoC Tool:
-  - https://github.com/pdamian/morion
+  - https://github.com/cyber-defence-campus/morion
 - Defeating the NETGEAR R6700v3:
   - https://www.synacktiv.com/en/publications/pwn2own-austin-2021-defeating-the-netgear-r6700v3.html
 - Emulating, Debugging and Exploiting NETGEAR R6700v3 *cicled* Binary:

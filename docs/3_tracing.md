@@ -14,10 +14,6 @@
 4. [Symbolic Execution](./4_symbex.md)
 5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
-<!--TODO--------------------------------------------------------------------------------------------
-- [ ] Update section Run so that it makes the Setup chapter
-- [ ] Review whether all addresses/values are consistent
---------------------------------------------------------------------------------------------------->
 # Tracing
 In the following, we document how to collect a **concrete execution trace** of our target, a
 known vulnerable ARMv7 binary named _circled_ (see
@@ -41,12 +37,12 @@ Before collecting concrete execution traces of the target binary _circled_, the 
 to be set up.
 ### GDB Commands Script
 The file [circled.trace.gdb](../morion/circled.trace.gdb) is a _GNU Project Debugger (GDB)_ commands
-script. As shown in the Figure 3.1 above, [Morion](https://github.com/pdamian/morion) uses GDB to
-interact with its target during the process of tracing. The script contains GDB commands that bring
-the target to the point from which tracing should start (e.g. to follow along and break the relevant
-thread when dealing with multi-threaded binaries, as it is the case with _circled_). As show below,
-the trace can then be collected with the command `morion_trace`, a custom GDB command implemented by
-[Morion](https://github.com/pdamian/morion) (usage:
+script. As shown in the Figure 3.1 above, [Morion](https://github.com/cyber-defence-campus/morion)
+uses GDB to interact with its target during the process of tracing. The script contains GDB commands
+that bring the target to the point from which tracing should start (e.g. to follow along and break
+the relevant thread when dealing with multi-threaded binaries, as it is the case with _circled_). As
+show below, the trace can then be collected with the command `morion_trace`, a custom GDB command
+implemented by [Morion](https://github.com/cyber-defence-campus/morion) (usage:
 `morion_trace [debug] <trace_file_yaml:str> <stop_addr:int> [<stop_addr:int> [...]]`).
 Alongside some stop addresses, `morion_trace` expects as argument a YAML file, into which the trace
 will be stored. As explained below in section [YAML File](./3_tracing.md#yaml-file), the
@@ -81,8 +77,8 @@ that should be hooked (`hooks:`).
 #### States
 Typically, the [circled.init.yaml](../morion/circled.init.yaml) file first defines information about
 the trace's entry state (`states:entry:`). More specifically, we define concrete register and/or
-memory values, that [Morion](https://github.com/pdamian/morion) - respectively _GDB_ - will set
-before collecting the trace (see also
+memory values, that [Morion](https://github.com/cyber-defence-campus/morion) - respectively _GDB_ -
+will set before collecting the trace (see also
 [Loading the Trace File](./3_tracing.md#loading-the-trace-file)).
 ```
 [...]
@@ -102,14 +98,14 @@ In the example of binary _circled_ above, we manually set a format string `%s %s
 that we are about to collect, this format string is solely used by the function `sscanf` - a
 function that we hook (see next section on Hooks) and in consequence, do not trace all of its
 assembly instructions. Due to skipping the function's instructions,
-[Morion](https://github.com/pdamian/morion) does not record all memory locations accessed by it,
-which is why we need to add them manually.
+[Morion](https://github.com/cyber-defence-campus/morion) does not record all memory locations
+accessed by it, which is why we need to add them manually.
 
-Here and in other places, [Morion](https://github.com/pdamian/morion) is designed with the intention
-to give an analyst extensive configuration flexibilities, so that cases can be handled where the
-tool does not (yet) implement full automation. In the example of `sscanf`, a future hooking
-implementation could improve on this, so that the format string is automatically added to the
-accessed memory pool.
+Here and in other places, [Morion](https://github.com/cyber-defence-campus/morion) is designed with
+the intention to give an analyst extensive configuration flexibilities, so that cases can be handled
+where the tool does not (yet) implement full automation. In the example of `sscanf`, a future
+hooking implementation could improve on this, so that the format string is automatically added to
+the accessed memory pool.
 
 The general format to configure the **entry state** looks like this:
 ```
@@ -155,13 +151,13 @@ parameter `mode`. This is only relevant during symbolic execution and will there
 in chapter [Symbolic Execution](./4_symbex.md). More details regarding hooking during trace
 collection can be found in section [How Hooking Works](./3_tracing.md#how-hooking-works) below.
 
-**Note**: As mentioned before, [Morion](https://github.com/pdamian/morion) generally intends to
-favor configuration flexibility over full automation. Therefore, `leave` addresses of hooks
-(currently) need to be configured manually, since in general, the return address of a function is
-hard to determine (e.g. tail calls). And more importantly,
-[Morion](https://github.com/pdamian/morion)'s hooking feature intends not to be limited to function
-calls, but be applicable in more generic cases, i.e. for any sequence of subsequent assembly
-instructions.
+**Note**: As mentioned before, [Morion](https://github.com/cyber-defence-campus/morion) generally
+intends to favor configuration flexibility over full automation. Therefore, `leave` addresses of
+hooks (currently) need to be configured manually, since in general, the return address of a function
+is hard to determine (e.g. tail calls). And more importantly,
+[Morion](https://github.com/cyber-defence-campus/morion)'s hooking feature intends not to be limited
+to function calls, but be applicable in more generic cases, i.e. for any sequence of subsequent
+assembly instructions.
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
@@ -187,7 +183,7 @@ _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fu
      ```
 ## Discussion
 In the following, we discuss some aspects of the tracing process as implemented by
-[Morion](https://github.com/pdamian/morion).
+[Morion](https://github.com/cyber-defence-campus/morion).
 ### Loading the Trace File
 As seen above, the file `circled.yaml` (initially a copy of
 [circled.init.yaml](../morion/circled.init.yaml)) may define concrete **register**
@@ -330,13 +326,13 @@ or to abstract away **environmental interactions** (e.g. with 3rd party librarie
 communications, Kernel, device drivers, coprocessors, etc.).
 
 Below, we discuss how the hooking of two concrete _libc_ functions looks like, while
-[Morion](https://github.com/pdamian/morion) collects a trace.
+[Morion](https://github.com/cyber-defence-campus/morion) collects a trace.
 #### Abstract Function Hook with Mode Skip (Example libc:fclose)
 The [circled.init.yaml](../morion/circled.init.yaml) file defines a hook for entry and leave 
 addresses `0xd040` and `0xd044`, respectively. The corresponding entry is located under the key
 `hooks:lib:func_hook:`, which means that an abstract hooking mechanism for functions should be used
 (see
-[morion/tracing/gdb/hooking/lib](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
+[morion/tracing/gdb/hooking/lib](https://github.com/cyber-defence-campus/morion/blob/main/morion/tracing/gdb/hooking/lib.py)
 for implementation details), as compared to a specific one, which will be the case in the second
 example below. The **abstract function hooking** mechanism will skip the actual assembly
 instructions of the function, and instead inject instructions that move the function's concrete 
@@ -344,16 +340,16 @@ return value to the appropriate return register(s) (`r0`/`r1` for ARMv7 architec
 needed so that during symbolic execution the return register(s) hold the correct concrete value(s)
 and the symbolic execution proceeds in synchronization with the concrete one. 
 
-The described behavior can be observed in [Morion](https://github.com/pdamian/morion)'s debug output
-below. Instructions with addresses `0xd040`, `0x1000` - `0x1010` have been injected by
-[Morion](https://github.com/pdamian/morion) to set the correct concrete return value(s) of the
-function. The last injected instruction at address `0x1010` transfers control back to the
+The described behavior can be observed in [Morion](https://github.com/cyber-defence-campus/morion)'s
+debug output below. Instructions with addresses `0xd040`, `0x1000` - `0x1010` have been injected by
+[Morion](https://github.com/cyber-defence-campus/morion) to set the correct concrete return value(s)
+of the function. The last injected instruction at address `0x1010` transfers control back to the
 instruction at the `leave` address (`0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]`).
 
-**Note**: [Morion](https://github.com/pdamian/morion) also implements the concept of hooking
-arbitrary sequences of assembly instructions ("`hooks:lib:inst_hook:`"), not necessarily belonging
-to function calls. These are similar to the ones regarding functions, but do not inject any
-instructions for setting return values.
+**Note**: [Morion](https://github.com/cyber-defence-campus/morion) also implements the concept of
+hooking arbitrary sequences of assembly instructions ("`hooks:lib:inst_hook:`"), not necessarily
+belonging to function calls. These are similar to the ones regarding functions, but do not inject
+any instructions for setting return values.
 ```
 [...]
 [2024-04-11 09:53:35] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8
@@ -389,14 +385,14 @@ One such function, with rather simple to cover side-effects, is _fgets_ from _li
 from a file `stream` to an address given by `s` (newline or end-of-file conditions can make the
 function read less bytes).
 In the file [circled.init.yaml](../morion/circled.init.yaml), the hook for function `fgets` is
-defined under the key `hooks:libc:fgets:`. [Morion](https://github.com/pdamian/morion) will
-therefore apply the specific _fgets_ implementation as defined in file
-[morion/tracing/gdb/hooking/libc](https://github.com/pdamian/morion/blob/main/morion/tracing/gdb/hooking/libc.py).
+defined under the key `hooks:libc:fgets:`. [Morion](https://github.com/cyber-defence-campus/morion)
+will therefore apply the specific _fgets_ implementation as defined in file
+[morion/tracing/gdb/hooking/libc](https://github.com/cyber-defence-campus/morion/blob/main/morion/tracing/gdb/hooking/libc.py).
 
-As can be seen in the output below, [Morion](https://github.com/pdamian/morion) injected
-instructions (addresses `0xcfe0`, `0x1000` - `0x6008`) that move the concrete string read by
-`fgets` (which actually corresponds to the PoV payload served by the HTTP server) to the appropriate
-memory addresses.
+As can be seen in the output below, [Morion](https://github.com/cyber-defence-campus/morion)
+injected instructions (addresses `0xcfe0`, `0x1000` - `0x6008`) that move the concrete string read
+by `fgets` (which actually corresponds to the PoV payload served by the HTTP server) to the
+appropriate memory addresses.
 ```
 [...]
 [2024-04-11 09:53:30] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5

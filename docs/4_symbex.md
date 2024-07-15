@@ -12,23 +12,17 @@
         3. [Analyzing Symbolic State](./4_symbex.md#analyzing-symbolic-state)
 5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
-<!--TODO--------------------------------------------------------------------------------------------
-- [ ] Does ARMv7 really use registers `r0` and `r1` for return values?
-- [ ] Change text of links and validate them
-- [ ] Refer to a page as chapter (not section)
-- [ ] Review whether all addresses/values are consistent
---------------------------------------------------------------------------------------------------->
 # Symbolic Execution
 Chapter [Tracing](./3_tracing.md) explained how to collect a concrete execution trace of your
 target, which in our specific case is the ARMv7 binary _circled_. If you followed along the given
 instructions, this trace was stored in the file `circled.yaml`. As we will see below, this trace
 file may then be used as input for the different **analysis modules** implemented by
-[Morion](https://github.com/pdamian/morion). These analysis modules execute the collected trace
-**symbolically**, which then allows for reasoning about the target's behavior by solving constraints
-for specified mathematical problems. An example for such a problem might for instance be the
-question of whether or not it is possible for the program counter (register `pc`) to become a
-certain value, and if so, how this can be achieved (e.g. leading to a control-flow hijacking
-condition).
+[Morion](https://github.com/cyber-defence-campus/morion). These analysis modules execute the
+collected trace **symbolically**, which then allows for reasoning about the target's behavior by
+solving constraints for specified mathematical problems. An example for such a problem might for
+instance be the question of whether or not it is possible for the program counter (register `pc`) to
+become a certain value, and if so, how this can be achieved (e.g. leading to a control-flow
+hijacking condition).
 <hr>
 <figure>
   <img src="../images/Morion_Overview.svg" alt="Morion Overview"/>
@@ -40,9 +34,9 @@ condition).
 <hr>
 
 ## Setup
-Before running one of [Morion](https://github.com/pdamian/morion)'s symbolic analysis modules, the
-collected trace file `circled.yaml` might optionally be customized. Such **customizations** could
-for example be to:
+Before running one of [Morion](https://github.com/cyber-defence-campus/morion)'s symbolic analysis
+modules, the collected trace file `circled.yaml` might optionally be customized. Such
+**customizations** could for example be to:
 - Mark (additional) register values or memory locations as being symbolic (in the entry state)
 - Modify the parameter `mode` of hooked functions
 - Add/remove assembly instructions to/from the trace
@@ -70,10 +64,10 @@ Remember that if you followed along the instructions in chapter [Tracing](./3_tr
 was collected while the vulnerable binary processed a sample payload leading to a
 **crasher/segfault** (as might have been identified by a fuzzer).
 ### Analysis Modules
-[Morion](https://github.com/pdamian/morion) implements different analysis modules that are based on
-symbolic execution. The chosen design attempts to make [Morion](https://github.com/pdamian/morion)
-easily **extendable** with new modules. The currently implemented ones are summarized in the table
-below:
+[Morion](https://github.com/cyber-defence-campus/morion) implements different analysis modules that
+are based on symbolic execution. The chosen design attempts to make
+[Morion](https://github.com/cyber-defence-campus/morion) easily **extendable** with new modules. The
+currently implemented ones are summarized in the table below:
 
 | Module                  | Description |
 |-------------------------|-------------|
@@ -87,18 +81,18 @@ below:
 
 ## Discussion
 In the following, we discuss some aspects of the symbolic execution process as implemented by
-[Morion](https://github.com/pdamian/morion).
+[Morion](https://github.com/cyber-defence-campus/morion).
 ### Loading the Trace File
 As explained in section [Tracing: Collecting the Trace](./3_tracing.md#collecting-the-trace), beside
 the executed assembly instructions, the initial **concrete values** of all registers and/or memory
 locations accessed within the trace are recorded (in our specific example in the file
 `circled.yaml`). Before starting the actual symbolic execution, these are used by
-[Morion](https://github.com/pdamian/morion) to initialize the corresponding concrete register and/or
-memory values within the context of the symbolic execution engine
-(which in our case is [Triton](https://triton-library.github.io/)). This assures that the symbolic
-execution of the recorded trace uses the correct concrete register and/or memory values. This
-initialization of registers and/or memory locations can be observed in
-[Morion](https://github.com/pdamian/morion)'s debug output:
+[Morion](https://github.com/cyber-defence-campus/morion) to initialize the corresponding concrete
+register and/or memory values within the context of the symbolic execution engine (which in our case
+is [Triton](https://triton-library.github.io/)). This assures that the symbolic execution of the
+recorded trace uses the correct concrete register and/or memory values. This initialization of
+registers and/or memory locations can be observed in
+[Morion](https://github.com/cyber-defence-campus/morion)'s debug output:
 ```
 [2024-04-11 10:46:19] [INFO] Start loading file 'circled.yaml'...
 [2024-04-11 10:46:21] [DEBG] Regs:
@@ -156,10 +150,11 @@ states:
       [...]
 [...]
 ```
-As can be seen in the excerpt above, [Morion](https://github.com/pdamian/morion) uses the specifier
-`$$` for referring to a **symbolic byte**. In the above example, where a symbolic register and a
-symbolic memory location were defined, [Morion](https://github.com/pdamian/morion)'s debug output,
-while loading the trace file, would look like this:
+As can be seen in the excerpt above, [Morion](https://github.com/cyber-defence-campus/morion) uses
+the specifier `$$` for referring to a **symbolic byte**. In the above example, where a symbolic
+register and a symbolic memory location were defined,
+[Morion](https://github.com/cyber-defence-campus/morion)'s debug output, while loading the trace
+file, would look like this:
 ```
 [...]
 [2024-04-11 10:46:21] [DEBG] 	r0=0x21ae0
@@ -173,12 +168,12 @@ Note that in our example of binary _circled_, we do not manually mark any regist
 location as being symbolic (there are no `$$` specifiers in the entry state of file
 [circled.init.yaml](../morion/circled.init.yaml)). Instead, and as will be explained in section
 [Symbex: How Hooking Works](./4_symbex.md#how-hooking-works) below, all symbolic variables are
-automatically introduced by [Morion](https://github.com/pdamian/morion) and its model for the hooked
-`libc` function `fgets`.
+automatically introduced by [Morion](https://github.com/cyber-defence-campus/morion) and its model
+for the hooked `libc` function `fgets`.
 
 After initializing concrete and/or symbolic values of all necessary registers and/or memory
 locations in the context of the symbolic execution engine,
-[Morion](https://github.com/pdamian/morion) sets up the defined function **hooks**:
+[Morion](https://github.com/cyber-defence-campus/morion) sets up the defined function **hooks**:
 ```
 [...]
 [2024-04-11 10:46:21] [DEBG] Hooks:
@@ -208,14 +203,14 @@ In the chapter about tracing (see section
 `0xd040` and `0xd044`, respectively. The hook corresponds to a call to function `fclose` (synopsis:
 `int fclose(FILE *stream);`) from `libc` (or to be more specific, `uclibc` in case of the binary
 _circled_). Due to the hooking, the effective assembly instructions of the function itself have not
-been traced. Instead [Morion](https://github.com/pdamian/morion) injected some instructions to
-reproduce some of the function's side-effects. Since we used an **abstract function hook**
-(`hooks:lib:func_hook:`), the only modelled side-effect corresponds to setting the correct return
-value(s). For the ARMv7 architecture that we target, a function's return value is generally stored
-in register `r0` (and potentially `r1`). This is exactly what instructions `0x1000` - `0x100c` are
-used for. [Morion](https://github.com/pdamian/morion) injected assembly instructions to move the
-trace's effective return value of function `fclose` (here `0`, meaning a successful closure of the
-corresponding file stream) to the return register(s).
+been traced. Instead [Morion](https://github.com/cyber-defence-campus/morion) injected some
+instructions to reproduce some of the function's side-effects. Since we used an
+**abstract function hook** (`hooks:lib:func_hook:`), the only modelled side-effect corresponds to
+setting the correct return value(s). For the ARMv7 architecture that we target, a function's return
+value is generally stored in register `r0` (and potentially `r1`). This is exactly what instructions
+`0x1000` - `0x100c` are used for. [Morion](https://github.com/cyber-defence-campus/morion) injected
+assembly instructions to move the trace's effective return value of function `fclose` (here `0`,
+meaning a successful closure of the corresponding file stream) to the return register(s).
 ```
 [...]
 [2024-04-11 10:46:22] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8
@@ -233,12 +228,12 @@ corresponding file stream) to the return register(s).
 [2024-04-11 10:46:22] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]
 [...]
 ```
-When running a trace symbolically, [Morion](https://github.com/pdamian/morion) follows along the
-recorded instructions (including the ones injected by hooks during tracing) and executes them one by
-one using its underlying symbolic execution engine ([Triton](https://triton-library.github.io/) in
-our case). For hooks with mode `skip`, no additional modifications of the symbolic state are
-performed. As we will see in the next example, this might be different when using a hook with mode
-`model`.
+When running a trace symbolically, [Morion](https://github.com/cyber-defence-campus/morion) follows
+along the recorded instructions (including the ones injected by hooks during tracing) and executes
+them one by one using its underlying symbolic execution engine
+([Triton](https://triton-library.github.io/) in our case). For hooks with mode `skip`, no additional
+modifications of the symbolic state are performed. As we will see in the next example, this might be
+different when using a hook with mode `model`.
 #### Specific Function Hook with Mode Model (Example libc:fgets)
 As mentioned in section [Tracing: How Hooking Works](./3_tracing.md#how-hooking-works), the file
 [circled.init.yaml](../morion/circled.init.yaml), beside others, also defines a hook for entry and
@@ -302,9 +297,9 @@ additional function-specific side-effects to the memory and register contexts.
 Since we defined a function-specific hook to be used with mode `model`, additional modifications to
 the **symbolic state** might be performed. These modifications can happen either at entry or when
 leaving the hook. The model implementation of `fgets` (see
-[libc.py#L12](https://github.com/pdamian/morion/blob/main/morion/symbex/hooking/libc.py#L12) for
-more details), for instance, makes the string `s` symbolic. This means that new symbolic variables
-get assigned to each character/byte of the read string.
+[libc.py#L12](https://github.com/cyber-defence-campus/morion/blob/main/morion/symbex/hooking/libc.py#L12)
+for more details), for instance, makes the string `s` symbolic. This means that new symbolic
+variables get assigned to each character/byte of the read string.
 
 But why does one want to make `s` symbolic?
 Well, `s` is read in from a resource external to the targeted binary (here a file), which is
@@ -318,20 +313,20 @@ attacker-controllable values, potentially leading to control-flow hijacking atta
 **Note**: In case you want to hook invocations of function `fgets` without making the read string
 symbolic, define the corresponding hook to use mode `skip`.
 
-**Note**: [Morion](https://github.com/pdamian/morion) is a *proof-of-concept (PoC)* tool intended to be
-used for experimenting with symbolic execution on (real-world) (ARMv7) binaries. It currently
-implements (only) a handful of hooks for common `libc` functions. These should be extended in future
-work (pull requests are welcome).
+**Note**: [Morion](https://github.com/cyber-defence-campus/morion) is a *proof-of-concept (PoC)*
+tool intended to be used for experimenting with symbolic execution on (real-world) (ARMv7) binaries.
+It currently implements (only) a handful of hooks for common `libc` functions. These should be
+extended in future work (pull requests are welcome).
 ### Analyzing Symbolic State
 If we symbolize inputs that an attacker can control, symbolic execution not only allows us to see
 which parts of a target binary can be influenced, but also how this may happen. At the end of a
-symbolic execution run, [Morion](https://github.com/pdamian/morion) for instance analyzes the
-**symbolic state** (can be disabled using option `--skip_state_analysis`). This means that an
-overview is given about which registers and memory locations are based on symbolic variable(s). In
-the example of the collected trace of binary *circled*, one immediately sees that the program
-counter (register `pc`) is one of these candidates. Remember that we only marked inputs an attacker
-might control as being symbolic, meaning that an attacker can potentially influence the program's
-control-flow.
+symbolic execution run, [Morion](https://github.com/cyber-defence-campus/morion) for instance
+analyzes the **symbolic state** (can be disabled using option `--skip_state_analysis`). This means
+that an overview is given about which registers and memory locations are based on symbolic
+variable(s). In the example of the collected trace of binary *circled*, one immediately sees that
+the program counter (register `pc`) is one of these candidates. Remember that we only marked inputs
+an attacker might control as being symbolic, meaning that an attacker can potentially influence the
+program's control-flow.
 ```
 [...]
 [2024-04-11 10:46:22] [INFO] Start analyzing symbolic state...

@@ -8,20 +8,19 @@
 4. [Symbolic Execution](./4_symbex.md)
 5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
-<!--TODO--------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------->
 # Setup
 This chapter lists instructions on how to set up an **analysis system** (also referred to as the
 **host system**), which, on the one hand, hosts a **guest system** emulating the targeted ARMv7
-binary and, on the other hand, contains [Morion](https://github.com/pdamian/morion) to collect
-execution traces that can then be analyzed symbolically.
+binary and, on the other hand, contains [Morion](https://github.com/cyber-defence-campus/morion) to
+collect execution traces that can then be analyzed symbolically.
 ## Analysis / Host System
 - Install the following dependencies:
   - git
   - binwalk (https://github.com/ReFirmLabs/binwalk)
 - Clone the project repository:
   ```
-  git clone https://github.com/pdamian/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
+  git clone https://github.com/cyber-defence-campus/netgear_r6700v3_circled.git && cd netgear_r6700v3_circled/
+  ```
 - Extract the R6700v3 firmware with *binwalk*:
   ```
   binwalk -e -M -C firmware/ firmware/R6700v3-V1.0.4.120_10.0.91.zip
@@ -46,7 +45,7 @@ execution traces that can then be analyzed symbolically.
   # Copy circled.driver.sh script (wrapper to emulate binary circled)
   cp firmware/circled.driver.sh $ROOTFS/circled.driver.sh
   ```
-- Install [Morion](https://github.com/pdamian/morion#installation).
+- Install [Morion](https://github.com/cyber-defence-campus/morion#installation).
 ## ARMHF Guest System
 **Note**: In the following, we assume that the variable `$ROOTFS` points to the firmware's root
 filesystem, as set in section [Analysis / Host System](./1_setup.md#analysis--host-system).

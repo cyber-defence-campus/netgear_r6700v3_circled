@@ -11,9 +11,6 @@
 4. [Symbolic Execution](./4_symbex.md)
 5. [Vulnerability CVE-2022-27646](./5_vulnerability.md)
 6. [Exploitation](./6_exploitation.md)
-<!--TODO--------------------------------------------------------------------------------------------
-- [ ] DNS and TCP redirection
---------------------------------------------------------------------------------------------------->
 # Emulation
 In this chapter, we briefly mention a handful of **files** and **scripts** that can be used to
 emulate the intended target, the binary *circled* from NETGEAR R6700v3 routers (firmware version
