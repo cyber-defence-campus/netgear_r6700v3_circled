@@ -146,7 +146,7 @@ states:
       'r0': ['0x21ae0', '$$$$$$$$']   # Marking register r0 as being symbolic
       [...]
     mems:
-      '0x000120f8': ['0x25', '$$'     # Marking memory location 0x120f8 as being symbolic
+      '0x000120f8': ['0x25', '$$']    # Marking memory location 0x120f8 as being symbolic
       [...]
 [...]
 ```
@@ -316,7 +316,7 @@ symbolic, define the corresponding hook to use mode `skip`.
 **Note**: [Morion](https://github.com/cyber-defence-campus/morion) is a *proof-of-concept (PoC)*
 tool intended to be used for experimenting with symbolic execution on (real-world) (ARMv7) binaries.
 It currently implements (only) a handful of hooks for common `libc` functions. These should be
-extended in future work (pull requests are welcome).
+extended in future work.
 ### Analyzing Symbolic State
 If we symbolize inputs that an attacker can control, symbolic execution not only allows us to see
 which parts of a target binary can be influenced, but also how this may happen. At the end of a

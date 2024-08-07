@@ -67,7 +67,7 @@ info registers r4 r5 r6 r7 r8 r9 r10 r11
 break *$before_vulnerability
 continue
 
-# Trace till return of function updating_database
+# Trace till return of function updating_database (address 0xf1a4)
 morion_trace debug circled.yaml 0xf1a4
 
 # Determine callee-save registers after invocation of updating_database (use original circleinfo.txt)

@@ -3,7 +3,7 @@
 from pprint import pprint
 from triton import CPUSIZE, MemoryAccess
 
-# Usage: `run -i circled.rop1.py`
+# Usage: `run -i circled.rop2.py`
 ctx = ctx
 ast = ast
 

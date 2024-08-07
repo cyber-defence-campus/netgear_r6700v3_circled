@@ -12,4 +12,5 @@ libcircled/*
 !libcircled/circled.c
 # Ignore all .yaml file (but the .init.yaml files)
 morion/*.yaml
-!morion/*.init.yaml
+!morion/circled.init.yaml
+!morion/circled.trace.yaml
