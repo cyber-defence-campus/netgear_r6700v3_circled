@@ -32,6 +32,12 @@ done offline, for instance on a more powerful machine.
 </figure>
 <hr>
 
+**Note**: In case you are not interested in how to collect a concrete execution trace yourself and
+directly want to jump into [Morion](https://github.com/cyber-defence-campus/morion)'s symbolic
+execution capabilities, the file [circled.trace.yaml](../morion/circled.trace.yaml) can be used.
+Rename it to `circled.yaml` (i.e. `cp circled.trace.yaml circled.yaml`) and follow along the
+discussions in chapter [Symbolic Execution](./4_symbex.md).
+
 ## Setup
 Before collecting concrete execution traces of the target binary _circled_, the following files need
 to be set up.
@@ -59,7 +65,7 @@ set $before_vulnerability     = 0xcfc0
 break *$before_vulnerability
 continue
 
-# Trace till return of function updating_database
+# Trace till return of function updating_database (address 0xf1a4)
 morion_trace debug circled.yaml 0xf1a4
 [...]
 ```
@@ -129,7 +135,7 @@ Most of the time, hooks will correspond to function calls (such as
 `0x0000d040 (73 f1 ff eb): bl #0x9614 <fclose@plt>`), where the effective symbolic execution of all
 included assembly instructions does either not scale, is irrelevant for the intended purpose (e.g.
 exploit generation) or the function has well-known semantics that can be mimicked by a semantic
-function model (TODO: Add reference).
+function model.
 ```
 [...]
 hooks:
