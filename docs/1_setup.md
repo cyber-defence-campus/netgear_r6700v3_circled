@@ -49,7 +49,7 @@ collect execution traces that can then be analyzed symbolically.
 ## ARMHF Guest System
 **Note**: In the following, we assume that the variable `$ROOTFS` points to the firmware's root
 filesystem, as set in section [Analysis / Host System](./1_setup.md#analysis--host-system).
-- Setup an ARMHF guest system (recommended: *QEMU* ARMHF Debian VM).
+- Setup an ARMHF guest system (recommended: [QEMU ARMHF Debian VM](./1_setup_guest.md)).
 - Copy the directories `$ROOTFS/` and `server/` to the ARMHF guest system.
 
 Execute the following instructions within the ARMHF guest system:
