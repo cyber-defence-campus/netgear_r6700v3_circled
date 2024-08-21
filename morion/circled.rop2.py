@@ -9,7 +9,7 @@ ast = ast
 
 # System command
 cmd         = "id>/id;#"
-cmd_addr    = 0xbeffc250
+cmd_addr    = 0xbeffcaa0
 
 # Preconditions
 g0_sp_val  = ctx.getConcreteRegisterValue(ctx.registers.sp)-9*CPUSIZE.DWORD

@@ -197,15 +197,15 @@ As seen above, the file `circled.yaml` (initially a copy of
 before starting the actual tracing process:
 ```
 [...]
-[2024-04-11 09:53:30] [INFO] Start loading trace file 'circled.yaml'...
-[2024-04-11 09:53:30] [DEBG] Regs:
-[2024-04-11 09:53:30] [DEBG] Mems:
-[2024-04-11 09:53:30] [DEBG] 	0x000120f8 = 0x25 %
-[2024-04-11 09:53:30] [DEBG] 	0x000120f9 = 0x73 s
-[2024-04-11 09:53:30] [DEBG] 	0x000120fa = 0x20  
-[2024-04-11 09:53:30] [DEBG] 	0x000120fb = 0x25 %
-[2024-04-11 09:53:30] [DEBG] 	0x000120fc = 0x73 s
-[2024-04-11 09:53:30] [DEBG] 	0x000120fd = 0x00  
+[2024-08-20 14:16:07] [INFO] Start loading trace file 'circled.yaml'...
+[2024-08-20 14:16:07] [DEBG] Regs:
+[2024-08-20 14:16:07] [DEBG] Mems:
+[2024-08-20 14:16:07] [DEBG] 	0x000120f8 = 0x25 %
+[2024-08-20 14:16:07] [DEBG] 	0x000120f9 = 0x73 s
+[2024-08-20 14:16:07] [DEBG] 	0x000120fa = 0x20  
+[2024-08-20 14:16:07] [DEBG] 	0x000120fb = 0x25 %
+[2024-08-20 14:16:07] [DEBG] 	0x000120fc = 0x73 s
+[2024-08-20 14:16:07] [DEBG] 	0x000120fd = 0x00  
 [...]
 ```
 Also, the **hooks** defined in `circled.yaml` are applied (using _GDB_), so that they take effect
@@ -213,20 +213,20 @@ Also, the **hooks** defined in `circled.yaml` are applied (using _GDB_), so that
 execution trace:
 ```
 [...]
-[2024-04-11 09:53:30] [DEBG] Hooks:
-[2024-04-11 09:53:30] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000d044 'lib:func_hook (on=leave, mode=skip)'
+[2024-08-20 14:16:07] [DEBG] Hooks:
+[2024-08-20 14:16:07] [DEBG] 	0x0000d040 'lib:func_hook (on=entry, mode=skip)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000d044 'lib:func_hook (on=leave, mode=skip)'
 [...]
-[2024-04-11 09:53:30] [DEBG] 	0x0000c9c4 'lib:func_hook (on=entry, mode=skip)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000c9c8 'lib:func_hook (on=leave, mode=skip)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000cfe0 'libc:fgets (on=entry, mode=model)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000cfe4 'libc:fgets (on=leave, mode=model)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000d094 'libc:fgets (on=entry, mode=model)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000d098 'libc:fgets (on=leave, mode=model)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000cffc 'libc:sscanf (on=entry, mode=model)'
-[2024-04-11 09:53:30] [DEBG] 	0x0000d000 'libc:sscanf (on=leave, mode=model)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000c9c4 'lib:func_hook (on=entry, mode=skip)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000c9c8 'lib:func_hook (on=leave, mode=skip)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000cfe0 'libc:fgets (on=entry, mode=model)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000cfe4 'libc:fgets (on=leave, mode=model)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000d094 'libc:fgets (on=entry, mode=model)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000d098 'libc:fgets (on=leave, mode=model)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000cffc 'libc:sscanf (on=entry, mode=model)'
+[2024-08-20 14:16:07] [DEBG] 	0x0000d000 'libc:sscanf (on=leave, mode=model)'
 [...]
-[2024-04-11 09:53:30] [INFO] ... finished loading trace file 'circled.yaml'.
+[2024-08-20 14:16:07] [INFO] ... finished loading trace file 'circled.yaml'.
 [...]
 ```
 Once this is done, the actual tracing can start.
@@ -234,23 +234,23 @@ Once this is done, the actual tracing can start.
 Collecting a trace includes the recording of the following pieces of information:
 - Executed assembly **instructions** (e.g. `0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!`)
 - **Initial values** of all accessed registers and memory locations (e.g. `r3 = 0x0`,
-  `r5 = 0xbeffc828` or `0xbeffc0c4 = 0x00`)
+  `r5 = 0xbeffd078` or `0xbeffc914 = 0x00`)
 ```
 [...]
-[2024-04-11 09:53:30] [INFO] Start tracing...
-[2024-04-11 09:53:30] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!  # store 1st assembly instruction
-[2024-04-11 09:53:30] [DEBG] Regs:
-[2024-04-11 09:53:30] [DEBG] 	r3 = 0x0                                          # store value of accessed register r3 (initial access)
-[2024-04-11 09:53:30] [DEBG] 	r5 = 0xbeffc828                                   # store value of accessed register r5 (initial access)
-[2024-04-11 09:53:30] [DEBG] Mems:
-[2024-04-11 09:53:30] [DEBG] 	0xbeffc0c4 = 0x00                                 # store value of memory 0xbeffc0c4 (initial access)
-[2024-04-11 09:53:30] [DEBG] 0x0000cfc4 (64 32 9f e5): ldr r3, [pc, #0x264]     # store 2nd assembly instruction
-[2024-04-11 09:53:30] [DEBG] Regs:                                              # ignore value of accessed register r3 (stored before)
-[2024-04-11 09:53:30] [DEBG] Mems:
-[2024-04-11 09:53:30] [DEBG] 	0x0000d230 = 0xbc                                 # store value of memory 0x0000d230 (initial access)
-[2024-04-11 09:53:30] [DEBG] 	0x0000d231 = 0x6a j                               # store value of memory 0x0000d231 (initial access)
-[2024-04-11 09:53:30] [DEBG] 	0x0000d232 = 0xff                                 # store value of memory 0x0000d232 (initial access)
-[2024-04-11 09:53:30] [DEBG] 	0x0000d233 = 0xff                                 # store value of memory 0x0000d233 (initial access)
+[2024-08-20 14:16:07] [INFO] Start tracing...
+[2024-08-20 14:16:07] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!  # store 1st assembly instruction
+[2024-08-20 14:16:07] [DEBG] Regs:
+[2024-08-20 14:16:07] [DEBG] 	r3 = 0x0                                          # store value of accessed register r3 (initial access)
+[2024-08-20 14:16:07] [DEBG] 	r5 = 0xbeffd078                                   # store value of accessed register r5 (initial access)
+[2024-08-20 14:16:07] [DEBG] Mems:
+[2024-08-20 14:16:07] [DEBG] 	0xbeffc914 = 0x00                                 # store value of memory 0xbeffc914 (initial access)
+[2024-08-20 14:16:07] [DEBG] 0x0000cfc4 (64 32 9f e5): ldr r3, [pc, #0x264]     # store 2nd assembly instruction
+[2024-08-20 14:16:07] [DEBG] Regs:                                              # ignore value of accessed register r3 (stored before)
+[2024-08-20 14:16:07] [DEBG] Mems:
+[2024-08-20 14:16:07] [DEBG] 	0x0000d230 = 0xbc                                 # store value of memory 0x0000d230 (initial access)
+[2024-08-20 14:16:07] [DEBG] 	0x0000d231 = 0x6a j                               # store value of memory 0x0000d231 (initial access)
+[2024-08-20 14:16:07] [DEBG] 	0x0000d232 = 0xff                                 # store value of memory 0x0000d232 (initial access)
+[2024-08-20 14:16:07] [DEBG] 	0x0000d233 = 0xff                                 # store value of memory 0x0000d233 (initial access)
 [...]
 ```
 The initial values of register (`states:entry:regs:`) and memory locations (`states:entry:mems:`)
@@ -276,7 +276,7 @@ states:
       [...]
       r3: ['0x00000000']
       [...]
-      r5: ['0xbeffc828']
+      r5: ['0xbeffd078']
       [...]
     mems:
       '0x0000d230': ['0xbc']
@@ -291,7 +291,7 @@ states:
       '0x000120fc': ['0x73']  # 's'
       '0x000120fd': ['0x00']  #
       [...]
-      '0xbeffc0c4': ['0x00']
+      '0xbeffc914': ['0x00']
       [...]
 [...]
 ```
@@ -300,21 +300,21 @@ If we look at the end of the tracing process's debug output, we can observe that
 end at our configured stop address `0xf1a4`, but at address `0xcf24`:
 ```
 [...]
-[2024-04-11 09:53:40] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
-[2024-04-11 09:53:40] [DEBG] Regs:
-[2024-04-11 09:53:40] [DEBG] Mems:
-[2024-04-11 09:53:40] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}
-[2024-04-11 09:53:40] [DEBG] Regs:
-[2024-04-11 09:53:40] [DEBG] Mems:
-[2024-04-11 09:53:40] [DEBG] 	0xbeffc82c = 0x41 A
-[2024-04-11 09:53:40] [DEBG] 	0xbeffc82d = 0x41 A
+[2024-08-20 14:16:18] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
+[2024-08-20 14:16:18] [DEBG] Regs:
+[2024-08-20 14:16:18] [DEBG] Mems:
+[2024-08-20 14:16:18] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+[2024-08-20 14:16:18] [DEBG] Regs:
+[2024-08-20 14:16:18] [DEBG] Mems:
+[2024-08-20 14:16:18] [DEBG] 	0xbeffd094 = 0x41 A
+[2024-08-20 14:16:18] [DEBG] 	0xbeffd095 = 0x41 A
 [...]
-[2024-04-11 09:53:40] [DEBG] 	0xbeffc84a = 0x41 A
-[2024-04-11 09:53:40] [DEBG] 	0xbeffc84b = 0x41 A
-[2024-04-11 09:53:40] [ERRO] 	Failed to execute instruction at address 0x0000cf24: 'Remote connection closed'
-[2024-04-11 09:53:40] [INFO] ... finished tracing (pc=0x0000cf24).
-[2024-04-11 09:53:40] [INFO] Start storing trace file 'circled.yaml'...
-[2024-04-11 09:53:42] [INFO] ... finished storing trace file 'circled.yaml'.
+[2024-08-20 14:16:18] [DEBG] 	0xbeffd082 = 0x41 A
+[2024-08-20 14:16:18] [DEBG] 	0xbeffd083 = 0x41 A
+[2024-08-20 14:16:18] [ERRO] 	Failed to execute instruction at address 0x0000cf24: 'Remote connection closed'
+[2024-08-20 14:16:18] [INFO] ... finished tracing (pc=0x0000cf24).
+[2024-08-20 14:16:18] [INFO] Start storing trace file 'circled.yaml'...
+[2024-08-20 14:16:21] [INFO] ... finished storing trace file 'circled.yaml'.
 ```
 This is due to the fact, that our target binary crashed before reaching the intended stop address.
 More specifically, and as we will see in greater detail later on, the instruction
@@ -358,26 +358,26 @@ belonging to function calls. These are similar to the ones regarding functions, 
 any instructions for setting return values.
 ```
 [...]
-[2024-04-11 09:53:35] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8
-[2024-04-11 09:53:35] [DEBG] Regs:
-[2024-04-11 09:53:35] [DEBG] Mems:
-[2024-04-11 09:53:35] [INFO] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
-[2024-04-11 09:53:35] [INFO]           'func_hook'
-[2024-04-11 09:53:35] [DEBG] 0x0000d040 (ee cf ff ea): b #-0xc040             # // Hook: lib:func_hook (on=entry, mode=skip)
-[2024-04-11 09:53:35] [INFO]    ---
-[2024-04-11 09:53:35] [DEBG] 0x00001000 (00 00 a0 e3): mov  r0, #0x0          # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 09:53:35] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0x0          # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 09:53:35] [DEBG] 0x00001008 (01 10 a0 e3): mov  r1, #0x1          # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 09:53:35] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0          # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 09:53:35] [DEBG] 0x00001010 (0b 30 00 ea): b #0xc034              # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 09:53:35] [INFO] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
-[2024-04-11 09:53:35] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]
-[2024-04-11 09:53:35] [DEBG] Regs:
-[2024-04-11 09:53:35] [DEBG] Mems:
-[2024-04-11 09:53:35] [DEBG] 	0xbeffb834 = 0x06  
-[2024-04-11 09:53:35] [DEBG] 	0xbeffb835 = 0x00  
-[2024-04-11 09:53:35] [DEBG] 	0xbeffb836 = 0x00  
-[2024-04-11 09:53:35] [DEBG] 	0xbeffb837 = 0x00 
+[2024-08-20 14:16:13] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8
+[2024-08-20 14:16:13] [DEBG] Regs:
+[2024-08-20 14:16:13] [DEBG] Mems:
+[2024-08-20 14:16:13] [INFO] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
+[2024-08-20 14:16:13] [INFO]           'func_hook'
+[2024-08-20 14:16:13] [DEBG] 0x0000d040 (ee cf ff ea): b #-0xc040           # // Hook: lib:func_hook (on=entry, mode=skip)
+[2024-08-20 14:16:13] [INFO]    ---
+[2024-08-20 14:16:13] [DEBG] 0x00001000 (00 00 a0 e3): mov  r0, #0x0        # // Hook: lib:func_hook (on=leave, mode=skip)
+[2024-08-20 14:16:13] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0x0        # // Hook: lib:func_hook (on=leave, mode=skip)
+[2024-08-20 14:16:13] [DEBG] 0x00001008 (01 10 a0 e3): mov  r1, #0x1        # // Hook: lib:func_hook (on=leave, mode=skip)
+[2024-08-20 14:16:13] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0        # // Hook: lib:func_hook (on=leave, mode=skip)
+[2024-08-20 14:16:13] [DEBG] 0x00001010 (0b 30 00 ea): b #0xc034            # // Hook: lib:func_hook (on=leave, mode=skip)
+[2024-08-20 14:16:13] [INFO] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
+[2024-08-20 14:16:13] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]
+[2024-08-20 14:16:13] [DEBG] Regs:
+[2024-08-20 14:16:13] [DEBG] Mems:
+[2024-08-20 14:16:13] [DEBG] 	0xbeffc084 = 0x06  
+[2024-08-20 14:16:13] [DEBG] 	0xbeffc085 = 0x00  
+[2024-08-20 14:16:13] [DEBG] 	0xbeffc086 = 0x00  
+[2024-08-20 14:16:13] [DEBG] 	0xbeffc087 = 0x00  
 [...]
 ```
 #### Specific Function Hook with Mode Model (Example libc:fgets)
@@ -401,35 +401,35 @@ by `fgets` (which actually corresponds to the PoV payload served by the HTTP ser
 appropriate memory addresses.
 ```
 [...]
-[2024-04-11 09:53:30] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5
-[2024-04-11 09:53:30] [DEBG] Regs:
-[2024-04-11 09:53:30] [DEBG] 	r0 = 0x21ae0
-[2024-04-11 09:53:30] [DEBG] Mems:
-[2024-04-11 09:53:30] [INFO] --> Hook: 'libc:fgets (on=entry, mode=model)'
-[2024-04-11 09:53:30] [INFO]           'char *fgets(char *restrict s, int n, FILE *restrict stream);'
-[2024-04-11 09:53:30] [INFO] 	 s      = 0xbeffc0c4
-[2024-04-11 09:53:30] [INFO] 	 n      = 1024
-[2024-04-11 09:53:30] [INFO] 	 stream = 0x00021ae0
-[2024-04-11 09:53:30] [DEBG] 0x0000cfe0 (06 d0 ff ea): b #-0xbfe0             # // Hook: libc:fgets (on=entry, mode=model)
-[2024-04-11 09:53:30] [INFO]    ---
-[2024-04-11 09:53:31] [INFO] 	 s = 0xbeffc0c4
-[2024-04-11 09:53:31] [INFO] 	*s = 'AAA[...]AAA X'
-[2024-04-11 09:53:32] [DEBG] 0x00001000 (c4 00 0c e3): mov  r0, #0xc0c4       # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00001004 (ff 0e 4b e3): movt r0, #0xbeff       # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00001008 (41 10 a0 e3): mov  r1, #0x41         # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0          # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00001010 (00 10 c0 e5): strb r1, [r0]          # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:08] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5
+[2024-08-20 14:16:08] [DEBG] Regs:
+[2024-08-20 14:16:08] [DEBG] 	r0 = 0x21a90
+[2024-08-20 14:16:08] [DEBG] Mems:
+[2024-08-20 14:16:08] [INFO] --> Hook: 'libc:fgets (on=entry, mode=model)'
+[2024-08-20 14:16:08] [INFO]           'char *fgets(char *restrict s, int n, FILE *restrict stream);'
+[2024-08-20 14:16:08] [INFO] 	 s      = 0xbeffc914
+[2024-08-20 14:16:08] [INFO] 	 n      = 1024
+[2024-08-20 14:16:08] [INFO] 	 stream = 0x00021a90
+[2024-08-20 14:16:08] [DEBG] 0x0000cfe0 (06 d0 ff ea): b #-0xbfe0             # // Hook: libc:fgets (on=entry, mode=model)
+[2024-08-20 14:16:08] [INFO]    ---
+[2024-08-20 14:16:08] [INFO] 	 s = 0xbeffc914
+[2024-08-20 14:16:08] [INFO] 	*s = 'AAA[...]AAA X'
+[2024-08-20 14:16:09] [DEBG] 0x00001000 (14 09 0c e3): mov  r0, #0xc914       # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00001004 (ff 0e 4b e3): movt r0, #0xbeff       # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00001008 (41 10 a0 e3): mov  r1, #0x41         # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0x0          # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00001010 (00 10 c0 e5): strb r1, [r0]          # // Hook: libc:fgets (on=leave, mode=model)
 [...]
-[2024-04-11 09:53:32] [DEBG] 0x00005fec (c3 04 0c e3): mov  r0, #0xc4c3       # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00005ff0 (ff 0e 4b e3): movt r0, #0xbeff       # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00005ff4 (00 10 a0 e3): mov  r1, #0x0          # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00005ff8 (00 10 40 e3): movt r1, #0x0          # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00005ffc (00 10 c0 e5): strb r1, [r0]          # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00006000 (c4 00 0c e3): mov  r0, #0xc0c4       # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00006004 (ff 0e 4b e3): movt r0, #0xbeff       # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [DEBG] 0x00006008 (f5 1b 00 ea): b #0x6fdc              # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 09:53:32] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
-[2024-04-11 09:53:32] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0
+[2024-08-20 14:16:09] [DEBG] 0x00005fec (13 0d 0c e3): mov  r0, #0xcd13       # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00005ff0 (ff 0e 4b e3): movt r0, #0xbeff       # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00005ff4 (00 10 a0 e3): mov  r1, #0x0          # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00005ff8 (00 10 40 e3): movt r1, #0x0          # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00005ffc (00 10 c0 e5): strb r1, [r0]          # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00006000 (14 09 0c e3): mov  r0, #0xc914       # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00006004 (ff 0e 4b e3): movt r0, #0xbeff       # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [DEBG] 0x00006008 (f5 1b 00 ea): b #0x6fdc              # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:09] [INFO] <-- Hook: 'libc:fgets (on=leave, mode=model)'
+[2024-08-20 14:16:09] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0
 [...]
 ```
 The implementation of all a function's side-effects might not always be so simple as in the example 
