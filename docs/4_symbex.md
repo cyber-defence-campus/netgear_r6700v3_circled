@@ -94,48 +94,48 @@ recorded trace uses the correct concrete register and/or memory values. This ini
 registers and/or memory locations can be observed in
 [Morion](https://github.com/cyber-defence-campus/morion)'s debug output:
 ```
-[2024-04-11 10:46:19] [INFO] Start loading file 'circled.yaml'...
-[2024-04-11 10:46:21] [DEBG] Regs:
-[2024-04-11 10:46:21] [DEBG] 	n=0x0
-[2024-04-11 10:46:21] [DEBG] 	r0=0x21ae0
-[2024-04-11 10:46:21] [DEBG] 	r1=0x1
-[2024-04-11 10:46:21] [DEBG] 	r10=0xbeffbcc4
-[2024-04-11 10:46:21] [DEBG] 	r11=0xbeffc4c4
-[2024-04-11 10:46:21] [DEBG] 	r2=0x258
-[2024-04-11 10:46:21] [DEBG] 	r3=0x0
-[2024-04-11 10:46:21] [DEBG] 	r4=0x1b850
-[2024-04-11 10:46:21] [DEBG] 	r5=0xbeffc828
-[2024-04-11 10:46:21] [DEBG] 	r6=0xbeffc6c4
-[2024-04-11 10:46:21] [DEBG] 	r7=0xbeffc5c4
-[2024-04-11 10:46:21] [DEBG] 	r8=0x21ae0
-[2024-04-11 10:46:21] [DEBG] 	r9=0xffff68a8
-[2024-04-11 10:46:21] [DEBG] 	sp=0xbeffb830
-[2024-04-11 10:46:21] [DEBG] 	v=0x0
-[2024-04-11 10:46:21] [DEBG] 	z=0x0
-[2024-04-11 10:46:21] [DEBG] Mems:
-[2024-04-11 10:46:21] [DEBG] 	0x0000d230=0xbc  
-[2024-04-11 10:46:21] [DEBG] 	0x0000d231=0x6a j
-[2024-04-11 10:46:21] [DEBG] 	0x0000d232=0xff  
-[2024-04-11 10:46:21] [DEBG] 	0x0000d233=0xff
+[2024-08-20 14:16:43] [INFO] Start loading file 'circled.yaml'...
+[2024-08-20 14:16:45] [DEBG] Regs:
+[2024-08-20 14:16:45] [DEBG] 	n=0x0
+[2024-08-20 14:16:45] [DEBG] 	r0=0x21a90
+[2024-08-20 14:16:45] [DEBG] 	r1=0x1
+[2024-08-20 14:16:45] [DEBG] 	r10=0xbeffc514
+[2024-08-20 14:16:45] [DEBG] 	r11=0xbeffcd14
+[2024-08-20 14:16:45] [DEBG] 	r2=0x258
+[2024-08-20 14:16:45] [DEBG] 	r3=0x0
+[2024-08-20 14:16:45] [DEBG] 	r4=0x1b850
+[2024-08-20 14:16:45] [DEBG] 	r5=0xbeffd078
+[2024-08-20 14:16:45] [DEBG] 	r6=0xbeffcf14
+[2024-08-20 14:16:45] [DEBG] 	r7=0xbeffce14
+[2024-08-20 14:16:45] [DEBG] 	r8=0x21a90
+[2024-08-20 14:16:45] [DEBG] 	r9=0xffff68a8
+[2024-08-20 14:16:45] [DEBG] 	sp=0xbeffc080
+[2024-08-20 14:16:45] [DEBG] 	v=0x0
+[2024-08-20 14:16:45] [DEBG] 	z=0x0
+[2024-08-20 14:16:45] [DEBG] Mems:
+[2024-08-20 14:16:45] [DEBG] 	0x0000d230=0xbc  
+[2024-08-20 14:16:45] [DEBG] 	0x0000d231=0x6a j
+[2024-08-20 14:16:45] [DEBG] 	0x0000d232=0xff  
+[2024-08-20 14:16:45] [DEBG] 	0x0000d233=0xff  
 [...]
-[2024-04-11 10:46:21] [DEBG] 	0x000120f8=0x25 %
-[2024-04-11 10:46:21] [DEBG] 	0x000120f9=0x73 s
-[2024-04-11 10:46:21] [DEBG] 	0x000120fa=0x20  
-[2024-04-11 10:46:21] [DEBG] 	0x000120fb=0x25 %
-[2024-04-11 10:46:21] [DEBG] 	0x000120fc=0x73 s
-[2024-04-11 10:46:21] [DEBG] 	0x000120fd=0x00
+[2024-08-20 14:16:45] [DEBG] 	0x000120f8=0x25 %
+[2024-08-20 14:16:45] [DEBG] 	0x000120f9=0x73 s
+[2024-08-20 14:16:45] [DEBG] 	0x000120fa=0x20  
+[2024-08-20 14:16:45] [DEBG] 	0x000120fb=0x25 %
+[2024-08-20 14:16:45] [DEBG] 	0x000120fc=0x73 s
+[2024-08-20 14:16:45] [DEBG] 	0x000120fd=0x00 
 [...]
-[2024-04-11 10:46:21] [DEBG] 	0xbeffc0c4=0x00  
-[2024-04-11 10:46:21] [DEBG] 	0xbeffc82c=0x41 A
-[2024-04-11 10:46:21] [DEBG] 	0xbeffc82d=0x41 A
+[2024-08-20 14:16:45] [DEBG] 	0xbeffc914=0x00  
+[2024-08-20 14:16:45] [DEBG] 	0xbeffd07c=0x41 A
+[2024-08-20 14:16:45] [DEBG] 	0xbeffd07d=0x41 A
 [...]
-[2024-04-11 10:46:21] [DEBG] 	0xbeffc84e=0x41 A
-[2024-04-11 10:46:21] [DEBG] 	0xbeffc84f=0x41 A
+[2024-08-20 14:16:45] [DEBG] 	0xbeffd09e=0x41 A
+[2024-08-20 14:16:45] [DEBG] 	0xbeffd09f=0x41 A
 [...]
 ```
 In a similar manner, registers and/or memory locations can be assigned a new **symbolic variable**,
 before the actual symbolic execution of the trace begins. To for example mark the register `r0` as
-being symbolic (alongside its concrete initial value of `0x21ae0`), the trace file `circled.yaml`
+being symbolic (alongside its concrete initial value of `0x21a90`), the trace file `circled.yaml`
 (respectively the file [circled.init.yaml](../morion/circled.init.yaml)) could contain an entry such
 as the one shown below:
 ```
@@ -143,7 +143,7 @@ as the one shown below:
 states:
   entry:
     regs:
-      'r0': ['0x21ae0', '$$$$$$$$']   # Marking register r0 as being symbolic
+      'r0': ['0x21a90', '$$$$$$$$']   # Marking register r0 as being symbolic
       [...]
     mems:
       '0x000120f8': ['0x25', '$$']    # Marking memory location 0x120f8 as being symbolic
@@ -157,11 +157,11 @@ register and a symbolic memory location were defined,
 file, would look like this:
 ```
 [...]
-[2024-04-11 10:46:21] [DEBG] 	r0=0x21ae0
-[2024-04-11 10:46:21] [DEBG] 	r0=$$$$$$$$
+[2024-08-20 14:16:45] [DEBG] 	r0=0x21a90
+[2024-08-20 14:16:45] [DEBG] 	r0=$$$$$$$$
 [...]
-[2024-04-11 10:46:21] [DEBG] 	0x000120f8=0x25 %
-[2024-04-11 10:46:21] [DEBG] 	0x000120f8=$$
+[2024-08-20 14:16:45] [DEBG] 	0x000120f8=0x25 %
+[2024-08-20 14:16:45] [DEBG] 	0x000120f8=$$
 [...]
 ```
 Note that in our example of binary _circled_, we do not manually mark any register and/or memory
@@ -176,19 +176,19 @@ locations in the context of the symbolic execution engine,
 [Morion](https://github.com/cyber-defence-campus/morion) sets up the defined function **hooks**:
 ```
 [...]
-[2024-04-11 10:46:21] [DEBG] Hooks:
-[2024-04-11 10:46:21] [DEBG] 	0x0000d040: 'lib:func_hook (on=entry, mode=skip)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000d044: 'lib:func_hook (on=leave, mode=skip)'
+[2024-08-20 14:16:45] [DEBG] Hooks:
+[2024-08-20 14:16:45] [DEBG] 	0x0000d040: 'lib:func_hook (on=entry, mode=skip)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000d044: 'lib:func_hook (on=leave, mode=skip)'
 [...]
-[2024-04-11 10:46:21] [DEBG] 	0x0000c9c4: 'lib:func_hook (on=entry, mode=skip)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000c9c8: 'lib:func_hook (on=leave, mode=skip)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000cfe0: 'libc:fgets (on=entry, mode=model)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000cfe4: 'libc:fgets (on=leave, mode=model)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000d094: 'libc:fgets (on=entry, mode=model)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000d098: 'libc:fgets (on=leave, mode=model)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000cffc: 'libc:sscanf (on=entry, mode=model)'
-[2024-04-11 10:46:21] [DEBG] 	0x0000d000: 'libc:sscanf (on=leave, mode=model)'
-[2024-04-11 10:46:21] [INFO] ... finished loading file 'circled.yaml'.
+[2024-08-20 14:16:45] [DEBG] 	0x0000c9c4: 'lib:func_hook (on=entry, mode=skip)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000c9c8: 'lib:func_hook (on=leave, mode=skip)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000cfe0: 'libc:fgets (on=entry, mode=model)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000cfe4: 'libc:fgets (on=leave, mode=model)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000d094: 'libc:fgets (on=entry, mode=model)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000d098: 'libc:fgets (on=leave, mode=model)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000cffc: 'libc:sscanf (on=entry, mode=model)'
+[2024-08-20 14:16:45] [DEBG] 	0x0000d000: 'libc:sscanf (on=leave, mode=model)'
+[2024-08-20 14:16:45] [INFO] ... finished loading file 'circled.yaml'.
 [...]
 ```
 How hooking works, while executing a trace symbolically, is explained next.
@@ -213,19 +213,19 @@ assembly instructions to move the trace's effective return value of function `fc
 meaning a successful closure of the corresponding file stream) to the return register(s).
 ```
 [...]
-[2024-04-11 10:46:22] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8
-[2024-04-11 10:46:22] [DEBG] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
-[2024-04-11 10:46:22] [DEBG]           'func_hook'
-[2024-04-11 10:46:22] [DEBG]     ---
-[2024-04-11 10:46:22] [DEBG] 0x0000d040 (ee cf ff ea): b #0x1000               # // Hook: lib:func_hook (on=entry, mode=skip)
-[2024-04-11 10:46:22] [DEBG] 0x00001000 (00 00 a0 e3): mov r0, #0              # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 10:46:22] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0             # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 10:46:22] [DEBG] 0x00001008 (01 10 a0 e3): mov r1, #1              # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 10:46:22] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0             # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 10:46:22] [DEBG] 0x00001010 (0b 30 00 ea): b #0xd044               # // Hook: lib:func_hook (on=leave, mode=skip)
-[2024-04-11 10:46:22] [DEBG]     ---
-[2024-04-11 10:46:22] [DEBG] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
-[2024-04-11 10:46:22] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]
+[2024-08-20 14:16:46] [DEBG] 0x0000d03c (08 00 a0 e1): mov r0, r8
+[2024-08-20 14:16:46] [DEBG] --> Hook: 'lib:func_hook (on=entry, mode=skip)'
+[2024-08-20 14:16:46] [DEBG]           'func_hook'
+[2024-08-20 14:16:46] [DEBG]     ---
+[2024-08-20 14:16:46] [DEBG] 0x0000d040 (ee cf ff ea): b #0x1000               # // Hook: lib:func_hook (on=entry, mode=skip)    
+[2024-08-20 14:16:46] [DEBG] 0x00001000 (00 00 a0 e3): mov r0, #0              # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2024-08-20 14:16:46] [DEBG] 0x00001004 (00 00 40 e3): movt r0, #0             # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2024-08-20 14:16:46] [DEBG] 0x00001008 (01 10 a0 e3): mov r1, #1              # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2024-08-20 14:16:46] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0             # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2024-08-20 14:16:46] [DEBG] 0x00001010 (0b 30 00 ea): b #0xd044               # // Hook: lib:func_hook (on=leave, mode=skip)    
+[2024-08-20 14:16:46] [DEBG]     ---
+[2024-08-20 14:16:46] [DEBG] <-- Hook: 'lib:func_hook (on=leave, mode=skip)'
+[2024-08-20 14:16:46] [DEBG] 0x0000d044 (04 30 9d e5): ldr r3, [sp, #4]
 [...]
 ```
 When running a trace symbolically, [Morion](https://github.com/cyber-defence-campus/morion) follows
@@ -243,55 +243,55 @@ due to the hooking, the effective assembly instructions of the function itself h
 recorded during tracing. Instead, some instructions got injected to reproduce the side-effects
 that the function has on the memory and register contexts. When looking closely to the injected
 instructions, one observes that first the effective bytes of string `s` are set
-(`0xbeffc0c4: 0x41 'A'` - `0xbeffc4c2: 0x58 'X'`, `0xbeffc4c3: 0x00`), and second the
-correct return value (`0xbeffc0c4` - the address of string `s`) is placed into register `r0`. In
+(`0xbeffc914: 0x41 'A'` - `0xbeffcd12: 0x58 'X'`, `0xbeffcd13: 0x00`), and second the
+correct return value (`0xbeffc914` - the address of string `s`) is placed into register `r0`. In
 contrast to an abstract function hook (`hooks:lib:func_hook:`) where only instructions to handle
 correct function return values are injected, **specific function hooks** (`hooks:libc:fgets`) handle
 additional function-specific side-effects to the memory and register contexts.
 ```
 [...]
-[2024-04-11 10:46:21] [INFO] Start symbolic execution...
-[2024-04-11 10:46:21] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!
+[2024-08-20 14:16:45] [INFO] Start symbolic execution...
+[2024-08-20 14:16:45] [DEBG] 0x0000cfc0 (64 37 65 e5): strb r3, [r5, #-0x764]!
 [...]
-[2024-04-11 10:46:21] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5
-[2024-04-11 10:46:21] [DEBG] --> Hook: 'libc:fgets (on=entry, mode=model)'
-[2024-04-11 10:46:21] [DEBG]           'char *fgets(char *restrict s, int n, FILE *restrict stream);'
-[2024-04-11 10:46:21] [DEBG] 	 s = 0xbeffc0c4
-[2024-04-11 10:46:21] [DEBG] 	 n = 1024
-[2024-04-11 10:46:21] [DEBG] 	 stream = 0x00021ae0
-[2024-04-11 10:46:21] [DEBG]     ---
-[2024-04-11 10:46:21] [DEBG] 0x0000cfe0 (06 d0 ff ea): b #0x1000               # // Hook: libc:fgets (on=entry, mode=model)
-[2024-04-11 10:46:21] [DEBG] 0x00001000 (c4 00 0c e3): movw r0, #0xc0c4        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:21] [DEBG] 0x00001004 (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:21] [DEBG] 0x00001008 (41 10 a0 e3): mov r1, #0x41           # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:21] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:21] [DEBG] 0x00001010 (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)
+[2024-08-20 14:16:45] [DEBG] 0x0000cfdc (05 00 a0 e1): mov r0, r5
+[2024-08-20 14:16:45] [DEBG] --> Hook: 'libc:fgets (on=entry, mode=model)'
+[2024-08-20 14:16:45] [DEBG]           'char *fgets(char *restrict s, int n, FILE *restrict stream);'
+[2024-08-20 14:16:45] [DEBG] 	 s = 0xbeffc914
+[2024-08-20 14:16:45] [DEBG] 	 n = 1024
+[2024-08-20 14:16:45] [DEBG] 	 stream = 0x00021a90
+[2024-08-20 14:16:45] [DEBG]     ---
+[2024-08-20 14:16:45] [DEBG] 0x0000cfe0 (06 d0 ff ea): b #0x1000               # // Hook: libc:fgets (on=entry, mode=model)      
+[2024-08-20 14:16:45] [DEBG] 0x00001000 (14 09 0c e3): movw r0, #0xc914        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:45] [DEBG] 0x00001004 (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:45] [DEBG] 0x00001008 (41 10 a0 e3): mov r1, #0x41           # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:45] [DEBG] 0x0000100c (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:45] [DEBG] 0x00001010 (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)      
 [...]
-[2024-04-11 10:46:22] [DEBG] 0x00005fd8 (c2 04 0c e3): movw r0, #0xc4c2        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005fdc (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005fe0 (58 10 a0 e3): mov r1, #0x58           # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005fe4 (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005fe8 (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005fec (c3 04 0c e3): movw r0, #0xc4c3        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005ff0 (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005ff4 (00 10 a0 e3): mov r1, #0              # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005ff8 (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00005ffc (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00006000 (c4 00 0c e3): movw r0, #0xc0c4        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00006004 (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 0x00006008 (f5 1b 00 ea): b #0xcfe4               # // Hook: libc:fgets (on=leave, mode=model)
-[2024-04-11 10:46:22] [DEBG] 	 s = 0xbeffc0c4
-[2024-04-11 10:46:22] [DEBG] 	*s = 'AAA[...]AAA X'
-[2024-04-11 10:46:22] [DEBG] 	0xbeffc0c4 = $$
-[2024-04-11 10:46:22] [DEBG] 	...
-[2024-04-11 10:46:22] [DEBG] 	0xbeffc4c2 = $$
-[2024-04-11 10:46:22] [DEBG]     ---
-[2024-04-11 10:46:22] [DEBG] <-- Hook: 'libc:fgets (on=leave, mode=model)'
-[2024-04-11 10:46:22] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0
+[2024-08-20 14:16:46] [DEBG] 0x00005fd8 (12 0d 0c e3): movw r0, #0xcd12        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005fdc (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005fe0 (58 10 a0 e3): mov r1, #0x58           # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005fe4 (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005fe8 (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005fec (13 0d 0c e3): movw r0, #0xcd13        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005ff0 (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005ff4 (00 10 a0 e3): mov r1, #0              # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005ff8 (00 10 40 e3): movt r1, #0             # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00005ffc (00 10 c0 e5): strb r1, [r0]           # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00006000 (14 09 0c e3): movw r0, #0xc914        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00006004 (ff 0e 4b e3): movt r0, #0xbeff        # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 0x00006008 (f5 1b 00 ea): b #0xcfe4               # // Hook: libc:fgets (on=leave, mode=model)      
+[2024-08-20 14:16:46] [DEBG] 	 s = 0xbeffc914
+[2024-08-20 14:16:46] [DEBG] 	*s = 'AAA[...]AAA X'
+[2024-08-20 14:16:46] [DEBG] 	0xbeffc914 = $$
+[2024-08-20 14:16:46] [DEBG] 	...
+[2024-08-20 14:16:46] [DEBG] 	0xbeffcd12 = $$
+[2024-08-20 14:16:46] [DEBG]     ---
+[2024-08-20 14:16:46] [DEBG] <-- Hook: 'libc:fgets (on=leave, mode=model)'
+[2024-08-20 14:16:46] [DEBG] 0x0000cfe4 (00 00 50 e3): cmp r0, #0
 [...]
-[2024-04-11 10:46:22] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00      #                                                 
-[2024-04-11 10:46:22] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc}#                                                 
-[2024-04-11 10:46:22] [INFO] ... finished symbolic execution (pc=0x41414140).
+[2024-08-20 14:16:46] [DEBG] 0x0000cf20 (03 db 8d e2): add sp, sp, #0xc00
+[2024-08-20 14:16:46] [DEBG] 0x0000cf24 (f0 8f bd e8): pop {r4, r5, r6, r7, r8, sb, sl, fp, pc
+[2024-08-20 14:16:46] [INFO] ... finished symbolic execution (pc=0x41414140).
 [...]
 ```
 Since we defined a function-specific hook to be used with mode `model`, additional modifications to
@@ -329,28 +329,28 @@ an attacker might control as being symbolic, meaning that an attacker can potent
 program's control-flow.
 ```
 [...]
-[2024-04-11 10:46:22] [INFO] Start analyzing symbolic state...
-[2024-04-11 10:46:22] [INFO] Symbolic Regs:
-[2024-04-11 10:46:22] [INFO] 	pc=$$$$$$$$
-[2024-04-11 10:46:22] [INFO] 	r10=$$$$$$$$
-[2024-04-11 10:46:22] [INFO] 	r11=$$$$$$$$
-[2024-04-11 10:46:23] [INFO] 	r4=$$$$$$$$
-[2024-04-11 10:46:23] [INFO] 	r5=$$$$$$$$
-[2024-04-11 10:46:23] [INFO] 	r6=$$$$$$$$
-[2024-04-11 10:46:23] [INFO] 	r7=$$$$$$$$
-[2024-04-11 10:46:24] [INFO] 	r8=$$$$$$$$
-[2024-04-11 10:46:24] [INFO] 	r9=$$$$$$$$
-[2024-04-11 10:46:24] [INFO] Symbolic Mems:
-[2024-04-11 10:47:23] [INFO] 	0xbeffc0c4=$$
-[2024-04-11 10:47:23] [INFO] 	...
-[2024-04-11 10:47:23] [INFO] 	0xbeffc4c2=$$
-[2024-04-11 10:47:23] [INFO] 	0xbeffc5c4=$$
-[2024-04-11 10:47:23] [INFO] 	0xbeffc6c4=$$
-[2024-04-11 10:47:23] [INFO] 	...
-[2024-04-11 10:47:23] [INFO] 	0xbeffcac0=$$
-[2024-04-11 10:47:23] [INFO] ... finished analyzing symbolic state.
-[2024-04-11 10:47:23] [INFO] Start storing file 'circled.yaml'...
-[2024-04-11 10:47:25] [INFO] ... finished storing file 'circled.yaml'.
+[2024-08-20 14:16:46] [INFO] Start analyzing symbolic state...
+[2024-08-20 14:16:46] [INFO] Symbolic Regs:
+[2024-08-20 14:16:46] [INFO] 	pc=$$$$$$$$
+[2024-08-20 14:16:46] [INFO] 	r10=$$$$$$$$
+[2024-08-20 14:16:47] [INFO] 	r11=$$$$$$$$
+[2024-08-20 14:16:47] [INFO] 	r4=$$$$$$$$
+[2024-08-20 14:16:47] [INFO] 	r5=$$$$$$$$
+[2024-08-20 14:16:47] [INFO] 	r6=$$$$$$$$
+[2024-08-20 14:16:47] [INFO] 	r7=$$$$$$$$
+[2024-08-20 14:16:48] [INFO] 	r8=$$$$$$$$
+[2024-08-20 14:16:48] [INFO] 	r9=$$$$$$$$
+[2024-08-20 14:16:48] [INFO] Symbolic Mems:
+[2024-08-20 14:17:56] [INFO] 	0xbeffc914=$$
+[2024-08-20 14:17:56] [INFO] 	...
+[2024-08-20 14:17:56] [INFO] 	0xbeffcd12=$$
+[2024-08-20 14:17:56] [INFO] 	0xbeffce14=$$
+[2024-08-20 14:17:56] [INFO] 	0xbeffcf14=$$
+[2024-08-20 14:17:56] [INFO] 	...
+[2024-08-20 14:17:56] [INFO] 	0xbeffd310=$$
+[2024-08-20 14:17:56] [INFO] ... finished analyzing symbolic state.
+[2024-08-20 14:17:56] [INFO] Start storing file 'circled.yaml'...
+[2024-08-20 14:17:58] [INFO] ... finished storing file 'circled.yaml'.
 ```
 In chapter [Exploitation](./6_exploitation.md), we will see how symbolic execution might help us to
 decide whether the crasher we traced might be **exploitable** or not, i.e. corresponds to an actual

