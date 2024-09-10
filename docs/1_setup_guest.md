@@ -1,7 +1,8 @@
 # Setup QEMU Debian ARMHF
 The below instructions might be used to setup a _QEMU Debian ARMHF_ virtual machine (VM).
 ## Installing
-Install the _QEMU Debian ARMHF_ VM:
+Install the _QEMU Debian ARMHF_ VM (here using Debian version 11.10, but more recent ones might be
+used instead):
 ```shell
 # Download Kernel and initial RAM disk
 mkdir Debian-11.10-ARMHF && cd Debian-11.10-ARMHF/
