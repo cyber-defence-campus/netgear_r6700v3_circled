@@ -76,6 +76,10 @@ exploit for CVE-2022-27646 (see also [Exploitation](./6_exploitation.md)), this 
 trace should include both the points where attacker-controllable inputs are introduced and where
 these inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a
 memory violation condition - as for instance found by a fuzzing campaign).
+
+**DEMO Tracing/Setup/GDB_Commands_Script** - Click the image below to watch on YouTube:
+[![Demo Video](https://img.youtube.com/vi/6oUEp2QjeJg/maxresdefault.jpg)](https://www.youtube.com/watch?v=6oUEp2QjeJg)
+
 ### YAML File
 Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined. It typically
 includes information about the trace's entry state (`states:entry:`), as well as about functions
@@ -164,6 +168,10 @@ is hard to determine (e.g. tail calls). And more importantly,
 [Morion](https://github.com/cyber-defence-campus/morion)'s hooking feature intends not to be limited
 to function calls, but be applicable in more generic cases, i.e. for any sequence of subsequent
 assembly instructions.
+
+**DEMO Tracing/Setup/YAML_File** - Click the image below to watch on YouTube:
+[![Demo Video](https://img.youtube.com/vi/z3axU4WM-jc/maxresdefault.jpg)](https://www.youtube.com/watch?v=z3axU4WM-jc)
+
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
 _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fuzzer):
@@ -187,6 +195,10 @@ _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fu
      cp circled.init.yaml circled.yaml        # Start with a fresh circled.yaml file
      gdb-multiarch -q -x circled.trace.gdb    # Use GDB for cross-platform remote trace collection
      ```
+
+**DEMO Tracing/Run** - Click the image below to watch on YouTube:
+[![Demo Video](https://img.youtube.com/vi/ripE2dtaVtM/maxresdefault.jpg)](https://www.youtube.com/watch?v=ripE2dtaVtM)
+
 ## Discussion
 In the following, we discuss some aspects of the tracing process as implemented by
 [Morion](https://github.com/cyber-defence-campus/morion).
@@ -323,6 +335,10 @@ stack that led to an invalid program counter (`pc` register), and in consequence
 **segmentation fault** (segfault). We will learn later on how [symbolic execution](./4_symbex.md)
 can help us to decide whether this situation is [exploitable](./6_exploitation.md) or not, and if
 so, how we can do it.
+
+**DEMO Tracing/Discussion/Collecting_the_Trace** - Click the image below to watch on YouTube:
+[![Demo Video](https://img.youtube.com/vi/PrjXVZ3awz0/maxresdefault.jpg)](https://www.youtube.com/watch?v=PrjXVZ3awz0)
+
 ### How Hooking Works
 As mentioned before, hooking allows a specified **sequence of assembly instructions** (e.g.
 corresponding to a called function) not to be added to the trace. In consequence, these instructions
