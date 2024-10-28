@@ -64,8 +64,10 @@ Remember that if you followed along the instructions in chapter [Tracing](./3_tr
 was collected while the vulnerable binary processed a sample payload leading to a
 **crasher/segfault** (as might have been identified by a fuzzer).
 
+<!--
 **DEMO Symbolic_Execution/Run** - Click the image below to watch on YouTube:
 [![Demo Video](https://img.youtube.com/vi/emHSZWiy9P8/maxresdefault.jpg)](https://www.youtube.com/watch?v=emHSZWiy9P8)
+-->
 
 ### Analysis Modules
 [Morion](https://github.com/cyber-defence-campus/morion) implements different analysis modules that
