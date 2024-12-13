@@ -77,10 +77,8 @@ trace should include both the points where attacker-controllable inputs are intr
 these inputs lead to a potential vulnerability (e.g. the point the binary is crashing due to a
 memory violation condition - as for instance found by a fuzzing campaign).
 
-<!--
 **DEMO Tracing/Setup/GDB_Commands_Script** - Click the image below to watch on YouTube:
 [![Demo Video](https://img.youtube.com/vi/6oUEp2QjeJg/maxresdefault.jpg)](https://www.youtube.com/watch?v=6oUEp2QjeJg)
--->
 
 ### YAML File
 Next, the file [circled.init.yaml](../morion/circled.init.yaml) needs to be defined. It typically
@@ -171,10 +169,8 @@ is hard to determine (e.g. tail calls). And more importantly,
 to function calls, but be applicable in more generic cases, i.e. for any sequence of subsequent
 assembly instructions.
 
-<!--
 **DEMO Tracing/Setup/YAML_File** - Click the image below to watch on YouTube:
 [![Demo Video](https://img.youtube.com/vi/z3axU4WM-jc/maxresdefault.jpg)](https://www.youtube.com/watch?v=z3axU4WM-jc)
--->
 
 ## Run
 Use the following steps to create a **trace** of the binary _circled_, while it is targeted with a
@@ -200,10 +196,8 @@ _proof-of-vulnerability (PoV)_ payload (as for instance being identified by a fu
      gdb-multiarch -q -x circled.trace.gdb    # Use GDB for cross-platform remote trace collection
      ```
 
-<!--
 **DEMO Tracing/Run** - Click the image below to watch on YouTube:
 [![Demo Video](https://img.youtube.com/vi/ripE2dtaVtM/maxresdefault.jpg)](https://www.youtube.com/watch?v=ripE2dtaVtM)
--->
 
 ## Discussion
 In the following, we discuss some aspects of the tracing process as implemented by
@@ -342,10 +336,8 @@ stack that led to an invalid program counter (`pc` register), and in consequence
 can help us to decide whether this situation is [exploitable](./6_exploitation.md) or not, and if
 so, how we can do it.
 
-<!--
 **DEMO Tracing/Discussion/Collecting_the_Trace** - Click the image below to watch on YouTube:
 [![Demo Video](https://img.youtube.com/vi/PrjXVZ3awz0/maxresdefault.jpg)](https://www.youtube.com/watch?v=PrjXVZ3awz0)
--->
 
 ### How Hooking Works
 As mentioned before, hooking allows a specified **sequence of assembly instructions** (e.g.
